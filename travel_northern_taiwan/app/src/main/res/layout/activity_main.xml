@@ -21,7 +21,7 @@
         android:layout_width="150dp"
         android:layout_marginBottom="15dp"
         android:layout_height="wrap_content"
-        android:onClick="openLoginActivity"
+        android:onClick="openActivity"
         android:text="Log In" />
 
     <LinearLayout
@@ -37,14 +37,14 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
-        android:onClick="openSignupActivity"
+        android:onClick="openActivity"
         android:text="Sign Up" />
 
     <Button
         android:id="@+id/language_btn"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
-        android:onClick="openLanguageActivity"
+        android:onClick="openActivity"
         android:text="Language" />
 
 </LinearLayout>

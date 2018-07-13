@@ -1,9 +1,13 @@
 package com.example.android.travelnortherntaiwan;
 
 import android.content.Intent;
+import android.nfc.Tag;
+import android.speech.tts.TextToSpeech;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -13,18 +17,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public void openLoginActivity(View v) {
-        Intent intent = new Intent(this, LoginActivity.class);
-        startActivity(intent);
-    }
+    public void openActivity(View button) {
+        Intent intent = null;
+        String buttonName = (((Button) button).getText().toString());
 
-    public void openSignupActivity(View v) {
-        Intent intent = new Intent(this, SignupActivity.class);
-        startActivity(intent);
-    }
+        if(buttonName.equals("Log In"))
+            intent = new Intent(this, LoginActivity.class);
+        else if(buttonName.equals("Sign Up"))
+            intent = new Intent(this, SignupActivity.class);
+        else if(buttonName.equals("Language"))
+            intent = new Intent(this, LanguageActivity.class);
 
-    public void openLanguageActivity(View v) {
-        Intent intent = new Intent(this, LanguageActivity.class);
-        startActivity(intent);
+        if(intent != null)
+            startActivity(intent);
     }
 }
