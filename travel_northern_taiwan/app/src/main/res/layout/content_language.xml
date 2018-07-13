@@ -1,11 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.android.travelnortherntaiwan.LanguageActivity"
-    tools:showIn="@layout/app_bar_language">
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp">
 
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:id="@+id/english_btn"
+        android:layout_width="150dp"
+        android:layout_marginBottom="15dp"
+        android:layout_height="wrap_content"
+        android:text="English" />
+
+    <Button
+        android:id="@+id/spanish_btn"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:text="Español" />
+
+    <Button
+        android:id="@+id/trad_chinese_btn"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:text="繁體中文" />
+
+    <Button
+        android:id="@+id/simp_chinese_btn"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="简体中文" />
+</LinearLayout>
