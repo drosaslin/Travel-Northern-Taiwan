@@ -1,10 +1,10 @@
 2018/7/14 ~ 2018/7/21 預定進度
 
-修改 home page picture
-修改 漢堡選單(原本漢堡選單新增language選項)
-修改 signup page
-修改 log in page(登入之後要連結到chooseregin page)
-修改 log out(回到home picture)
-新增 chooseregin page(Taipei, New Taipei, Yilan, Keelung, Taoyuan, Hsinchu)
-新增 budget page
-新增 myplans page
+修改 home page picture (嘉香)
+修改 漢堡選單(原本漢堡選單新增language選項) (嘉香)
+修改 signup page (立宭)
+修改 log in page(登入之後要連結到chooseregin page) (立宭)
+修改 log out(回到home picture) (立宭)
+新增 chooseregin page(Taipei, New Taipei, Yilan, Keelung, Taoyuan, Hsinchu) (嘉香)
+新增 budget page (大衛)
+新增 myplans page (大衛)
