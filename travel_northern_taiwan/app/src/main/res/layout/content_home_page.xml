@@ -7,5 +7,92 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="com.example.android.travelnortherntaiwan.HomePageActivity"
     tools:showIn="@layout/app_bar_home_page">
+    <ScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/TaipeiMainMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="192dp"
+                android:contentDescription="@string/TaipeiMainMenu"
+                android:padding="0dp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@+id/NewTaipeiMainMenu"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:srcCompat="@drawable/main_page_taipei" />
+
+            <ImageView
+                android:id="@+id/NewTaipeiMainMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="192dp"
+                android:contentDescription="@string/NewTaipeiMainMenu"
+                android:scaleType="fitStart"
+                app:layout_constraintBottom_toTopOf="@+id/KeelungMainMenu"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:srcCompat="@drawable/main_page_newtaipei" />
+
+            <ImageView
+                android:id="@+id/KeelungMainMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="192dp"
+                android:contentDescription="@string/KeelungMainMenu"
+                app:layout_constraintBottom_toBottomOf="@+id/YilanMainMenu"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:srcCompat="@drawable/main_page_keelung" />
+
+            <ImageView
+                android:id="@+id/YilanMainMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="192dp"
+                android:contentDescription="@string/YilanMainMenu"
+                app:layout_constraintTop_toBottomOf="@+id/KeelungMainMenu"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:srcCompat="@drawable/main_page_yilan" />
+
+            <ImageView
+                android:id="@+id/HsinchuMainMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="192dp"
+                android:contentDescription="@string/HsinchuMainMenu"
+                app:layout_constraintTop_toBottomOf="@+id/YilanMainMenu"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:srcCompat="@drawable/main_page_hsinchu" />
+
+            <ImageView
+                android:id="@+id/TaoyuanMainMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="192dp"
+                android:contentDescription="@string/TaoyuanMainMenu"
+                app:layout_constraintTop_toBottomOf="@+id/HsinchuMainMenu"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:srcCompat="@drawable/main_page_taoyuan" />
+
+        </android.support.constraint.ConstraintLayout>
+
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>
