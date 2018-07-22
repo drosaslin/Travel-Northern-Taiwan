@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         String buttonName = (((Button) button).getText().toString());
 
         if(buttonName.equals("Log In"))
-            intent = new Intent(this, LoginActivity.class);
+            intent = new Intent(this, HomePageActivity.class);
         else if(buttonName.equals("Sign Up"))
             intent = new Intent(this, SignupActivity.class);
         else if(buttonName.equals("Language"))
