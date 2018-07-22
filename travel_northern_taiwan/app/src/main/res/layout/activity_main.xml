@@ -45,6 +45,6 @@
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:onClick="openActivity"
-        android:text="Language" />
+        android:text="@string/Language" />
 
 </LinearLayout>
