@@ -1,5 +1,6 @@
 package com.example.android.travelnortherntaiwan;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -79,19 +80,21 @@ public class HomePageActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
+        Intent intent = null;
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
-
-        } else if (id == R.id.nav_slideshow) {
-
-        } else if (id == R.id.nav_manage) {
-
-        } else if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
+        if (id == R.id.nav_home) {
+            intent = new Intent(this, HomePageActivity.class);
+        } else if (id == R.id.nav_plan) {
+            //intent = new Intent(this, HomePageActivity.class);
+        } else if (id == R.id.nav_language) {
+            intent = new Intent(this, LanguageActivity.class);
+        } else if (id == R.id.nav_weather) {
+            //intent = new Intent(this, HomePageActivity.class);
+        }
+        else if (id==R.id.nav_log_out) {
+            intent = new Intent(this, HomePageActivity.class);
+        }else if (id==R.id.nav_about){
+            intent = new Intent(this, HomePageActivity.class);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
