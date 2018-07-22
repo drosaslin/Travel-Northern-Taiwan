@@ -14,7 +14,7 @@
         android:layout_width="292dp"
         android:layout_height="152dp"
         android:layout_marginBottom="15dp"
-        app:srcCompat="@drawable/rocket_logo_template" />
+        app:srcCompat="@drawable/logo" />
 
     <Button
         android:id="@+id/log_in_btn"

@@ -21,4 +21,10 @@
 
     <string name="action_settings">Settings</string>
     <string name="title_activity_home_page">HomePageActivity</string>
-</resources>
+    <string name="TaipeiMainMenu">TaipeiMainMenu</string>
+    <string name="NewTaipeiMainMenu">NewTaipeiMainMenu</string>
+    <string name="KeelungMainMenu">KeelungMainMenu</string>
+    <string name="YilanMainMenu">YilanMainMenu</string>
+    <string name="HsinchuMainMenu">HsinchuMainMenu</string>
+    <string name="TaoyuanMainMenu">TaoyuanMainMenu</string>
+    </resources>
