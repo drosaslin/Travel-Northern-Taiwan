@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d("TESTING", "second test");
         if(buttonName.equals("Log In")) {
-            startActivity(new Intent(this, LoginActivity.class));
+            startActivity(new Intent(this, HomePageActivity.class));
         }
         else if(buttonName.equals("Sign Up")) {
             startActivity(new Intent(this, SignupActivity.class));
