@@ -14,25 +14,31 @@
         android:layout_width="150dp"
         android:layout_marginBottom="15dp"
         android:layout_height="wrap_content"
-        android:text="English" />
+        android:text="@string/english" />
 
     <Button
         android:id="@+id/spanish_btn"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
-        android:text="Español" />
+        android:text="@string/spanish" />
 
     <Button
         android:id="@+id/trad_chinese_btn"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
-        android:text="繁體中文" />
+        android:text="@string/traditional_chinese" />
 
     <Button
         android:id="@+id/simp_chinese_btn"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:text="简体中文" />
+        android:text="@string/simplified_chinese" />
+
+    <Button
+        android:id="@+id/logout_btn"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:text="LOGOUT" />
 </LinearLayout>

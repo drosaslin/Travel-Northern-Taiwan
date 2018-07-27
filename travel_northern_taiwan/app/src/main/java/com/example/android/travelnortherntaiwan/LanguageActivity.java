@@ -1,5 +1,6 @@
 package com.example.android.travelnortherntaiwan;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -12,9 +13,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 public class LanguageActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    FirebaseAuth mAuth;
+    private Button logout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +29,17 @@ public class LanguageActivity extends AppCompatActivity
         setContentView(R.layout.activity_language);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        mAuth = FirebaseAuth.getInstance();
+        logout = findViewById(R.id.logout_btn);
+
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mAuth.signOut();
+                LanguageActivity.this.finish();
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -93,7 +111,9 @@ public class LanguageActivity extends AppCompatActivity
         } else if (id == R.id.nav_send) {
 
         }else if (id==R.id.nav_log_out) {
-
+            mAuth.signOut();
+            LanguageActivity.this.finish();
+            startActivity(new Intent(this, MainActivity.class));
         }else if (id==R.id.nav_about){
 
         }

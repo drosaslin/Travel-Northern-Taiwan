@@ -3,6 +3,7 @@ package com.example.android.travelnortherntaiwan;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -31,7 +32,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.w3c.dom.Text;
 
@@ -54,9 +59,9 @@ public class SignupActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        email = (EditText) findViewById(R.id.email);
-        password = (EditText) findViewById(R.id.password);
-        signUpBtn = (Button) findViewById(R.id.sign_up_button);
+        email = findViewById(R.id.email);
+        password = findViewById(R.id.password);
+        signUpBtn = findViewById(R.id.sign_up_button);
 
         signUpBtn.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view) {
@@ -69,14 +74,46 @@ public class SignupActivity extends AppCompatActivity {
         String emailText = email.getText().toString().trim();
         String passwordText = password.getText().toString().trim();
 
-        if(TextUtils.isEmpty(emailText)) {
+        if(!isCorrectForm(emailText, passwordText)) {
+            return;
+        }
+
+        mAuth.createUserWithEmailAndPassword(emailText, passwordText)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Toast.makeText(SignupActivity.this, "Authentication Success.", Toast.LENGTH_SHORT).show();
+                            Log.d("TAG", "createUserWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            SignupActivity.this.finish();
+                            startActivity(new Intent(SignupActivity.this, MainActivity.class));
+                        }
+                        else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("TAG", "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(SignupActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private boolean isCorrectForm(String email, String password) {
+        if(TextUtils.isEmpty(email)) {
             Toast.makeText(getApplicationContext(), "Please enter your email", Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         }
-        if(TextUtils.isEmpty(passwordText)) {
+        if(TextUtils.isEmpty(password)) {
             Toast.makeText(getApplicationContext(), "Please enter your password", Toast.LENGTH_SHORT).show();
-            return;
+            return false;
         }
+        if(password.length() < 6) {
+            Toast.makeText(getApplicationContext(), "Password length must be greater than six", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 
 }
