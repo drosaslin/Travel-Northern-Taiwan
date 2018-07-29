@@ -100,21 +100,26 @@ public class LanguageActivity extends AppCompatActivity
 
         if (id == R.id.nav_home) {
             // Handle the camera action
-        } else if (id == R.id.nav_plan) {
+        }
+        else if (id == R.id.nav_plan) {
 
-        } else if (id == R.id.nav_language) {
+        }
+        else if (id == R.id.nav_language) {
 
-        } else if (id == R.id.nav_weather) {
+        }
+        else if (id == R.id.nav_weather) {
 
-        } else if (id == R.id.nav_share) {
+        }
+        else if (id == R.id.nav_share) {
 
-        } else if (id == R.id.nav_send) {
+        }
+        else if (id == R.id.nav_send) {
 
-        }else if (id==R.id.nav_log_out) {
-            mAuth.signOut();
-            LanguageActivity.this.finish();
-            startActivity(new Intent(this, MainActivity.class));
-        }else if (id==R.id.nav_about){
+        }
+        else if (id==R.id.nav_log_out) {
+
+        }
+        else if (id==R.id.nav_about){
 
         }
 

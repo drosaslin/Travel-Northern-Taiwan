@@ -24,49 +24,31 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Log.d("TESTING", "first test");
 
         mAuth = FirebaseAuth.getInstance();
-
-//        button = findViewById(R.id.temp);
-//        button2 = findViewById(R.id.logout);
-//
-//        button2.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Toast.makeText(MainActivity.this, "signed out", Toast.LENGTH_LONG).show();
-//                mAuth.signOut();
-//            }
-//        });
-//
-//        button.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View view) {
-//                if(currentUser !=  null)
-//                    Toast.makeText(MainActivity.this, "user currently logged in", Toast.LENGTH_LONG).show();
-//                else
-//                    Toast.makeText(MainActivity.this, "no user logged", Toast.LENGTH_LONG).show();
-//            }
-//        });
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         currentUser = mAuth.getCurrentUser();
+        if(currentUser != null) {
+            //open the home page directly if a user is already logged in
+            MainActivity.this.finish();
+            startActivity(new Intent(this, LanguageActivity.class));
+        }
     }
 
     public void openActivity(View button) {
-        String buttonName = (((Button) button).getText().toString());
+        int id = button.getId();
 
-        Log.d("TESTING", "second test");
-        if(buttonName.equals("Log In")) {
+        if(id == R.id.log_in_btn) {
             startActivity(new Intent(this, LoginActivity.class));
         }
-        else if(buttonName.equals("Sign Up")) {
+        else if(id == R.id.sign_up_btn) {
             startActivity(new Intent(this, SignupActivity.class));
         }
-        else if(buttonName.equals("Language")) {
+        else if(id == R.id.language_btn) {
             startActivity(new Intent(this, LanguageActivity.class));
         }
     }

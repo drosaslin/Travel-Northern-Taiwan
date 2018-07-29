@@ -1,0 +1,5 @@
+﻿2018/7/28 ~ 2018/8/4 預定進度
+實作 new trip 和 myplans 功能 (嘉香)
+新增 overview 介面 & 底層頁面滑動功能 (立宭)
+新增 openweather 介面 & 功能 (大衛)
+(Reference: https://www.youtube.com/watch?v=w1g9AaDltUM&t=168s)

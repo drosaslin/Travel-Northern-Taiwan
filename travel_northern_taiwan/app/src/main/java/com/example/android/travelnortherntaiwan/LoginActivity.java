@@ -61,11 +61,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Log.e("LOGIN", "part1");
-
         mAuth = FirebaseAuth.getInstance();
-
-        Log.e("LOGIN", "part2");
 
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
@@ -77,8 +73,6 @@ public class LoginActivity extends AppCompatActivity {
                 attemptSignIn();
             }
         });
-
-        Log.e("LOGIN", "part3");
     }
 
     @Override
@@ -88,9 +82,14 @@ public class LoginActivity extends AppCompatActivity {
         //Check if the user is signed in and update UI accordingly
         FirebaseUser user = mAuth.getCurrentUser();
         if(user != null) {
-            LoginActivity.this.finish();
             startActivity(new Intent(this, LanguageActivity.class));
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LoginActivity.this.finish();
     }
 
     private void attemptSignIn() {
@@ -110,7 +109,7 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d("TAG", "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             LoginActivity.this.finish();
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                            startActivity(new Intent(LoginActivity.this, HomePageActivity.class));
                         }
                         else {
                             // If sign in fails, display a message to the user.
@@ -139,4 +138,3 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 }
-

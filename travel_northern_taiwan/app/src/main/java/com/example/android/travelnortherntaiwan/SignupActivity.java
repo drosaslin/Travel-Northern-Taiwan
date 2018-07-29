@@ -49,6 +49,7 @@ public class SignupActivity extends AppCompatActivity {
 
     private EditText email;
     private EditText password;
+    private EditText rptPassword;
     private Button signUpBtn;
     private FirebaseAuth mAuth;
 
@@ -61,6 +62,7 @@ public class SignupActivity extends AppCompatActivity {
 
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
+        rptPassword = findViewById(R.id.rpt_password);
         signUpBtn = findViewById(R.id.sign_up_button);
 
         signUpBtn.setOnClickListener(new View.OnClickListener(){
@@ -70,11 +72,18 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SignupActivity.this.finish();
+    }
+
     public void attemptSignUp() {
         String emailText = email.getText().toString().trim();
         String passwordText = password.getText().toString().trim();
+        String rptPassText = rptPassword.getText().toString().trim();
 
-        if(!isCorrectForm(emailText, passwordText)) {
+        if(!isCorrectForm(emailText, passwordText, rptPassText)) {
             return;
         }
 
@@ -87,7 +96,6 @@ public class SignupActivity extends AppCompatActivity {
                             Toast.makeText(SignupActivity.this, "Authentication Success.", Toast.LENGTH_SHORT).show();
                             Log.d("TAG", "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            SignupActivity.this.finish();
                             startActivity(new Intent(SignupActivity.this, MainActivity.class));
                         }
                         else {
@@ -99,13 +107,13 @@ public class SignupActivity extends AppCompatActivity {
                 });
     }
 
-    private boolean isCorrectForm(String email, String password) {
-        if(TextUtils.isEmpty(email)) {
-            Toast.makeText(getApplicationContext(), "Please enter your email", Toast.LENGTH_SHORT).show();
+    private boolean isCorrectForm(String email, String password, String rptPassword) {
+        if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(rptPassword)) {
+            Toast.makeText(getApplicationContext(), "Please fill all the fields", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if(TextUtils.isEmpty(password)) {
-            Toast.makeText(getApplicationContext(), "Please enter your password", Toast.LENGTH_SHORT).show();
+        if(!password.equals(rptPassword)) {
+            Toast.makeText(getApplicationContext(), "Passwords don't match", Toast.LENGTH_SHORT).show();
             return false;
         }
         if(password.length() < 6) {

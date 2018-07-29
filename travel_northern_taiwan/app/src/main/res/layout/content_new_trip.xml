@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".new_trip"
+    tools:showIn="@layout/activity_new_trip">
+
+
+    <EditText
+        android:id="@+id/tripName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:hint="Trip Name"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/ToDate"
+        android:layout_width="127dp"
+        android:layout_height="40dp"
+        android:ems="10"
+        android:hint="To"
+        android:inputType="time"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="100dp" />
+
+    <EditText
+        android:id="@+id/FromDate"
+        android:layout_width="127dp"
+        android:layout_height="40dp"
+        android:ems="10"
+        android:hint="From"
+        android:inputType="time"
+        tools:layout_editor_absoluteX="224dp"
+        tools:layout_editor_absoluteY="100dp" />
+
+    <EditText
+        android:id="@+id/Budget"
+        android:layout_width="133dp"
+        android:layout_height="54dp"
+        android:ems="10"
+        android:hint="Budget"
+        android:inputType="number"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="175dp" />
+
+    <Button
+        android:id="@+id/next_btn"
+        android:layout_width="109dp"
+        android:layout_height="wrap_content"
+        android:text="Next"
+        tools:layout_editor_absoluteX="115dp"
+        tools:layout_editor_absoluteY="253dp" />
+
+
+</android.support.constraint.ConstraintLayout>
