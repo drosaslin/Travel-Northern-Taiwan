@@ -58,7 +58,7 @@ public class Weather extends AppCompatActivity {
 
     public void callApi(View button) {
         String city = ((Button) button).getText().toString();
-        String url = "http://api.openweathermap.org/data/2.5/forecast?&q=" + city + "&appid=53db770470fd9d7b80a82d800c41fecc";
+        String url = "http://api.openweathermap.org/data/2.5/forecast?&units=metric&q=" + city + "&appid=53db770470fd9d7b80a82d800c41fecc";
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
