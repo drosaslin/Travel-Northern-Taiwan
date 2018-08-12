@@ -10,59 +10,78 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".new_trip"
+    tools:context=".NewTripActivity"
     tools:showIn="@layout/activity_new_trip">
 
 
     <EditText
         android:id="@+id/tripName"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="333dp"
+        android:layout_height="46dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:ems="10"
         android:hint="Trip Name"
         android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/fromDate"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.517" />
 
     <EditText
-        android:id="@+id/ToDate"
+        android:id="@+id/toDate"
         android:layout_width="127dp"
-        android:layout_height="40dp"
+        android:layout_height="46dp"
+        android:layout_marginBottom="104dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:ems="10"
         android:hint="To"
-        android:inputType="time"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="100dp" />
+        android:inputType="datetime"
+        app:layout_constraintBottom_toTopOf="@+id/budget"
+        app:layout_constraintEnd_toStartOf="@+id/fromDate"
+        app:layout_constraintHorizontal_bias="0.036"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
-        android:id="@+id/FromDate"
+        android:id="@+id/fromDate"
         android:layout_width="127dp"
-        android:layout_height="40dp"
+        android:layout_height="46dp"
+        android:layout_marginBottom="104dp"
+        android:layout_marginEnd="16dp"
         android:ems="10"
         android:hint="From"
-        android:inputType="time"
-        tools:layout_editor_absoluteX="224dp"
-        tools:layout_editor_absoluteY="100dp" />
+        android:inputType="datetime"
+        app:layout_constraintBottom_toTopOf="@+id/budget"
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <EditText
-        android:id="@+id/Budget"
-        android:layout_width="133dp"
-        android:layout_height="54dp"
+        android:id="@+id/budget"
+        android:layout_width="127dp"
+        android:layout_height="46dp"
+        android:layout_marginBottom="4dp"
+        android:layout_marginStart="16dp"
         android:ems="10"
         android:hint="Budget"
         android:inputType="number"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="175dp" />
+        app:layout_constraintBottom_toTopOf="@+id/next_btn"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/next_btn"
         android:layout_width="109dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="96dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
         android:text="Next"
-        tools:layout_editor_absoluteX="115dp"
-        tools:layout_editor_absoluteY="253dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>
