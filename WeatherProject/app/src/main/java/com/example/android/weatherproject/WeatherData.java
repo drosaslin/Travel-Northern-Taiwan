@@ -1,13 +1,18 @@
 package com.example.android.weatherproject;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -22,7 +27,6 @@ public class WeatherData {
     private String city;
     private Forecast currently;
     private HourlyWeather hourly;
-    private RequestQueue queue;
 
     public WeatherData() {
         latitude = 0.0;
@@ -30,8 +34,6 @@ public class WeatherData {
         city = "City";
         currently = new Forecast();
         hourly = new HourlyWeather();
-
-//        getLocationAddress();
     }
 
     public double getLatitude() {
@@ -75,28 +77,9 @@ public class WeatherData {
     }
 
     public void showData() {
+        Log.i("Data", "province: " + city);
         Log.i("Data", "coordinates: " + Double.toString(latitude) + ", " + Double.toString(longitude));
         currently.showData();
-        hourly.showData();
+        //hourly.showData();
     }
-
-//    private void getLocationAddress() {
-//        String latlng = Double.toString(latitude) + "," + Double.toString(longitude);
-//        String url ="https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latlng + "&key=" + GOOGLE_KEY;
-//
-//        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        Log.i("GoogleResponse", response);
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.d("Find", "Fail");
-//            }
-//        });
-//
-//        queue.add(stringRequest);
-//    }
 }

@@ -33,7 +33,7 @@
                 android:layout_height="45sp"
                 android:layout_marginRight="20sp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_wi_sunrise"/>
+                android:src="@drawable/ic_wi_cloudy"/>
 
             <TextView
                 android:id="@+id/temp"
