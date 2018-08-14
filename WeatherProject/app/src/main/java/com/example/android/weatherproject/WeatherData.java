@@ -2,6 +2,13 @@ package com.example.android.weatherproject;
 
 import android.util.Log;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import java.util.ArrayList;
 
 /**
@@ -9,57 +16,87 @@ import java.util.ArrayList;
  */
 
 public class WeatherData {
-    private ArrayList<Forecast> list;
-    private City city;
-    private String country;
-    private String cod;
-    private String message;
-    private int cnt;
+    private static final String GOOGLE_KEY = "AIzaSyB90nYIuqGFdjpxYP_EGlgacRKYROXyUtc";
+    private double latitude;
+    private double longitude;
+    private String city;
+    private Forecast currently;
+    private HourlyWeather hourly;
+    private RequestQueue queue;
 
     public WeatherData() {
-        list = new ArrayList<>();
-        city = new City();
-        country = "";
-        cod = "";
-        message = "";
-        cnt = 0;
+        latitude = 0.0;
+        longitude = 0.0;
+        city = "City";
+        currently = new Forecast();
+        hourly = new HourlyWeather();
+
+//        getLocationAddress();
     }
 
-    public City getCity() {
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public String getCity() {
         return city;
     }
 
-    public String getCountry() {
-        return country;
+    public Forecast getCurrently() {
+        return currently;
     }
 
-    public String getCod() {
-        return cod;
+    public HourlyWeather getHourly() {
+        return hourly;
     }
 
-    public String getMessage() {
-        return message;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
-    public int getCnt() {
-        return cnt;
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
-    public ArrayList<Forecast> getForecast() {
-        return list;
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public void setCurrently(Forecast currently) {
+        this.currently = currently;
+    }
+
+    public void setHourly(HourlyWeather hourly) {
+        this.hourly = hourly;
     }
 
     public void showData() {
-        Log.i("Data", "id: " + Integer.toString(city.getId()));
-        Log.i("Data", "city: " + city.getName());
-        Log.i("Data", "country: " + country);
-        Log.i("Data", "cod: " + cod);
-        Log.i("Data", "message: " + message);
-        Log.i("Data", "cnt: " + Integer.toString(cnt));
-        Log.i("Data", "forecast: " + Integer.toString(list.size()));
-
-        for(int n = 0; n < 5; n++) {
-            list.get(n).showData();
-        }
+        Log.i("Data", "coordinates: " + Double.toString(latitude) + ", " + Double.toString(longitude));
+        currently.showData();
+        hourly.showData();
     }
+
+//    private void getLocationAddress() {
+//        String latlng = Double.toString(latitude) + "," + Double.toString(longitude);
+//        String url ="https://maps.googleapis.com/maps/api/geocode/json?latlng=" + latlng + "&key=" + GOOGLE_KEY;
+//
+//        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+//                new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        Log.i("GoogleResponse", response);
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.d("Find", "Fail");
+//            }
+//        });
+//
+//        queue.add(stringRequest);
+//    }
 }

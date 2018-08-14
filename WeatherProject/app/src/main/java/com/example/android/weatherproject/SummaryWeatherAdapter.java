@@ -2,6 +2,7 @@ package com.example.android.weatherproject;
 
 import android.media.Image;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 
 /**
  * Created by David Rosas on 8/13/2018.
@@ -30,9 +32,8 @@ public class SummaryWeatherAdapter extends RecyclerView.Adapter<SummaryWeatherAd
 
     @Override
     public void onBindViewHolder(ViewHolderData holder, int position) {
-        holder.province.setText(weatherData.get(position).getCity().getName());
-        holder.tempMin.setText("30");
-        holder.tempMax.setText("32");
+        holder.province.setText(weatherData.get(position).getCity());
+        holder.temp.setText(Float.toString(weatherData.get(position).getCurrently().getTemperature()));
         holder.weather.setImageResource(R.drawable.ic_wi_sunrise);
     }
 
@@ -43,16 +44,14 @@ public class SummaryWeatherAdapter extends RecyclerView.Adapter<SummaryWeatherAd
 
     public class ViewHolderData extends RecyclerView.ViewHolder {
         TextView province;
-        TextView tempMin;
-        TextView tempMax;
+        TextView temp;
         ImageView weather;
 
         public ViewHolderData(View itemView) {
             super(itemView);
 
             province = itemView.findViewById(R.id.province_name);
-            tempMin = itemView.findViewById(R.id.temp_min);
-            tempMax = itemView.findViewById(R.id.temp_max);
+            temp = itemView.findViewById(R.id.temp);
             weather = itemView.findViewById(R.id.weather);
         }
     }

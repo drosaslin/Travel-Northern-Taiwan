@@ -7,51 +7,76 @@ import android.util.Log;
  */
 
 public class Forecast {
-    private int dt;
-    private String dt_txt;
-    private Temperature main;
-    private Clouds clouds;
-    private Wind wind;
-    private Sys sys;
+    private int time;
+    private float precipProbability;
+    private float temperature;
+    private String precipType;
+    private String summary;
+    private String icon;
 
     public Forecast() {
-        main = new Temperature();
-        clouds = new Clouds();
-        wind = new Wind();
-        sys = new Sys();
-        dt = 0;
-        dt_txt = "";
+        time = 0;
+        precipProbability = 0;
+        temperature = 0;
+        precipType = "";
+        summary = "";
+        icon = "";
     }
 
-    public int getDt() {
-        return dt;
+    public int getTime() {
+        return time;
     }
 
-    public String getDt_txt() {
-        return dt_txt;
+    public float getPrecipProbability() {
+        return precipProbability;
     }
 
-    public Temperature getTemperature() {
-        return main;
+    public float getTemperature() {
+        return temperature;
     }
 
-    public Clouds getClouds() {
-        return clouds;
+    public String getPrecipType() {
+        return precipType;
     }
 
-    public Wind getWind() {
-        return wind;
+    public String getSummary() {
+        return summary;
     }
 
-    public Sys getSys() {
-        return sys;
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public void setTime(int time) {
+        this.time = time;
+    }
+
+    public void setPrecipProbability(float precipProbability) {
+        this.precipProbability = precipProbability;
+    }
+
+    public void setTemperature(float temperature) {
+        this.temperature = temperature;
+    }
+
+    public void setPrecipType(String precipType) {
+        this.precipType = precipType;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     public void showData() {
-        Log.i("Data", "time: " + dt_txt);
-        Log.i("Data", "temp: " + main.getTemp());
-        Log.i("Data", "min_temp: " + main.getTemp_min());
-        Log.i("Data", "max_temp: " + main.getTemp_max());
-        Log.i("Data", "humidity: " + main.getHumidity());
+        Log.i("Data", "time: " + Integer.toString(time));
+        Log.i("Data", "precipitation: " + Float.toString(precipProbability));
+        Log.i("Data", "temperature: " + Float.toString(temperature));
+        Log.i("Data", "precipitation type: " + precipType);
+        Log.i("Data", "summary: " + summary);
+        Log.i("Data", "icon: " + icon);
     }
 }
