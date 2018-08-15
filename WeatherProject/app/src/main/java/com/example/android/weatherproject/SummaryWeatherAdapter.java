@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,8 +29,7 @@ public class SummaryWeatherAdapter extends RecyclerView.Adapter<SummaryWeatherAd
     @Override
     public ViewHolderData onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.province_list, parent, false);
-        ViewHolderData holder = new ViewHolderData(view);
-        return holder;
+        return new ViewHolderData(view);
     }
 
     @Override

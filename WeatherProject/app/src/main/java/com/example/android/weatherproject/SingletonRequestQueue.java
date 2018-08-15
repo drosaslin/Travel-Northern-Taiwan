@@ -17,6 +17,7 @@ public class SingletonRequestQueue {
         requestQueue = Volley.newRequestQueue(context.getApplicationContext());
     }
 
+    //by being synchronized, we are making the thread scheduler non-preemptive(threads can't be interrupted)
     public static synchronized SingletonRequestQueue getInstance(Context context) {
         if(mInstance == null) {
             mInstance = new SingletonRequestQueue(context);

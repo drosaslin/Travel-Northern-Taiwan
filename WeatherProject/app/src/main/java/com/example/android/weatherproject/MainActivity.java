@@ -40,15 +40,6 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView recycler;
     private SummaryWeatherAdapter adapter;
 
-    /*
-    Taipei lat=25.0330, long=121.5654
-    New Taipei lat=25.0170, long=121.4628
-    Keelung lat=25.1276, long=121.7392
-    Hsinchu lat=24.8138, long=120.9675
-    Taoyuan lat=24.9936, long=121.3010
-    Yilan lat=24.7021, long=121.7378
-    */
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
