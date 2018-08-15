@@ -113,6 +113,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void setProvinces() {
         //latitude and longitude of the provinces
+        coordinates.put("Current Place", "25.0330,121.5654");
         coordinates.put("Taipei", "25.0330,121.5654");
         coordinates.put("New Taipei", "25.0170,121.4628");
         coordinates.put("Keelung", "25.1276,121.7392");

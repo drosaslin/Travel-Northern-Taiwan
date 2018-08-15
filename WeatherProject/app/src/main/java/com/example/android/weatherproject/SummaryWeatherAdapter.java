@@ -1,6 +1,7 @@
 package com.example.android.weatherproject;
 
 import android.content.res.Resources;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,7 +17,7 @@ import java.util.HashMap;
  * Created by David Rosas on 8/13/2018.
  */
 
-public class SummaryWeatherAdapter extends RecyclerView.Adapter<SummaryWeatherAdapter.ViewHolderData> {
+public class SummaryWeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     ArrayList<WeatherData> weatherData;
     HashMap<String, Integer> weatherIcons;
 
@@ -27,19 +28,45 @@ public class SummaryWeatherAdapter extends RecyclerView.Adapter<SummaryWeatherAd
     }
 
     @Override
-    public ViewHolderData onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.province_list, parent, false);
-        return new ViewHolderData(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == R.layout.weather_list_main_row) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.weather_list_main_row, parent, false);
+            return new CurrentPositionViewHolder(view);
+        } else {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.province_list, parent, false);
+            return new ProvinceViewHolder(view);
+        }
     }
 
     @Override
-    public void onBindViewHolder(ViewHolderData holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         int temperature = Math.round(weatherData.get(position).getCurrently().getTemperature());
         String icon = weatherData.get(position).getCurrently().getIcon();
 
-        holder.province.setText(weatherData.get(position).getCity());
-        holder.temp.setText(Integer.toString(temperature) + "°");
-        holder.weather.setImageResource(weatherIcons.get(icon));
+        if(holder instanceof ProvinceViewHolder) {
+            ((ProvinceViewHolder)holder).province.setText(weatherData.get(position).getCity());
+            ((ProvinceViewHolder)holder).temp.setText(Integer.toString(temperature) + "°");
+            ((ProvinceViewHolder)holder).weather.setImageResource(weatherIcons.get(icon));
+        }
+        else if(holder instanceof CurrentPositionViewHolder) {
+            String precipitation = Float.toString(weatherData.get(position).getCurrently().getPrecipProbability());
+            String windSpeed = Double.toString(weatherData.get(position).getCurrently().getWindSpeed());
+
+            ((CurrentPositionViewHolder)holder).place.setText(weatherData.get(position).getCity());
+            ((CurrentPositionViewHolder)holder).temp.setText(Integer.toString(temperature));
+            ((CurrentPositionViewHolder)holder).precipitationProb.setText(precipitation);
+            ((CurrentPositionViewHolder)holder).windSpeed.setText(windSpeed);
+            ((CurrentPositionViewHolder)holder).weather.setImageResource(weatherIcons.get(icon));
+        }
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if(position == 0) {
+            return R.layout.weather_list_main_row;
+        }
+
+        return R.layout.province_list;
     }
 
     @Override
@@ -60,17 +87,35 @@ public class SummaryWeatherAdapter extends RecyclerView.Adapter<SummaryWeatherAd
         weatherIcons.put("fog", R.drawable.ic_wi_day_fog);
     }
 
-    public class ViewHolderData extends RecyclerView.ViewHolder {
+    public class ProvinceViewHolder extends RecyclerView.ViewHolder {
         TextView province;
         TextView temp;
         ImageView weather;
 
-        public ViewHolderData(View itemView) {
+        public ProvinceViewHolder(View itemView) {
             super(itemView);
 
             province = itemView.findViewById(R.id.province_name);
             temp = itemView.findViewById(R.id.temp);
             weather = itemView.findViewById(R.id.weather);
+        }
+    }
+
+    public class CurrentPositionViewHolder extends RecyclerView.ViewHolder {
+        TextView place;
+        TextView temp;
+        TextView precipitationProb;
+        TextView windSpeed;
+        ImageView weather;
+
+        public CurrentPositionViewHolder(View itemView) {
+            super(itemView);
+
+            place = itemView.findViewById(R.id.current_name);
+            temp = itemView.findViewById(R.id.current_temperature);
+            precipitationProb = itemView.findViewById(R.id.precipitation_prob);
+            windSpeed = itemView.findViewById(R.id.wind_speed);
+            weather = itemView.findViewById(R.id.current_weather);
         }
     }
 }
