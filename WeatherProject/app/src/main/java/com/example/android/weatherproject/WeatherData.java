@@ -21,7 +21,6 @@ import java.util.ArrayList;
  */
 
 public class WeatherData {
-    private static final String GOOGLE_KEY = "AIzaSyB90nYIuqGFdjpxYP_EGlgacRKYROXyUtc";
     private double latitude;
     private double longitude;
     private String city;
