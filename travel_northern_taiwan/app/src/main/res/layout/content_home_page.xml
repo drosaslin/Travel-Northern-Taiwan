@@ -33,19 +33,24 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:srcCompat="@drawable/main_page_taipei" />
+                app:srcCompat="@drawable/main_page_taipei"
+                android:adjustViewBounds="true"
+                android:cropToPadding="false"
+                android:scaleType="fitXY"/>
 
             <ImageView
                 android:id="@+id/NewTaipeiMainMenu"
                 android:layout_width="wrap_content"
                 android:layout_height="192dp"
                 android:contentDescription="@string/NewTaipeiMainMenu"
-                android:scaleType="fitStart"
                 app:layout_constraintBottom_toTopOf="@+id/KeelungMainMenu"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:srcCompat="@drawable/main_page_newtaipei" />
+                app:srcCompat="@drawable/main_page_newtaipei"
+                android:adjustViewBounds="true"
+                android:cropToPadding="false"
+                android:scaleType="fitXY"/>
 
             <ImageView
                 android:id="@+id/KeelungMainMenu"
@@ -56,7 +61,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:srcCompat="@drawable/main_page_keelung" />
+                app:srcCompat="@drawable/main_page_keelung"
+                android:adjustViewBounds="true"
+                android:cropToPadding="false"
+                android:scaleType="fitXY"/>
 
             <ImageView
                 android:id="@+id/YilanMainMenu"
@@ -67,7 +75,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:srcCompat="@drawable/main_page_yilan" />
+                app:srcCompat="@drawable/main_page_yilan"
+                android:adjustViewBounds="true"
+                android:cropToPadding="false"
+                android:scaleType="fitXY"/>
 
             <ImageView
                 android:id="@+id/HsinchuMainMenu"
@@ -78,7 +89,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:srcCompat="@drawable/main_page_hsinchu" />
+                app:srcCompat="@drawable/main_page_hsinchu"
+                android:adjustViewBounds="true"
+                android:cropToPadding="false"
+                android:scaleType="fitXY"/>
 
             <ImageView
                 android:id="@+id/TaoyuanMainMenu"
@@ -89,7 +103,10 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:srcCompat="@drawable/main_page_taoyuan" />
+                app:srcCompat="@drawable/main_page_taoyuan"
+                android:adjustViewBounds="true"
+                android:cropToPadding="false"
+                android:scaleType="fitXY"/>
 
         </android.support.constraint.ConstraintLayout>
 

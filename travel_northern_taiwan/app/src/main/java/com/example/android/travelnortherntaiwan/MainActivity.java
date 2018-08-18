@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         if(currentUser != null) {
             //open the home page directly if a user is already logged in
             MainActivity.this.finish();
-            startActivity(new Intent(this, LanguageActivity.class));
+            startActivity(new Intent(this, NewTripActivity.class));
         }
     }
 
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
             startActivity(new Intent(this, SignupActivity.class));
         }
         else if(id == R.id.language_btn) {
-            startActivity(new Intent(this, LanguageActivity.class));
+            startActivity(new Intent(this, NewTripActivity.class));
         }
     }
 }

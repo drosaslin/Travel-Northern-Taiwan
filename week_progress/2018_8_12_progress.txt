@@ -1,0 +1,6 @@
+﻿1- finish plan and new trip 家鄉
+2- finish weather 大衛
+3- connect all views （等開會）
+4- fix drawable menu 立宭
+5- place overview view 立宭
+6- my trip view 大衛
