@@ -119,11 +119,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setProvinces() {
-        String latlng = getDeviceLocation();
-        String city = getCurrentCity();
+//        String latlng = getDeviceLocation();
+//        String city = getCurrentCity();
 
         //latitude and longitude of the provinces
-        coordinates.put(city, latlng);
+        coordinates.put("City", "25.2341,122.3213");
         coordinates.put("Taipei", "25.0330,121.5654");
         coordinates.put("New Taipei", "25.0170,121.4628");
         coordinates.put("Keelung", "25.1276,121.7392");
