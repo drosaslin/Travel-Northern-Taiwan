@@ -1,0 +1,4 @@
+#Sat Aug 18 10:35:26 CST 2018
+base.0=C\:\\android-sdk\\Travel-Northern-Taiwan\\weather\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\26
+path.0=classes.dex
+renamed.0=classes.dex
