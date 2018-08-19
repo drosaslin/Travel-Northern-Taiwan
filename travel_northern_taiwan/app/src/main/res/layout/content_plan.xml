@@ -23,7 +23,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/editText2"
         app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/activity_home_page_drawer" />-->
+        app:menu="@menu/activity_main_drawer" />-->
 
 
 </android.support.constraint.ConstraintLayout>
@@ -49,7 +49,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/editText2"
         app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/activity_home_page_drawer" />
+        app:menu="@menu/activity_main_drawer" />
 
     <EditText
         android:id="@+id/editText"

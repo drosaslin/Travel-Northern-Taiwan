@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity
 
         mAuth = FirebaseAuth.getInstance();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         ActionBar actionbar = getSupportActionBar();
@@ -125,30 +125,30 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.nav_home) {
             // Handle the camera action
             item.setChecked(true);
-            setContentView(R.layout.activity_camera);
+            setContentView(R.layout.activity_home_page);
         }
-        else if (id == R.id.nav_gallery) {
+        else if (id == R.id.nav_plan) {
             //item.setChecked(true);
-            setContentView(R.layout.activity_camera);
+            setContentView(R.layout.activity_plan);
         }
-        else if (id == R.id.nav_slideshow) {
+        else if (id == R.id.nav_language) {
             //item.setChecked(true);
-            setContentView(R.layout.activity_camera);
+            setContentView(R.layout.activity_language);
         }
-        else if (id == R.id.nav_manage) {
+        else if (id == R.id.nav_weather) {
             //item.setChecked(true);
-            setContentView(R.layout.activity_camera);
+            setContentView(R.layout.activity_weather);
         }
-        else if (id == R.id.nav_share) {
+        else if (id == R.id.nav_log_out) {
             //item.setChecked(true);
-            setContentView(R.layout.activity_camera);
+            setContentView(R.layout.activity_log_out);
         }
-        else if (id == R.id.nav_send) {
+        else if (id == R.id.nav_about) {
             //item.setChecked(true);
-            setContentView(R.layout.activity_camera);
+            setContentView(R.layout.activity_about);
         }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -161,13 +161,6 @@ public class MainActivity extends AppCompatActivity
 
         //drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
-
-
-
-        /*ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();*/
 
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
