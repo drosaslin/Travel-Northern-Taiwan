@@ -140,11 +140,11 @@ public class MainActivity extends AppCompatActivity
         }
         else if (id == R.id.nav_weather) {
             //item.setChecked(true);
-            setContentView(R.layout.activity_weather);
+            //setContentView(R.layout.activity_weather);
         }
         else if (id == R.id.nav_log_out) {
             //item.setChecked(true);
-            setContentView(R.layout.activity_log_out);
+            //setContentView(R.layout.activity_log_out);
         }
         else if (id == R.id.nav_about) {
             //item.setChecked(true);

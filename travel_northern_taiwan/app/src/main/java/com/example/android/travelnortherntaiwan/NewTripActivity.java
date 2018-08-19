@@ -105,7 +105,7 @@ public class NewTripActivity extends AppCompatActivity {
                     taskMap.put("fromDate",fromDateText);
                     taskMap.put("budget",budgetText);
                     //taskMap.put("author", currentUser.getUid());
-                    mTripRef.UpdateChildrenAsync(taskMap);
+                    /*mTripRef.UpdateChildrenAsync(taskMap);*/
                     //mTripRef.setValue(newTripText);
                 }
             });

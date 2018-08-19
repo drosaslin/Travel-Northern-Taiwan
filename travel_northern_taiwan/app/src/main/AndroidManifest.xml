@@ -31,18 +31,6 @@
             android:name=".SignupActivity"
             android:label="@string/title_activity_signup" />
         <activity
-            android:name=".LanguageActivity"
-            android:label="@string/title_activity_language"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".HomePageActivity"
-            android:label="@string/title_activity_home_page"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".PlanActivity"
-            android:label="@string/title_activity_plan"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity
             android:name=".NewTripActivity"
             android:label="NewTripActivity"
             android:theme="@style/AppTheme.NoActionBar"/>

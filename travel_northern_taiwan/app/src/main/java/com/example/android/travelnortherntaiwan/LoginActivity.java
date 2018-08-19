@@ -81,9 +81,9 @@ public class LoginActivity extends AppCompatActivity {
 
         //Check if the user is signed in and update UI accordingly
         FirebaseUser user = mAuth.getCurrentUser();
-        if(user != null) {
+        /*if(user != null) {
             startActivity(new Intent(this, LanguageActivity.class));
-        }
+        }*/
     }
 
     @Override
@@ -109,7 +109,7 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d("TAG", "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             LoginActivity.this.finish();
-                            startActivity(new Intent(LoginActivity.this, HomePageActivity.class));
+                            /*startActivity(new Intent(LoginActivity.this, HomePageActivity.class));*/
                         }
                         else {
                             // If sign in fails, display a message to the user.
