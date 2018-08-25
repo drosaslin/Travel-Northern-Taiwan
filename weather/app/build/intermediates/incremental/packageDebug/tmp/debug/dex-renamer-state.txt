@@ -1,0 +1,10 @@
+#Sat Aug 18 10:35:28 CST 2018
+path.2=classes.dex
+path.1=classes.dex
+path.0=classes.dex
+renamed.2=classes3.dex
+renamed.1=classes2.dex
+renamed.0=classes.dex
+base.2=C\:\\android-sdk\\Travel-Northern-Taiwan\\weather\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\29
+base.1=C\:\\android-sdk\\Travel-Northern-Taiwan\\weather\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\28
+base.0=C\:\\android-sdk\\Travel-Northern-Taiwan\\weather\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\27

@@ -9,23 +9,17 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".PlanActivity"
+    tools:context=".MainActivity"
     tools:showIn="@layout/activity_plan">
 
-
-    <!--<android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
+    <TextView
         android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_gravity="start"
-        android:fitsSystemWindows="true"
-        app:headerLayout="@layout/nav_header_home_page"
+        android:layout_height="wrap_content"
+        android:text="Plan!"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/editText2"
-        app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/activity_home_page_drawer" />-->
-
-
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </android.support.constraint.ConstraintLayout>
 
 <!--<?xml version="1.0" encoding="utf-8"?>
@@ -49,7 +43,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/editText2"
         app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/activity_home_page_drawer" />
+        app:menu="@menu/activity_main_drawer" />
 
     <EditText
         android:id="@+id/editText"
