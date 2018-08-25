@@ -23,13 +23,14 @@ import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements Serializable {
     private static final String WEATHER_KEY = "db4321093bdd7e123918dc6fa6e9c1e3";
     private static final String GOOGLE_KEY = "AIzaSyB90nYIuqGFdjpxYP_EGlgacRKYROXyUtc";
     private int requestsFinished;
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response) {
                         //Log.i("Response", response);
-                        updateUI(response);
+                        updateGUI(response);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -89,13 +90,14 @@ public class MainActivity extends AppCompatActivity {
         queue.add(stringRequest);
     }
 
-    public void updateUI(String response) {
+    public void updateGUI(String response) {
         requestsFinished++;
         weatherData.add(new Gson().fromJson(response, WeatherData.class));
+        weatherData.get(weatherData.size() - 1).unixToDate();
 
         if(requestsFinished == coordinates.size()) {
             setProvincesNames();
-            adapter = new SummaryWeatherAdapter(weatherData);
+            adapter = new SummaryWeatherAdapter(weatherData, getApplicationContext());
             recycler.setAdapter(adapter);
 
             requestsFinished = 0;

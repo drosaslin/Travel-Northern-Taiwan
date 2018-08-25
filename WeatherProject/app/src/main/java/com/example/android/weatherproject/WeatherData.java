@@ -1,6 +1,8 @@
 package com.example.android.weatherproject;
 
 import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -20,12 +22,13 @@ import java.util.ArrayList;
  * Created by David Rosas on 8/8/2018.
  */
 
-public class WeatherData {
+public class WeatherData implements Parcelable {
     private double latitude;
     private double longitude;
     private String city;
     private Forecast currently;
     private HourlyWeather hourly;
+    private HourlyWeather daily;
 
     public WeatherData() {
         latitude = 0.0;
@@ -33,6 +36,43 @@ public class WeatherData {
         city = "City";
         currently = new Forecast();
         hourly = new HourlyWeather();
+        daily = new HourlyWeather();
+    }
+
+    protected WeatherData(Parcel in) {
+        latitude = in.readDouble();
+        longitude = in.readDouble();
+        city = in.readString();
+        currently = in.readParcelable(Forecast.class.getClassLoader());
+        hourly = in.readParcelable(HourlyWeather.class.getClassLoader());
+        daily = in.readParcelable(HourlyWeather.class.getClassLoader());
+    }
+
+    public static final Creator<WeatherData> CREATOR = new Creator<WeatherData>() {
+        @Override
+        public WeatherData createFromParcel(Parcel in) {
+            return new WeatherData(in);
+        }
+
+        @Override
+        public WeatherData[] newArray(int size) {
+            return new WeatherData[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeDouble(longitude);
+        dest.writeDouble(latitude);
+        dest.writeString(city);
+        dest.writeParcelable(currently, flags);
+        dest.writeParcelable(hourly, flags);
+        dest.writeParcelable(daily, flags);
     }
 
     public double getLatitude() {
@@ -79,6 +119,21 @@ public class WeatherData {
         Log.i("Data", "province: " + city);
         Log.i("Data", "coordinates: " + Double.toString(latitude) + ", " + Double.toString(longitude));
         currently.showData();
-        //hourly.showData();
+        hourly.showData();
+        daily.showData();
+    }
+
+    public void unixToDate() {
+        currently.unixToDate();
+        hourly.unixToDate();
+        daily.unixToDate();
+    }
+
+    public HourlyWeather getDaily() {
+        return daily;
+    }
+
+    public void setDaily(HourlyWeather daily) {
+        this.daily = daily;
     }
 }

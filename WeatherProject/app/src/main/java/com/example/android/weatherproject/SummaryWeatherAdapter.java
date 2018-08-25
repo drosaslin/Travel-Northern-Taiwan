@@ -1,6 +1,10 @@
 package com.example.android.weatherproject;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.res.Resources;
+import android.os.Bundle;
+import android.provider.SyncStateContract;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -10,6 +14,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -17,11 +24,13 @@ import java.util.HashMap;
  * Created by David Rosas on 8/13/2018.
  */
 
-public class SummaryWeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class SummaryWeatherAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Serializable {
     ArrayList<WeatherData> weatherData;
     HashMap<String, Integer> weatherIcons;
+    Context context;
 
-    public SummaryWeatherAdapter(ArrayList<WeatherData> newData){
+    public SummaryWeatherAdapter(ArrayList<WeatherData> newData, Context newContext){
+        context = newContext;
         weatherData = newData;
         weatherIcons = new HashMap<>();
         populateIcons();
@@ -39,13 +48,13 @@ public class SummaryWeatherAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        int temperature = Math.round(weatherData.get(position).getCurrently().getTemperature());
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+        String temperature = Integer.toString(Math.round(weatherData.get(position).getCurrently().getTemperature())) + "°";
         String icon = weatherData.get(position).getCurrently().getIcon();
 
         if(holder instanceof ProvinceViewHolder) {
             ((ProvinceViewHolder)holder).province.setText(weatherData.get(position).getCity());
-            ((ProvinceViewHolder)holder).temp.setText(Integer.toString(temperature) + "°");
+            ((ProvinceViewHolder)holder).temp.setText(temperature);
             ((ProvinceViewHolder)holder).weather.setImageResource(weatherIcons.get(icon));
         }
         else if(holder instanceof CurrentPositionViewHolder) {
@@ -53,11 +62,22 @@ public class SummaryWeatherAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             String windSpeed = Double.toString(weatherData.get(position).getCurrently().getWindSpeed());
 
             ((CurrentPositionViewHolder)holder).place.setText(weatherData.get(position).getCity());
-            ((CurrentPositionViewHolder)holder).temp.setText(Integer.toString(temperature));
+            ((CurrentPositionViewHolder)holder).temp.setText(temperature);
             ((CurrentPositionViewHolder)holder).precipitationProb.setText(precipitation);
             ((CurrentPositionViewHolder)holder).windSpeed.setText(windSpeed);
             ((CurrentPositionViewHolder)holder).weather.setImageResource(weatherIcons.get(icon));
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("WeatherData", weatherData.get(position));
+                Intent intent = new Intent(context, HourlyWeatherData.class);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

@@ -1,8 +1,11 @@
 package com.example.android.weatherproject;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.ArrayList;
 
-class HourlyWeather {
+class HourlyWeather implements Parcelable {
     private String summary;
     private String icon;
     private ArrayList<Forecast> data;
@@ -11,6 +14,36 @@ class HourlyWeather {
         summary = "";
         icon = "";
         data = new ArrayList<>();
+    }
+
+    protected HourlyWeather(Parcel in) {
+        summary = in.readString();
+        icon = in.readString();
+        data = in.createTypedArrayList(Forecast.CREATOR);
+    }
+
+    public static final Creator<HourlyWeather> CREATOR = new Creator<HourlyWeather>() {
+        @Override
+        public HourlyWeather createFromParcel(Parcel in) {
+            return new HourlyWeather(in);
+        }
+
+        @Override
+        public HourlyWeather[] newArray(int size) {
+            return new HourlyWeather[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(summary);
+        dest.writeString(icon);
+        dest.writeTypedList(this.data);
     }
 
     public String getSummary() {
@@ -35,6 +68,12 @@ class HourlyWeather {
 
     public void setData(ArrayList<Forecast> data) {
         this.data = data;
+    }
+
+    public void unixToDate() {
+        for(Forecast forecast : data) {
+            forecast.unixToDate();
+        }
     }
 
     public void showData() {
