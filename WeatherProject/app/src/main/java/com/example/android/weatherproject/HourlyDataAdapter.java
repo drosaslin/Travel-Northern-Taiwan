@@ -58,9 +58,7 @@ public class HourlyDataAdapter extends RecyclerView.Adapter<HourlyDataAdapter.Vi
 
         try{
             //converting to twelve hour format
-            Log.i("STRINGHOUR", sHour);
             iHour = Integer.parseInt(sHour);
-            Log.i("HOUR", Integer.toString(iHour));
             morning = (iHour < 12);
 
             if(iHour > 12) {
