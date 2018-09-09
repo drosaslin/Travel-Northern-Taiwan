@@ -33,7 +33,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private final String TOMTOM_API_KEY = "TSxftk4mgaKIMAQQ1Dt3Yv2lcJklkLxU";
     private final String GOOGLE_API_KEY = "AIzaSyCc4acsOQV7rnQ92weHYKO14fvL9wkRpKc";
     private GoogleMap mMap;
-    private ArrayList<Marker> markerList;
     private GoogleApiClient client;
     private LocationsResponse locationsResponse;
     private RequestQueue queue;
@@ -55,7 +54,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         setPlaces();
-        markerList = new ArrayList<>();
         taipei = new LatLng(25.0330, 121.5654);
 
         food = findViewById(R.id.food);
@@ -69,6 +67,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 String key = getResources().getResourceEntryName(view.getId());
 ////                String interests = setMarkers(interest);
                 for(String interest : places.get(key)) {
+                    mMap.clear();
                     String url1 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.0323,121.5735&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
                     String url2 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.1368,121.5474&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
                     apiCallPlaceOfInterest(interest, url1);
@@ -83,6 +82,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 String key = getResources().getResourceEntryName(view.getId());
 //                String interests = setMarkers(interest);
                 for(String interest : places.get(key)) {
+                    mMap.clear();
                     String url1 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.0323,121.5735&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
                     String url2 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.1368,121.5474&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
                     apiCallPlaceOfInterest(interest, url1);
@@ -97,7 +97,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 String key = getResources().getResourceEntryName(view.getId());
 //                String interests = setMarkers(interest);
                 for(String interest : places.get(key)) {
-//                    apiCallPlaceOfInterest(interest);
+                    mMap.clear();
+                    String url1 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.0323,121.5735&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
+                    String url2 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.1368,121.5474&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
+                    apiCallPlaceOfInterest(interest, url1);
+                    apiCallPlaceOfInterest(interest, url2);
                 }
             }
         });
@@ -108,7 +112,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 String key = getResources().getResourceEntryName(view.getId());
 //                String interests = setMarkers(interest);
                 for(String interest : places.get(key)) {
-//                    apiCallPlaceOfInterest(interest);
+                    mMap.clear();
+                    String url1 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.0323,121.5735&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
+                    String url2 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.1368,121.5474&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
+                    apiCallPlaceOfInterest(interest, url1);
+                    apiCallPlaceOfInterest(interest, url2);
                 }
             }
         });
@@ -127,7 +135,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         for(Results results : locationsResponse.getResults()) {
             LatLng coordinates = results.getGeometry().getLocation().getLatLng();
-            markerList.add(mMap.addMarker(new MarkerOptions().position(coordinates).title(results.getName())));
         }
 
 //        if(locationsResponse.getNext_page_token() != null) {
