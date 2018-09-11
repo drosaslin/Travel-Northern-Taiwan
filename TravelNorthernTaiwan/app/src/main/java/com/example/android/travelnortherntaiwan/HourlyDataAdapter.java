@@ -1,4 +1,4 @@
-package com.example.android.weatherproject;
+package com.example.android.travelnortherntaiwan;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
