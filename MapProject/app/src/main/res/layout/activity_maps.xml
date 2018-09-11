@@ -73,7 +73,7 @@
         android:layout_height="match_parent"
         android:gravity="bottom"
         sothree:umanoFadeColor="@android:color/transparent"
-        sothree:umanoScrollableView="@id/scroll_view"
+        sothree:umanoScrollableView="@id/locations_recycler"
         sothree:umanoDragView="@id/drag_view"
         sothree:umanoPanelHeight="50dp"
         sothree:umanoShadowHeight="6dp"
@@ -101,172 +101,14 @@
                 android:id="@+id/drag_view"
                 android:layout_height="50dp"
                 android:layout_width="match_parent"
+                android:background="#2ab243"
                 android:text="PANEL"/>
 
-            <LinearLayout
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/locations_recycler"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#FFCCCC">
-
-                <ScrollView
-                    android:id="@+id/scroll_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:layout_height="50dp"
-                            android:layout_width="match_parent"
-                            android:textSize="30dp"
-                            android:text="testing" />
-
-                        <TextView
-                            android:layout_height="50dp"
-                            android:layout_width="match_parent"
-                            android:textSize="30dp"
-                            android:text="testing" />
-
-                        <TextView
-                            android:layout_height="50dp"
-                            android:layout_width="match_parent"
-                            android:textSize="30dp"
-                            android:text="testing" />
-
-                        <TextView
-                            android:layout_height="50dp"
-                            android:layout_width="match_parent"
-                            android:textSize="30dp"
-                            android:text="testing" />
-
-                        <TextView
-                            android:layout_height="50dp"
-                            android:layout_width="match_parent"
-                            android:textSize="30dp"
-                            android:text="testing" />
-
-                        <TextView
-                            android:layout_height="50dp"
-                            android:layout_width="match_parent"
-                            android:textSize="30dp"
-                            android:text="testing" />
-
-                        <TextView
-                            android:layout_height="50dp"
-                            android:layout_width="match_parent"
-                            android:textSize="30dp"
-                            android:text="testing" />
-
-                        <TextView
-                            android:layout_height="50dp"
-                            android:layout_width="match_parent"
-                            android:textSize="30dp"
-                            android:text="testing" />
-
-                        <TextView
-                            android:layout_height="50dp"
-                            android:layout_width="match_parent"
-                            android:textSize="30dp"
-                            android:text="testing" />
-
-                        <TextView
-                            android:layout_height="50dp"
-                            android:layout_width="match_parent"
-                            android:textSize="30dp"
-                            android:text="testing" />
-
-                        <TextView
-                            android:layout_height="50dp"
-                            android:layout_width="match_parent"
-                            android:textSize="30dp"
-                            android:text="testing" />
-
-                        <TextView
-                            android:layout_height="50dp"
-                            android:layout_width="match_parent"
-                            android:textSize="30dp"
-                            android:text="testing" />
-
-                        <TextView
-                            android:layout_height="50dp"
-                            android:layout_width="match_parent"
-                            android:textSize="30dp"
-                            android:text="testing" />
-
-                        <TextView
-                            android:layout_height="50dp"
-                            android:layout_width="match_parent"
-                            android:textSize="30dp"
-                            android:text="testing" />
-
-                        <TextView
-                            android:layout_height="50dp"
-                            android:layout_width="match_parent"
-                            android:textSize="30dp"
-                            android:text="testing" />
-
-                        <TextView
-                            android:layout_height="50dp"
-                            android:layout_width="match_parent"
-                            android:textSize="30dp"
-                            android:text="testing" />
-
-                        <TextView
-                            android:layout_height="50dp"
-                            android:layout_width="match_parent"
-                            android:textSize="30dp"
-                            android:text="testing" />
-
-                        <TextView
-                            android:layout_height="50dp"
-                            android:layout_width="match_parent"
-                            android:textSize="30dp"
-                            android:text="testing" />
-
-                        <TextView
-                            android:layout_height="50dp"
-                            android:layout_width="match_parent"
-                            android:textSize="30dp"
-                            android:text="testing" />
-
-                        <TextView
-                            android:layout_height="50dp"
-                            android:layout_width="match_parent"
-                            android:textSize="30dp"
-                            android:text="testing" />
-
-                        <TextView
-                            android:layout_height="50dp"
-                            android:layout_width="match_parent"
-                            android:textSize="30dp"
-                            android:text="testing" />
-
-                        <TextView
-                            android:layout_height="50dp"
-                            android:layout_width="match_parent"
-                            android:textSize="30dp"
-                            android:text="testing" />
-
-                        <TextView
-                            android:layout_height="50dp"
-                            android:layout_width="match_parent"
-                            android:textSize="30dp"
-                            android:text="testing" />
-
-                        <TextView
-                            android:layout_height="50dp"
-                            android:layout_width="match_parent"
-                            android:textSize="30dp"
-                            android:text="testing" />
-
-                    </LinearLayout>
-
-                </ScrollView>
-
-            </LinearLayout>
+                android:layout_height="match_parent">
+            </android.support.v7.widget.RecyclerView>
 
         </LinearLayout>
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>

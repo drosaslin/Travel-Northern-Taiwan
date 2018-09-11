@@ -1,5 +1,7 @@
 package com.example.android.mapproject;
 
+import java.util.ArrayList;
+
 /**
  * Created by David Rosas on 9/5/2018.
  */
@@ -7,7 +9,7 @@ package com.example.android.mapproject;
 public class LocationsResponse {
     private String next_page_token;
 
-    private Results[] results;
+    private ArrayList<Results> results;
 
     private String[] html_attributions;
 
@@ -23,12 +25,12 @@ public class LocationsResponse {
         this.next_page_token = next_page_token;
     }
 
-    public Results[] getResults ()
+    public ArrayList<Results> getResults ()
     {
         return results;
     }
 
-    public void setResults (Results[] results)
+    public void setResults (ArrayList<Results> results)
     {
         this.results = results;
     }

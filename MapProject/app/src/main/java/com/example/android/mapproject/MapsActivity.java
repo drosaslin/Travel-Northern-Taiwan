@@ -4,6 +4,8 @@ import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -42,7 +44,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private TextView shopping;
     private TextView nightlife;
     private TextView history;
-    private int count = 0;
+    private RecyclerView recycler;
+    private LocationAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setPlaces();
         taipei = new LatLng(25.0330, 121.5654);
 
+        adapter = new LocationAdapter(new ArrayList<Results>());
+        recycler = findViewById(R.id.locations_recycler);
+        recycler.setLayoutManager(new LinearLayoutManager(this));
+
         food = findViewById(R.id.food);
         shopping = findViewById(R.id.shopping);
         nightlife = findViewById(R.id.nightlife);
@@ -66,8 +73,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View view) {
                 String key = getResources().getResourceEntryName(view.getId());
 ////                String interests = setMarkers(interest);
-                for(String interest : places.get(key)) {
+                if(mMap != null) {
                     mMap.clear();
+                }
+                adapter.clearData();
+                for(String interest : places.get(key)) {
                     String url1 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.0323,121.5735&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
                     String url2 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.1368,121.5474&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
                     apiCallPlaceOfInterest(interest, url1);
@@ -81,8 +91,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View view) {
                 String key = getResources().getResourceEntryName(view.getId());
 //                String interests = setMarkers(interest);
-                for(String interest : places.get(key)) {
+                if(mMap != null) {
                     mMap.clear();
+                }
+                adapter.clearData();
+                for(String interest : places.get(key)) {
                     String url1 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.0323,121.5735&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
                     String url2 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.1368,121.5474&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
                     apiCallPlaceOfInterest(interest, url1);
@@ -96,8 +109,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View view) {
                 String key = getResources().getResourceEntryName(view.getId());
 //                String interests = setMarkers(interest);
-                for(String interest : places.get(key)) {
+                if(mMap != null) {
                     mMap.clear();
+                }
+                adapter.clearData();
+                for(String interest : places.get(key)) {
                     String url1 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.0323,121.5735&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
                     String url2 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.1368,121.5474&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
                     apiCallPlaceOfInterest(interest, url1);
@@ -111,8 +127,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View view) {
                 String key = getResources().getResourceEntryName(view.getId());
 //                String interests = setMarkers(interest);
-                for(String interest : places.get(key)) {
+                if(mMap != null) {
                     mMap.clear();
+                }
+                for(String interest : places.get(key)) {
                     String url1 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.0323,121.5735&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
                     String url2 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.1368,121.5474&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
                     apiCallPlaceOfInterest(interest, url1);
@@ -121,6 +139,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
 
+        food.performClick();
     }
 
     @Override
@@ -135,6 +154,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         for(Results results : locationsResponse.getResults()) {
             LatLng coordinates = results.getGeometry().getLocation().getLatLng();
+            mMap.addMarker(new MarkerOptions().position(coordinates).title(results.getName()));
         }
 
 //        if(locationsResponse.getNext_page_token() != null) {
@@ -146,6 +166,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //                }
 //            }, 1500);
 //        }
+
+        adapter.addNewData(locationsResponse.getResults());
+        recycler.setAdapter(adapter);
     }
 
     private void getMoreResults() {
@@ -208,18 +231,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
         queue.add(stringRequest);
-    }
-
-    private void setMarkers(String key) {
-//        for(String place : places.get(key)) {
-//            Handler handler = new Handler();
-//            handler.postDelayed(new Runnable() {
-//                public void run() {
-//                    String token = locationsResponse.getNext_page_token();
-//                    apiCallPlaceOfInterest(place);
-//                }
-//            }, 2000);
-//        }
     }
 
     private void setPlaces() {

@@ -60,7 +60,7 @@ public class HourlyDataAdapter extends RecyclerView.Adapter<HourlyDataAdapter.Vi
             //converting to twelve hour format
             iHour = Integer.parseInt(sHour);
             morning = (iHour < 12);
-
+`
             if(iHour > 12) {
                 iHour -= 12;
             }

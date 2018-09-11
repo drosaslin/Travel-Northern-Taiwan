@@ -1,5 +1,7 @@
 package com.example.android.mapproject;
 
+import java.util.ArrayList;
+
 /**
  * Created by David Rosas on 9/5/2018.
  */
@@ -19,7 +21,7 @@ public class Results {
 
     private String id;
 
-    private Photos[] photos;
+    private ArrayList<Photos> photos;
 
     private String vicinity;
 
@@ -101,12 +103,12 @@ public class Results {
         this.id = id;
     }
 
-    public Photos[] getPhotos ()
+    public ArrayList<Photos> getPhotos ()
     {
         return photos;
     }
 
-    public void setPhotos (Photos[] photos)
+    public void setPhotos (ArrayList<Photos> photos)
     {
         this.photos = photos;
     }
