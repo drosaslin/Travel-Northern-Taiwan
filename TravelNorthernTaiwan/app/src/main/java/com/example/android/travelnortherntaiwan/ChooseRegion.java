@@ -2,14 +2,12 @@ package com.example.android.travelnortherntaiwan;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.NavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-public class HomePageActivity extends AppCompatActivity {
+public class ChooseRegion extends AppCompatActivity {
     CardView taipeiCard, newTaipeiCard, keelungCard, yilanCard, hsinchuCard, taoyuanCard;
 
     @Override
@@ -27,7 +25,7 @@ public class HomePageActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(),"taipei", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(HomePageActivity.this, TripsActivity.class));
+                startActivity(new Intent(ChooseRegion.this, MapsActivity.class));
             }
         });
 

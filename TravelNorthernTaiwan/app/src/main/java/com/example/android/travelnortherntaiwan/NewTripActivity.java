@@ -118,7 +118,7 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
         ChildReference.child(tripName).child("From").setValue(fromDate);
 
         //move later to another function
-        startActivity(new Intent(NewTripActivity.this, HomePageActivity.class));
+        startActivity(new Intent(NewTripActivity.this, ChooseRegion.class));
     }
 
 

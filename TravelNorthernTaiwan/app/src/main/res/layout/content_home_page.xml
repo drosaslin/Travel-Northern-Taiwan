@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     tools:showIn="@layout/activity_home_page"
-    tools:context=".HomePageActivity"
+    tools:context=".ChooseRegion"
     android:background="#ccd7ff"
     android:padding="2dp">
 
