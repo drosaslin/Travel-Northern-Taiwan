@@ -3,9 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://D:\NTUT_Classes\Project\grad_project\repocopy\app\app.iml" filepath="D:\NTUT_Classes\Project\grad_project\repocopy\app\app.iml" />
       <module fileurl="file://$PROJECT_DIR$/repocopy.iml" filepath="$PROJECT_DIR$/repocopy.iml" />
-      <module fileurl="file://D:\NTUT_Classes\Project\grad_project\repocopy\repocopy.iml" filepath="D:\NTUT_Classes\Project\grad_project\repocopy\repocopy.iml" />
     </modules>
   </component>
 </project>

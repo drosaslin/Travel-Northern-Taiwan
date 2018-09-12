@@ -77,15 +77,15 @@ public class HourlyWeatherData extends AppCompatActivity {
     }
 
     private void populateIcons() {
-        weatherIcons.put("clear-day", R.drawable.ic_wi_day_sunny);
-        weatherIcons.put("clear-night", R.drawable.ic_wi_night_clear);
-        weatherIcons.put("partly-cloudy-day", R.drawable.ic_wi_day_cloudy);
-        weatherIcons.put("partly-cloudy-night", R.drawable.ic_wi_night_partly_cloudy);
-        weatherIcons.put("cloudy", R.drawable.ic_wi_cloudy);
-        weatherIcons.put("rain", R.drawable.ic_wi_day_rain);
-        weatherIcons.put("sleet", R.drawable.ic_wi_day_sleet);
-        weatherIcons.put("snow", R.drawable.ic_wi_day_snow);
-        weatherIcons.put("wind", R.drawable.ic_wi_day_windy);
-        weatherIcons.put("fog", R.drawable.ic_wi_day_fog);
+        weatherIcons.put("clear-day", R.drawable.weather_wi_day_sunny);
+        weatherIcons.put("clear-night", R.drawable.weather_wi_night_clear);
+        weatherIcons.put("partly-cloudy-day", R.drawable.weather_wi_day_cloudy);
+        weatherIcons.put("partly-cloudy-night", R.drawable.weather_wi_night_partly_cloudy);
+        weatherIcons.put("cloudy", R.drawable.weather_wi_cloudy);
+        weatherIcons.put("rain", R.drawable.weather_wi_day_rain);
+        weatherIcons.put("sleet", R.drawable.weather_wi_day_sleet);
+        weatherIcons.put("snow", R.drawable.weather_wi_day_snow);
+        weatherIcons.put("wind", R.drawable.weather_wi_day_windy);
+        weatherIcons.put("fog", R.drawable.weather_wi_day_fog);
     }
 }

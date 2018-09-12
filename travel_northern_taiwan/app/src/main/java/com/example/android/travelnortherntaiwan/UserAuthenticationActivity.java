@@ -1,9 +1,6 @@
 package com.example.android.travelnortherntaiwan;
 
 import android.content.Intent;
-import android.nfc.Tag;
-import android.speech.tts.TextToSpeech;
-import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -12,19 +9,15 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class MainActivity extends AppCompatActivity
+public class UserAuthenticationActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
     private FirebaseAuth mAuth;
@@ -34,7 +27,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_user_auth);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -61,7 +54,7 @@ public class MainActivity extends AppCompatActivity
         currentUser = mAuth.getCurrentUser();
         if(currentUser != null) {
             //open the home page directly if a user is already logged in
-            MainActivity.this.finish();
+            UserAuthenticationActivity.this.finish();
             startActivity(new Intent(this, NewTripActivity.class));
         }
     }

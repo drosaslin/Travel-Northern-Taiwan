@@ -1,13 +1,13 @@
 package com.example.android.travelnortherntaiwan;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -18,29 +18,31 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-public class SignupActivity extends AppCompatActivity {
+/**
+ * A login screen that offers login via email/password.
+ */
+public class LoginActivity extends AppCompatActivity {
 
     private EditText email;
     private EditText password;
-    private EditText rptPassword;
-    private Button signUpBtn;
+    private Button SignInBtn;
     private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
+        setContentView(R.layout.activity_login);
 
         mAuth = FirebaseAuth.getInstance();
 
         email = findViewById(R.id.email);
         password = findViewById(R.id.password);
-        rptPassword = findViewById(R.id.rpt_password);
-        signUpBtn = findViewById(R.id.sign_up_button);
+        SignInBtn = findViewById(R.id.sign_in_btn);
 
-        signUpBtn.setOnClickListener(new View.OnClickListener(){
+        SignInBtn.setOnClickListener(new OnClickListener(){
+            @Override
             public void onClick(View view) {
-                attemptSignUp();
+                attemptSignIn();
             }
         });
     }
@@ -48,45 +50,43 @@ public class SignupActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        SignupActivity.this.finish();
+        LoginActivity.this.finish();
     }
 
-    public void attemptSignUp() {
+    private void attemptSignIn() {
         String emailText = email.getText().toString().trim();
         String passwordText = password.getText().toString().trim();
-        String rptPassText = rptPassword.getText().toString().trim();
 
-        if(!isCorrectForm(emailText, passwordText, rptPassText)) {
+        if(!isCorrectForm(emailText, passwordText)) {
             return;
         }
 
-        mAuth.createUserWithEmailAndPassword(emailText, passwordText)
+        mAuth.signInWithEmailAndPassword(emailText, passwordText)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Toast.makeText(SignupActivity.this, "Authentication Success.", Toast.LENGTH_SHORT).show();
-                            Log.d("TAG", "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            startActivity(new Intent(SignupActivity.this, UserAuthenticationActivity.class));
+                            LoginActivity.this.finish();
+                            startActivity(new Intent(LoginActivity.this, DrawerActivity.class));
                         }
                         else {
                             // If sign in fails, display a message to the user.
-                            Log.w("TAG", "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(SignupActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                            Log.w("TAG", "signInWithEmail:failure", task.getException());
+                            Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
     }
 
-    private boolean isCorrectForm(String email, String password, String rptPassword) {
-        if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password) || TextUtils.isEmpty(rptPassword)) {
-            Toast.makeText(getApplicationContext(), "Please fill all the fields", Toast.LENGTH_SHORT).show();
+    private boolean isCorrectForm(String email, String password) {
+        if(TextUtils.isEmpty(email)) {
+            Toast.makeText(getApplicationContext(), "Please enter your email", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if(!password.equals(rptPassword)) {
-            Toast.makeText(getApplicationContext(), "Passwords don't match", Toast.LENGTH_SHORT).show();
+        if(TextUtils.isEmpty(password)) {
+            Toast.makeText(getApplicationContext(), "Please enter your password", Toast.LENGTH_SHORT).show();
             return false;
         }
         if(password.length() < 6) {
@@ -98,4 +98,3 @@ public class SignupActivity extends AppCompatActivity {
     }
 
 }
-

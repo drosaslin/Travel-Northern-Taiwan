@@ -35,7 +35,7 @@
                     android:layout_width="100sp"
                     android:layout_height="100sp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_wi_cloudy"/>
+                    android:src="@drawable/weather_wi_cloudy"/>
 
                 <TextView
                     android:id="@+id/current_temperature"
@@ -64,7 +64,7 @@
                             android:layout_width="50sp"
                             android:layout_height="50sp"
                             android:scaleType="fitCenter"
-                            android:src="@drawable/ic_wi_raindrops"/>
+                            android:src="@drawable/weather_wi_raindrops"/>
 
                         <TextView
                             android:id="@+id/precipitation_prob"
@@ -86,7 +86,7 @@
                             android:layout_width="50sp"
                             android:layout_height="50sp"
                             android:scaleType="fitCenter"
-                            android:src="@drawable/ic_wi_windy"/>
+                            android:src="@drawable/weather_wi_windy"/>
 
                         <TextView
                             android:id="@+id/wind_speed"

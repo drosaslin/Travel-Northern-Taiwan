@@ -33,7 +33,7 @@
                 android:layout_height="40sp"
                 android:layout_marginRight="20sp"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_wi_cloudy"/>
+                android:src="@drawable/weather_wi_cloudy"/>
 
             <TextView
                 android:id="@+id/temp_high"

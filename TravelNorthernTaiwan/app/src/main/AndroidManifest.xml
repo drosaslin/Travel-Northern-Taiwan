@@ -12,15 +12,36 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".DrawerActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+        <activity
+            android:name=".UserAuthenticationActivity"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".HourlyWeatherData"></activity>
+        <activity
+            android:name=".DrawerActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".LoginActivity"
+            android:label="Log in" />
+        <activity
+            android:name=".SignupActivity"
+            android:label="Sign up" />
+        <activity
+            android:name=".HomePageActivity"
+            android:label="Choose Region" />
+        <activity
+            android:name=".TripsActivity"
+            android:label="My Trips" />
+        <activity
+            android:name=".NewTripActivity"
+            android:label="Create new trip" />
+        <activity
+            android:name=".HourlyWeatherData"
+            android:label="Weather By Hour" />
     </application>
 
 </manifest>
