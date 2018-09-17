@@ -1,0 +1,47 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:clickable="true"
+    tools:context="com.example.android.mapproject.LocationDetails">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:id="@+id/place_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Name" />
+
+    <ImageView
+        android:id="@+id/place_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_menu_directions"/>
+
+    <TextView
+        android:id="@+id/place_address"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="adress"/>
+
+    <TextView
+        android:id="@+id/place_opening_hours"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="10:00am - 10:00pm"/>
+
+    <TextView
+        android:id="@+id/place_phone_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="(886) 9123 42341"/>
+
+    <TextView
+        android:id="@+id/place_entrance_fee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="10$"/>
+
+</LinearLayout>

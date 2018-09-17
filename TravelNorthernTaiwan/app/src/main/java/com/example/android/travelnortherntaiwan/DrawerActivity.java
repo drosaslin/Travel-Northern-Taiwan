@@ -1,6 +1,5 @@
 package com.example.android.travelnortherntaiwan;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,8 +10,9 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
-import android.widget.Toast;
 
+import com.example.android.trip_organizer.TripsActivity;
+import com.example.android.weather.WeatherMainFragment;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class DrawerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -22,7 +22,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_base_drawer);
+        setContentView(R.layout.drawer_activity_base);
 
         Log.i("ACTIVITY CREATED", "Drawer");
 
@@ -54,7 +54,7 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new TripsActivity()).commit();
                 break;
             case R.id.nav_weather:
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new WeatherMain()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new WeatherMainFragment()).commit();
                 break;
             case R.id.nav_sign_out:
                 FirebaseAuth.getInstance().signOut();

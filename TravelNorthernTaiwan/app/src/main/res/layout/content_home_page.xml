@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     tools:showIn="@layout/activity_home_page"
-    tools:context=".ChooseRegion"
+    tools:context="com.example.android.trip_organizer.ChooseRegion"
     android:background="#ccd7ff"
     android:padding="2dp">
 

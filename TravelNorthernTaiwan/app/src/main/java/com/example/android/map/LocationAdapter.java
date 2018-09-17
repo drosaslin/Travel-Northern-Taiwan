@@ -1,21 +1,16 @@
-package com.example.android.mapproject;
+package com.example.android.map;
 
-import android.app.Activity;
-import android.app.Fragment;
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.android.mapproject.Photos;
-import com.example.android.mapproject.Results;
+import com.example.android.travelnortherntaiwan.R;
 import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 /**
@@ -25,7 +20,7 @@ import java.util.ArrayList;
 public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.LocationsViewHolder> {
     private final String GOOGLE_API_KEY = "AIzaSyCc4acsOQV7rnQ92weHYKO14fvL9wkRpKc";
     private ArrayList<Results> locations;
-    private LocationsList locationsList;
+    private LocationsListFragment locationsListFragment;
 
     public LocationAdapter(ArrayList<Results> newLocations) {
         locations = newLocations;
@@ -34,7 +29,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
     @NonNull
     @Override
     public LocationAdapter.LocationsViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.location_info, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.map_location_info, parent, false);
         return new LocationAdapter.LocationsViewHolder(view);
     }
 
@@ -75,12 +70,12 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.Locati
         notifyDataSetChanged();
     }
 
-    public void setListener(LocationsList newLocationsList) {
-        locationsList = newLocationsList;
+    public void setListener(LocationsListFragment newLocationsListFragment) {
+        locationsListFragment = newLocationsListFragment;
     }
 
     public void notifyListener(int position) {
-        locationsList.updateActivity(locations.get(position).getPlace_id());
+        locationsListFragment.updateActivity(locations.get(position).getPlace_id());
     }
 
     public class LocationsViewHolder extends RecyclerView.ViewHolder {

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_vertical"
-    tools:context="com.example.android.travelnortherntaiwan.TripsActivity">
+    tools:context="com.example.android.trip_organizer.NewTripActivity">
 
     <Button
         android:id="@+id/add_trip_button"

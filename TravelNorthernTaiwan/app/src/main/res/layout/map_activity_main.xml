@@ -114,27 +114,7 @@
                     android:layout_height="match_parent">
                 </FrameLayout>
 
-                <!--<android.support.v7.widget.RecyclerView-->
-                    <!--android:id="@+id/locations_recycler"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent">-->
-                <!--</android.support.v7.widget.RecyclerView>-->
-
             </android.support.constraint.ConstraintLayout>
-
-            <!--<LinearLayout-->
-                <!--android:id="@+id/more_info_layout"-->
-                <!--android:orientation="vertical"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="match_parent">-->
-
-                <!--<TextView-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="HIII"-->
-                    <!--android:textSize="100sp"/>-->
-
-            <!--</LinearLayout>-->
 
         </LinearLayout>
     </com.sothree.slidinguppanel.SlidingUpPanelLayout>

@@ -1,28 +1,21 @@
-package com.example.android.mapproject;
+package com.example.android.map;
 
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
+import com.example.android.travelnortherntaiwan.R;
+import com.example.android.travelnortherntaiwan.SingletonRequestQueue;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -38,7 +31,7 @@ import java.util.HashMap;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
         GoogleMap.OnMarkerClickListener,
-        LocationsList.OnLocationPressedListener {
+        LocationsListFragment.OnLocationPressedListener {
 
     private final String GOOGLE_API_KEY = "AIzaSyCc4acsOQV7rnQ92weHYKO14fvL9wkRpKc";
     private GoogleMap mMap;
@@ -50,13 +43,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private TextView shopping;
     private TextView nightlife;
     private TextView history;
-    private LocationsList locationsList;
-    private LocationDetails locationDetails;
+    private LocationsListFragment locationsListFragment;
+    private LocationDetailsFragment locationDetailsFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
+        setContentView(R.layout.map_activity_main);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -68,8 +61,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         queue = SingletonRequestQueue.getInstance(this).getRequestQueue();
 
-        locationsList = new LocationsList();
-        locationDetails = new LocationDetails();
+        locationsListFragment = new LocationsListFragment();
+        locationDetailsFragment = new LocationDetailsFragment();
 
         food = findViewById(R.id.food);
         shopping = findViewById(R.id.shopping);
@@ -86,7 +79,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     mMap.clear();
                 }
                 //clear locationslist recycler view
-                locationsList.clearData();
+                locationsListFragment.clearData();
                 for(String interest : places.get(key)) {
                     String url1 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.0323,121.5735&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
                     String url2 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.1368,121.5474&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
@@ -104,7 +97,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if(mMap != null) {
                     mMap.clear();
                 }
-                locationsList.clearData();
+                locationsListFragment.clearData();
                 for(String interest : places.get(key)) {
                     String url1 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.0323,121.5735&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
                     String url2 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.1368,121.5474&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
@@ -122,7 +115,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 if(mMap != null) {
                     mMap.clear();
                 }
-                locationsList.clearData();
+                locationsListFragment.clearData();
                 for(String interest : places.get(key)) {
                     String url1 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.0323,121.5735&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
                     String url2 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.1368,121.5474&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
@@ -137,7 +130,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View view) {
                 String key = getResources().getResourceEntryName(view.getId());
 //                String interests = setMarkers(interest);
-                locationsList.clearData();
+                locationsListFragment.clearData();
                 if(mMap != null) {
                     mMap.clear();
                 }
@@ -154,7 +147,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         food.performClick();
 
         //display the locations list fragment in the slide up panel
-        getSupportFragmentManager().beginTransaction().replace(R.id.locations_container, locationsList).commit();
+        getSupportFragmentManager().beginTransaction().replace(R.id.locations_container, locationsListFragment).commit();
     }
 
     @Override
@@ -173,7 +166,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //            recycler.setAlpha(1);
 //        }
 
-//        getSupportFragmentManager().beginTransaction().replace(R.id.more_info_container, new LocationDetails()).commit();
+//        getSupportFragmentManager().beginTransaction().replace(R.id.more_info_container, new LocationDetailsFragment()).commit();
 //        frameLayout.bringToFront();
 //        frameLayout.invalidate();
 
@@ -200,7 +193,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        }
 
         //update location list fragment's recycler
-        locationsList.updateData(locationsResponse.getResults());
+        locationsListFragment.updateData(locationsResponse.getResults());
     }
 
     private void getMoreResults() {
@@ -275,11 +268,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onLocationPressed(String locationId) {
         /*set the location id in the location details' fragment and put the locations
           details fragment in front of the locations list fragment*/
-        locationDetails.setPlaceId(locationId);
+        locationDetailsFragment.setPlaceId(locationId);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.locations_container, locationDetails);
+        fragmentTransaction.add(R.id.locations_container, locationDetailsFragment);
         fragmentTransaction.addToBackStack("locationDetailsStack");
         fragmentTransaction.commit();
     }

@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".NewTripActivity"
+    tools:context="com.example.android.trip_organizer.NewTripActivity"
     tools:showIn="@layout/activity_new_trip"
     android:paddingBottom="16dp"
     android:paddingLeft="16dp"

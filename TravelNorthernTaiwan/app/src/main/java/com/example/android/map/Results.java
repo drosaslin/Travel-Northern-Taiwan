@@ -1,7 +1,4 @@
-package com.example.android.mapproject;
-
-import android.os.Parcel;
-import android.os.Parcelable;
+package com.example.android.map;
 
 import java.util.ArrayList;
 
@@ -9,7 +6,7 @@ import java.util.ArrayList;
  * Created by David Rosas on 9/5/2018.
  */
 
-public class Results implements Parcelable{
+public class Results {
     private String icon;
 
     private String place_id;
@@ -35,30 +32,6 @@ public class Results implements Parcelable{
     private String rating;
 
     private String[] types;
-
-    protected Results(Parcel in) {
-        icon = in.readString();
-        place_id = in.readString();
-        scope = in.readString();
-        reference = in.readString();
-        id = in.readString();
-        vicinity = in.readString();
-        name = in.readString();
-        rating = in.readString();
-        types = in.createStringArray();
-    }
-
-    public static final Creator<Results> CREATOR = new Creator<Results>() {
-        @Override
-        public Results createFromParcel(Parcel in) {
-            return new Results(in);
-        }
-
-        @Override
-        public Results[] newArray(int size) {
-            return new Results[size];
-        }
-    };
 
     public String getIcon ()
     {
@@ -194,23 +167,5 @@ public class Results implements Parcelable{
     public String toString()
     {
         return "ClassPojo [icon = "+icon+", place_id = "+place_id+", scope = "+scope+", reference = "+reference+", geometry = "+geometry+", opening_hours = "+opening_hours+", id = "+id+", photos = "+photos+", vicinity = "+vicinity+", name = "+name+", plus_code = "+plus_code+", rating = "+rating+", types = "+types+"]";
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(icon);
-        parcel.writeString(place_id);
-        parcel.writeString(scope);
-        parcel.writeString(reference);
-        parcel.writeString(id);
-        parcel.writeString(vicinity);
-        parcel.writeString(name);
-        parcel.writeString(rating);
-        parcel.writeStringArray(types);
     }
 }
