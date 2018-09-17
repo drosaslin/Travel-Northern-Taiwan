@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         if(currentUser != null) {
             //open the home page directly if a user is already logged in
             MainActivity.this.finish();
-            startActivity(new Intent(this, PlanActivity.class));
+            startActivity(new Intent(this, NewTripActivity.class));
         }
     }
 

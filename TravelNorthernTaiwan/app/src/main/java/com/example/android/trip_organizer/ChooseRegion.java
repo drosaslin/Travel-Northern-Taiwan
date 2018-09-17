@@ -9,13 +9,29 @@ import android.widget.Toast;
 
 import com.example.android.map.MapsActivity;
 import com.example.android.travelnortherntaiwan.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class ChooseRegion extends AppCompatActivity {
     CardView taipeiCard, newTaipeiCard, keelungCard, yilanCard, hsinchuCard, taoyuanCard;
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    private DatabaseReference mRootReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //obtaining the current trip's key
+        final String currentTripKey = getIntent().getExtras().getString("tripKey");
+
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+
+        mRootReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://travel-northern-taiwan.firebaseio.com/BasicTripInfo");
+
         setContentView(R.layout.activity_home_page);
         taipeiCard = findViewById(R.id.taipeiCard);
         newTaipeiCard = findViewById(R.id.newTaipeiCard);
@@ -28,6 +44,8 @@ public class ChooseRegion extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(),"taipei", Toast.LENGTH_SHORT).show();
+                //Adding Region to the current trip
+                mRootReference.child(currentTripKey).child("Region").setValue("Taipei");
                 startActivity(new Intent(ChooseRegion.this, MapsActivity.class));
             }
         });
@@ -36,6 +54,8 @@ public class ChooseRegion extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(),"new taipei", Toast.LENGTH_SHORT).show();
+                //Adding Region to the current trip
+                mRootReference.child(currentTripKey).child("Region").setValue("New Taipei");
             }
         });
 
@@ -43,6 +63,8 @@ public class ChooseRegion extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(),"keelung", Toast.LENGTH_SHORT).show();
+                //Adding Region to the current trip
+                mRootReference.child(currentTripKey).child("Region").setValue("Keelung");
             }
         });
 
@@ -50,6 +72,8 @@ public class ChooseRegion extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(),"yilan", Toast.LENGTH_SHORT).show();
+                //Adding Region to the current trip
+                mRootReference.child(currentTripKey).child("Region").setValue("Yilan");
             }
         });
 
@@ -57,6 +81,8 @@ public class ChooseRegion extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(),"hsinchu", Toast.LENGTH_SHORT).show();
+                //Adding Region to the current trip
+                mRootReference.child(currentTripKey).child("Region").setValue("Hsinchu");
             }
         });
 
@@ -64,6 +90,8 @@ public class ChooseRegion extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Toast.makeText(getApplicationContext(),"taoyuan", Toast.LENGTH_SHORT).show();
+                //Adding Region to the current trip
+                mRootReference.child(currentTripKey).child("Region").setValue("Taoyuan");
             }
         });
     }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -19,6 +20,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
+import java.util.HashMap;
 
 public class NewTripActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     //create function to check if the trip name from the same user already exists
@@ -53,7 +55,7 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
         mNextBtn = (Button) findViewById(R.id.next_btn);
 
         //Get db reference
-        mRootReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://travel-northern-taiwan.firebaseio.com/TripInfoByUser");
+        mRootReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://travel-northern-taiwan.firebaseio.com");
 
         mFromDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -100,26 +102,46 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
 //    }
 
     public void attemptNewTrip(){
-        String tripName = mTripName.getText().toString();
+        String tripName = mTripName.getText().toString().trim();
         String userName = currentUser.getUid();
-        String toDate = mToDate.getText().toString();//check datepicker
-        String fromDate = mFromDate.getText().toString();
-        String budget = mBudget.getText().toString();
+        String toDate = mToDate.getText().toString().trim();//check datepicker
+        String fromDate = mFromDate.getText().toString().trim();
+        String budget = mBudget.getText().toString().trim();
 
         if(!isValidInput(tripName, toDate, fromDate, budget)){
             return;
         }
 
-        //Creating child with user id or using existent in case it already exists
-        DatabaseReference ChildReference = mRootReference.child(userName);
+        //obtaining a randomly generated key for trip
+        String currentKey = mRootReference.push().getKey();
 
-        //Creating a trip child under the user id
-        ChildReference.child(tripName).child("Budget").setValue(stringToDouble(budget));
-        ChildReference.child(tripName).child("To").setValue(toDate);
-        ChildReference.child(tripName).child("From").setValue(fromDate);
+        //Declaring hashmaps for BasicTripInfo and ExpensesByTrip
+        HashMap<String, String> infoMap =  new HashMap<String, String>();
+        HashMap<String, Double> expensesMap =  new HashMap<String, Double>();
+
+        infoMap.put("TripName", tripName);
+        infoMap.put("From", fromDate);
+        infoMap.put("To", toDate);
+        infoMap.put("Author", userName);
+
+        expensesMap.put("Budget",stringToDouble(budget));
+        expensesMap.put("Hotel",Double.valueOf(0));
+        expensesMap.put("Tickets",Double.valueOf(0));
+        expensesMap.put("Souvenirs", Double.valueOf(0));
+        expensesMap.put("Food",Double.valueOf(0));
+        expensesMap.put("Others",Double.valueOf(0));
+
+        //sending the data to the firebase database
+        mRootReference.child("BasicTripInfo").child(currentKey).setValue(infoMap);
+        mRootReference.child("ExpensesByTrip").child(currentKey).setValue(expensesMap);
+
 
         //move later to another function
-        startActivity(new Intent(NewTripActivity.this, ChooseRegion.class));
+        //sending the user to another view and passing the current trip parameter to the view
+        Intent selectRegion = new Intent(NewTripActivity.this,ChooseRegion.class);
+        selectRegion.putExtra("tripKey", currentKey);
+        Log.d("test","key = " + currentKey);
+        startActivity(selectRegion);
     }
 
 
