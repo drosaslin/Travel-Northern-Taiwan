@@ -34,7 +34,7 @@
             android:name="com.example.android.user_authentication.SignupActivity"
             android:label="Sign up" />
         <activity
-            android:name="com.example.android.trip_organizer.ChooseRegion"
+            android:name="com.example.android.trip_organizer.ChooseRegionActivity"
             android:label="Choose Region" />
         <activity
             android:name="com.example.android.trip_organizer.NewTripActivity"

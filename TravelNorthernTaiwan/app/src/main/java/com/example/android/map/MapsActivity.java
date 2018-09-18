@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -34,17 +35,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LocationsListFragment.OnLocationPressedListener {
 
     private final String GOOGLE_API_KEY = "AIzaSyCc4acsOQV7rnQ92weHYKO14fvL9wkRpKc";
-    private GoogleMap mMap;
-    private LocationsResponse locationsResponse;
-    private RequestQueue queue;
-    private HashMap<String, ArrayList<String>> places;
-    private LatLng taipei;
     private TextView food;
     private TextView shopping;
     private TextView nightlife;
     private TextView history;
+    private GoogleMap mMap;
+    private LocationsResponse locationsResponse;
+    private RequestQueue queue;
+    private HashMap<String, ArrayList<String>> places;
+    private HashMap<String, LatLng> coordinates;
     private LocationsListFragment locationsListFragment;
     private LocationDetailsFragment locationDetailsFragment;
+    private LatLng regionCoordinates;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +58,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        setPlaces();
-        taipei = new LatLng(25.0330, 121.5654);
-
         queue = SingletonRequestQueue.getInstance(this).getRequestQueue();
 
         locationsListFragment = new LocationsListFragment();
@@ -68,6 +67,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         shopping = findViewById(R.id.shopping);
         nightlife = findViewById(R.id.nightlife);
         history = findViewById(R.id.history);
+
+        setPlaces();
+        setCoordinates();
+        setRegionCoordinates();
 
         food.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,22 +156,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        LatLng taipei = new LatLng(25.0330, 121.5654);
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(taipei, 15));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(regionCoordinates, 11));
     }
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-//        if(recycler.getAlpha() == 1) {
-//            recycler.setAlpha(0);
-//        }
-//        else {
-//            recycler.setAlpha(1);
-//        }
-
-//        getSupportFragmentManager().beginTransaction().replace(R.id.more_info_container, new LocationDetailsFragment()).commit();
-//        frameLayout.bringToFront();
-//        frameLayout.invalidate();
 
         return false;
     }
@@ -181,16 +173,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             mMap.addMarker(new MarkerOptions().position(coordinates).title(results.getName()));
             mMap.setOnMarkerClickListener(this);
         }
-
-//        if(locationsResponse.getNext_page_token() != null) {
-//            Handler handler = new Handler();
-//            handler.postDelayed(new Runnable() {
-//                public void run() {
-//                    String token = locationsResponse.getNext_page_token();
-//                    apiCallNextToken(token);
-//                }
-//            }, 1500);
-//        }
 
         //update location list fragment's recycler
         locationsListFragment.updateData(locationsResponse.getResults());
@@ -210,7 +192,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void apiCallPlaceOfInterest(String interest, String url) {
-        String location = Double.toString(taipei.latitude) + "," + Double.toString(taipei.longitude);
+        String location = Double.toString(regionCoordinates.latitude) + "," + Double.toString(regionCoordinates.longitude);
 
 //        String url = "https://api.tomtom.com/search/2/search/restaurant.json?key=TSxftk4mgaKIMAQQ1Dt3Yv2lcJklkLxU&lat=25.0330&lon=121.5654&radius=1000&limit=10";
 //        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + location + "&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
@@ -262,6 +244,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         places.put("shopping", new ArrayList<>(Arrays.asList("clothing_store", "department_store", "shoe_store", "shopping_mall", "store")));
         places.put("nightlife", new ArrayList<>(Arrays.asList("bar", "movie_theater", "night_club")));
         places.put("history", new ArrayList<>(Arrays.asList("library", "museum")));
+    }
+
+    private void setCoordinates() {
+        coordinates = new HashMap<>();
+        coordinates.put("Taipei", new LatLng(25.0330, 121.5654));
+        coordinates.put("New Taipei", new LatLng(25.016969, 121.462988));
+        coordinates.put("Keelung", new LatLng(25.12825, 121.7419));
+        coordinates.put("Yilan", new LatLng(24.757, 121.753));
+        coordinates.put("Hsinchu", new LatLng(24.80361, 120.96861));
+        coordinates.put("Taoyuan", new LatLng(24.99368, 121.29696));
+    }
+
+    private void setRegionCoordinates() {
+        Bundle bundle = getIntent().getExtras();
+        String region = "";
+
+        if(bundle != null) {
+            region = bundle.getString("region");
+        }
+
+        Log.i("REGION", region);
+        for (String key : coordinates.keySet()) {
+            if(key.equals(region)) {
+                regionCoordinates = coordinates.get(key);
+                break;
+            }
+        }
     }
 
     @Override
