@@ -62,7 +62,7 @@ public class PlanActivity extends AppCompatActivity {
     private void showData(DataSnapshot dataSnapshot) {
         String tmpChild = "none";
         int x = 0;
-//        Log.d("test","name: b4loop " + dataSnapshot.child(userId).child("gggg").getValue());
+        Log.d("test","json: " + dataSnapshot.child(userId).getValue()); //test merge???
 //        Log.d("test", "USER " + userId);
         for(DataSnapshot ds : dataSnapshot.getChildren()){//gets the userId
             x++;
@@ -76,7 +76,7 @@ public class PlanActivity extends AppCompatActivity {
 //            tInfo.setFromDate(ds.child(userId).child(tmpChild).getValue(TripInformation.class).getFromDate());
 
             //Log.d("test","name: inloop " + ds.child("gggg").getValue());//usar como referencia
-            //Log.d("test","2 " + ds.getValue());//tiene todos los trips creados por el usuario
+            Log.d("test","2 " + ds.getValue());//tiene todos los trips creados por el usuario
             //Log.d("test", String.valueOf(ds.getChildrenCount()));//cantidad de trips creados
             //Log.d("user #", String.valueOf(x) + " : " + ds.getKey()); //obtiene el nombre de los usuarios
             //Log.d("test","budget:" + tInfo.getBudget());

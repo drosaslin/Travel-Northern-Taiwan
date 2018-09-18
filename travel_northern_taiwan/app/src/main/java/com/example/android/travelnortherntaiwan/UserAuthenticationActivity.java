@@ -32,6 +32,7 @@ public class UserAuthenticationActivity extends AppCompatActivity
         mAuth = FirebaseAuth.getInstance();
 
         Toolbar toolbar = findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
 
         ActionBar actionbar = getSupportActionBar();
