@@ -3,7 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/MapProject.iml" filepath="$PROJECT_DIR$/MapProject.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://D:\NTUT_Classes\Project\grad_project\Travel-Northern-Taiwan\MapProject\MapProject.iml" filepath="D:\NTUT_Classes\Project\grad_project\Travel-Northern-Taiwan\MapProject\MapProject.iml" />
+      <module fileurl="file://D:\NTUT_Classes\Project\grad_project\Travel-Northern-Taiwan\MapProject\app\app.iml" filepath="D:\NTUT_Classes\Project\grad_project\Travel-Northern-Taiwan\MapProject\app\app.iml" />
     </modules>
   </component>
 </project>

@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -35,6 +34,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LocationsListFragment.OnLocationPressedListener {
 
     private final String GOOGLE_API_KEY = "AIzaSyCc4acsOQV7rnQ92weHYKO14fvL9wkRpKc";
+    private ArrayList<TextView> activityList;
     private TextView food;
     private TextView shopping;
     private TextView nightlife;
@@ -43,9 +43,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private LocationsResponse locationsResponse;
     private RequestQueue queue;
     private HashMap<String, ArrayList<String>> places;
-    private HashMap<String, LatLng> coordinates;
+    private HashMap<String, ArrayList<ArrayList<String>>> coordinates;
+    private HashMap<String, LatLng> regionLocation;
+    private HashMap<String, Integer> radius;
     private LocationsListFragment locationsListFragment;
     private LocationDetailsFragment locationDetailsFragment;
+    private String region;
     private LatLng regionCoordinates;
 
     @Override
@@ -58,96 +61,45 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        //getting the instance of the request queue
         queue = SingletonRequestQueue.getInstance(this).getRequestQueue();
 
+        //setting up all necessary data
+        setActivities();
+        setCoordinates();
+        setRegionLocation();
+        setRegion();
+
+        //creating instances of the fragments
         locationsListFragment = new LocationsListFragment();
         locationDetailsFragment = new LocationDetailsFragment();
 
+        //setting up activity's views
         food = findViewById(R.id.food);
         shopping = findViewById(R.id.shopping);
         nightlife = findViewById(R.id.nightlife);
         history = findViewById(R.id.history);
 
-        setPlaces();
-        setCoordinates();
-        setRegionCoordinates();
+        //storing the views in an list to prevent duplicate code with onclick events
+        activityList = new ArrayList<>();
+        activityList.add(food);
+        activityList.add(shopping);
+        activityList.add(nightlife);
+        activityList.add(history);
 
-        food.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String key = getResources().getResourceEntryName(view.getId());
-////                String interests = setMarkers(interest);
-                if(mMap != null) {
-                    //clear map markers
-                    mMap.clear();
+        //setting up on click events
+        for(TextView activity : activityList) {
+            activity.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    cleanView();
+                    performApiCalls(view);
                 }
-                //clear locationslist recycler view
-                locationsListFragment.clearData();
-                for(String interest : places.get(key)) {
-                    String url1 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.0323,121.5735&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
-                    String url2 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.1368,121.5474&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
-                    apiCallPlaceOfInterest(interest, url1);
-                    apiCallPlaceOfInterest(interest, url2);
-                }
-            }
-        });
-
-        shopping.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String key = getResources().getResourceEntryName(view.getId());
-//                String interests = setMarkers(interest);
-                if(mMap != null) {
-                    mMap.clear();
-                }
-                locationsListFragment.clearData();
-                for(String interest : places.get(key)) {
-                    String url1 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.0323,121.5735&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
-                    String url2 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.1368,121.5474&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
-                    apiCallPlaceOfInterest(interest, url1);
-                    apiCallPlaceOfInterest(interest, url2);
-                }
-            }
-        });
-
-        nightlife.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String key = getResources().getResourceEntryName(view.getId());
-//                String interests = setMarkers(interest);
-                if(mMap != null) {
-                    mMap.clear();
-                }
-                locationsListFragment.clearData();
-                for(String interest : places.get(key)) {
-                    String url1 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.0323,121.5735&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
-                    String url2 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.1368,121.5474&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
-                    apiCallPlaceOfInterest(interest, url1);
-                    apiCallPlaceOfInterest(interest, url2);
-                }
-            }
-        });
-
-        history.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String key = getResources().getResourceEntryName(view.getId());
-//                String interests = setMarkers(interest);
-                locationsListFragment.clearData();
-                if(mMap != null) {
-                    mMap.clear();
-                }
-                for(String interest : places.get(key)) {
-                    String url1 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.0323,121.5735&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
-                    String url2 = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=25.1368,121.5474&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
-                    apiCallPlaceOfInterest(interest, url1);
-                    apiCallPlaceOfInterest(interest, url2);
-                }
-            }
-        });
+            });
+        }
 
         //call the food onClickListener so that the food locations are displayed by default
-        food.performClick();
+        activityList.get(0).performClick();
 
         //display the locations list fragment in the slide up panel
         getSupportFragmentManager().beginTransaction().replace(R.id.locations_container, locationsListFragment).commit();
@@ -156,7 +108,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(regionCoordinates, 11));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(regionCoordinates , 11));
     }
 
     @Override
@@ -168,6 +120,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void updateMap(String response) {
         locationsResponse = new Gson().fromJson(response, LocationsResponse.class);
 
+        //add the markers for every place returned from the api call
         for(Results results : locationsResponse.getResults()) {
             LatLng coordinates = results.getGeometry().getLocation().getLatLng();
             mMap.addMarker(new MarkerOptions().position(coordinates).title(results.getName()));
@@ -178,27 +131,36 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         locationsListFragment.updateData(locationsResponse.getResults());
     }
 
-    private void getMoreResults() {
-        if(locationsResponse.getNext_page_token() != null) {
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                public void run() {
-                    String token = locationsResponse.getNext_page_token();
-                    Log.i("TOKEN", token);
-                    apiCallNextToken(token);
-                }
-            }, 5000);
+//    private void getMoreResults() {
+//        if(locationsResponse.getNext_page_token() != null) {
+//            Handler handler = new Handler();
+//            handler.postDelayed(new Runnable() {
+//                public void run() {
+//                    String token = locationsResponse.getNext_page_token();
+//                    Log.i("TOKEN", token);
+//                    apiCallNextToken(token);
+//                }
+//            }, 5000);
+//        }
+//    }
+
+    private void performApiCalls(View view) {
+        String key = getResources().getResourceEntryName(view.getId());
+
+        //call the google places api for all activities related to the user's choice on its respective region
+        for(String interest : places.get(key)) {
+            Log.i("REGION", region);
+            for(ArrayList<String> list : coordinates.get(region)) {
+                String latLng = list.get(0);
+                String radius = list.get(1);
+                String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + latLng + "&radius=" + radius + "&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
+                Log.i("URL", url);
+                apiCallPlaceOfInterest(interest, url);
+            }
         }
     }
 
-    public void apiCallPlaceOfInterest(String interest, String url) {
-        String location = Double.toString(regionCoordinates.latitude) + "," + Double.toString(regionCoordinates.longitude);
-
-//        String url = "https://api.tomtom.com/search/2/search/restaurant.json?key=TSxftk4mgaKIMAQQ1Dt3Yv2lcJklkLxU&lat=25.0330&lon=121.5654&radius=1000&limit=10";
-//        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=" + location + "&radius=7700&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
-//        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?&locationbias=rectangle:25.017845,121.492740|25.065567,121.602192&language=en&type=" + interest + "&fields=rating&key=" + GOOGLE_API_KEY;
-//        String url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query=" + interest + "&key=AIzaSyCc4acsOQV7rnQ92weHYKO14fvL9wkRpKc";
-
+    private void apiCallPlaceOfInterest(String interest, String url) {
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
@@ -217,28 +179,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         queue.add(stringRequest);
     }
 
-    public void apiCallNextToken(String token) {
-        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=" + token + "&key=" + GOOGLE_API_KEY;
+//    private void apiCallNextToken(String token) {
+//        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=" + token + "&key=" + GOOGLE_API_KEY;
+//
+//        // Request a string response from the provided URL.
+//        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+//                new Response.Listener<String>() {
+//                    @Override
+//                    public void onResponse(String response) {
+//                        Log.i("Response", response);
+//                        updateMap(response);
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError error) {
+//                Log.d("Find", "Fail");
+//            }
+//        });
+//
+//        queue.add(stringRequest);
+//    }
 
-        // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        Log.i("Response", response);
-                        updateMap(response);
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("Find", "Fail");
-            }
-        });
+    private void cleanView() {
+        //clear all the markers from the map and items from the locations list
 
-        queue.add(stringRequest);
+        if(mMap != null) {
+            mMap.clear();
+        }
+
+        locationsListFragment.clearData();
     }
 
-    private void setPlaces() {
+    private void setActivities() {
         places = new HashMap<>();
         places.put("food", new ArrayList<>(Arrays.asList("restaurant", "meal_takeaway", "bakery", "cafe")));
         places.put("shopping", new ArrayList<>(Arrays.asList("clothing_store", "department_store", "shoe_store", "shopping_mall", "store")));
@@ -248,28 +220,58 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void setCoordinates() {
         coordinates = new HashMap<>();
-        coordinates.put("Taipei", new LatLng(25.0330, 121.5654));
-        coordinates.put("New Taipei", new LatLng(25.016969, 121.462988));
-        coordinates.put("Keelung", new LatLng(25.12825, 121.7419));
-        coordinates.put("Yilan", new LatLng(24.757, 121.753));
-        coordinates.put("Hsinchu", new LatLng(24.80361, 120.96861));
-        coordinates.put("Taoyuan", new LatLng(24.99368, 121.29696));
+
+        coordinates.put("Taipei", new ArrayList<ArrayList<String>>());
+        coordinates.get("Taipei").add(new ArrayList<String>());
+        coordinates.get("Taipei").get(0).add("25.0323,121.5735");
+        coordinates.get("Taipei").get(0).add("7700");
+        coordinates.get("Taipei").add(new ArrayList<String>());
+        coordinates.get("Taipei").get(1).add("25.1368,121.5474");
+        coordinates.get("Taipei").get(1).add("7700");
+
+        coordinates.put("Keelung", new ArrayList<ArrayList<String>>());
+        coordinates.get("Keelung").add(new ArrayList<String>());
+        coordinates.get("Keelung").get(0).add("25.1258,121.7176");
+        coordinates.get("Keelung").get(0).add("8899");
+
+//        coordinates.get("Taipei").add(new LatLng(25.0323,121.5735));
+//        coordinates.get("Taipei").add(new LatLng(25.1368,121.5474));
+
+//        coordinates.put("New Taipei", new ArrayList<LatLng>());
+//
+//        coordinates.put("Keelung", new ArrayList<LatLng>());
+//        coordinates.get("Keelung").add(new LatLng(25.1258,121.7176));
+
+//        coordinatesList.add(new LatLng(25.1258,121.7176));
+//        coordinates.put("Keelung", coordinatesList);
+//        coordinatesList.clear();
+//        coordinates.put("New Taipei", new LatLng(25.016969, 121.462988));
+//        coordinates.put("Keelung", new LatLng(25.12825, 121.7419));
+//        coordinates.put("Yilan", new LatLng(24.757, 121.753));
+//        coordinates.put("Hsinchu", new LatLng(24.80361, 120.96861));
+//        coordinates.put("Taoyuan", new LatLng(24.99368, 121.29696));
     }
 
-    private void setRegionCoordinates() {
+    private void setRegionLocation() {
+        //set the coordinate to which the map will zoom at when the respective region is chosen
+        regionLocation = new HashMap<>();
+        regionLocation.put("Taipei", new LatLng(25.0330, 121.5654));
+        regionLocation.put("New Taipei", new LatLng(25.016969, 121.462988));
+        regionLocation.put("Keelung", new LatLng(25.12825, 121.7419));
+        regionLocation.put("Yilan", new LatLng(24.757, 121.753));
+        regionLocation.put("Hsinchu", new LatLng(24.80361, 120.96861));
+        regionLocation.put("Taoyuan", new LatLng(24.99368, 121.29696));
+    }
+
+    private void setRegion() {
         Bundle bundle = getIntent().getExtras();
-        String region = "";
 
         if(bundle != null) {
             region = bundle.getString("region");
+            regionCoordinates = regionLocation.get(region);
         }
-
-        Log.i("REGION", region);
-        for (String key : coordinates.keySet()) {
-            if(key.equals(region)) {
-                regionCoordinates = coordinates.get(key);
-                break;
-            }
+        else {
+            region = "";
         }
     }
 
