@@ -18,6 +18,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.android.travelnortherntaiwan.R;
 import com.example.android.travelnortherntaiwan.SingletonRequestQueue;
 import com.google.gson.Gson;
+import com.squareup.picasso.Picasso;
 
 public class LocationDetailsFragment extends Fragment {
     private final String GOOGLE_API_KEY = "AIzaSyCc4acsOQV7rnQ92weHYKO14fvL9wkRpKc";
@@ -74,6 +75,14 @@ public class LocationDetailsFragment extends Fragment {
             placePhone.setText(placeDetails.getResult().getFormatted_phone_number());
         }
 //        placeImage.setImageResource();
+        if(placeDetails.getResult().getPhotos() != null) {
+            Photos photo = placeDetails.getResult().getPhotos().get(0);
+            if (photo != null) {
+                String reference = photo.getPhoto_reference();
+                String url = "https://maps.googleapis.com/maps/api/place/photo?&maxwidth=500&photoreference=" + reference + "&key=" + GOOGLE_API_KEY;
+                Picasso.get().load(url).into(placeImage);
+            }
+        }
     }
 
     private void apiCallPlaceDetails() {

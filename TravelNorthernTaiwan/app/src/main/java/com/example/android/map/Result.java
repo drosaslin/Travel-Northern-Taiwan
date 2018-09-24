@@ -1,11 +1,13 @@
 package com.example.android.map;
 
+import java.util.ArrayList;
+
 /**
  * Created by David Rosas on 9/16/2018.
  */
 
 class Result {
-    private Photos[] photos;
+    private ArrayList<Photos> photos;
 
     private String id;
 
@@ -29,12 +31,12 @@ class Result {
 
     private Geometry geometry;
 
-    public Photos[] getPhotos ()
+    public ArrayList<Photos> getPhotos ()
     {
         return photos;
     }
 
-    public void setPhotos (Photos[] photos)
+    public void setPhotos (ArrayList<Photos> photos)
     {
         this.photos = photos;
     }

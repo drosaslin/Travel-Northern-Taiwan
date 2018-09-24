@@ -1,7 +1,6 @@
 package com.example.android.map;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -23,13 +22,16 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.maps.android.clustering.ClusterItem;
 import com.google.gson.Gson;
+import com.google.maps.android.clustering.ClusterManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback,
+public class MapsActivity extends FragmentActivity implements
+        OnMapReadyCallback,
         GoogleMap.OnMarkerClickListener,
         LocationsListFragment.OnLocationPressedListener {
 
@@ -42,10 +44,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private LocationsResponse locationsResponse;
     private RequestQueue queue;
+    private ClusterManager<MyItem> mClusterManager;
     private HashMap<String, ArrayList<String>> places;
     private HashMap<String, ArrayList<ArrayList<String>>> coordinates;
     private HashMap<String, LatLng> regionLocation;
-    private HashMap<String, Integer> radius;
     private LocationsListFragment locationsListFragment;
     private LocationDetailsFragment locationDetailsFragment;
     private String region;
@@ -63,6 +65,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //getting the instance of the request queue
         queue = SingletonRequestQueue.getInstance(this).getRequestQueue();
+
 
         //setting up all necessary data
         setActivities();
@@ -109,6 +112,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(regionCoordinates , 11));
+        setUpClusterer();
     }
 
     @Override
@@ -125,6 +129,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             LatLng coordinates = results.getGeometry().getLocation().getLatLng();
             mMap.addMarker(new MarkerOptions().position(coordinates).title(results.getName()));
             mMap.setOnMarkerClickListener(this);
+            mClusterManager.addItem(new MyItem(results.getGeometry().getLocation().getLat(), results.getGeometry().getLocation().getLng()));
         }
 
         //update location list fragment's recycler
@@ -409,5 +414,49 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         fragmentTransaction.add(R.id.locations_container, locationDetailsFragment);
         fragmentTransaction.addToBackStack("locationDetailsStack");
         fragmentTransaction.commit();
+    }
+
+    private void setUpClusterer() {
+        // Initialize the manager with the context and the map.
+        // (Activity extends context, so we can pass 'this' in the constructor.)
+        mClusterManager = new ClusterManager<>(this, mMap);
+
+        // Point the map's listeners at the listeners implemented by the cluster
+        // manager.
+        mMap.setOnCameraIdleListener(mClusterManager);
+        mMap.setOnMarkerClickListener(mClusterManager);
+    }
+
+    public class MyItem implements ClusterItem {
+        private final LatLng mPosition;
+        private final String mTitle;
+        private final String mSnippet;
+
+        public MyItem(double lat, double lng) {
+            mPosition = new LatLng(lat, lng);
+            mTitle = "";
+            mSnippet = "";
+        }
+
+        public MyItem(double lat, double lng, String title, String snippet) {
+            mPosition = new LatLng(lat, lng);
+            mTitle = title;
+            mSnippet = snippet;
+        }
+
+        @Override
+        public LatLng getPosition() {
+            return mPosition;
+        }
+
+        @Override
+        public String getTitle() {
+            return mTitle;
+        }
+
+        @Override
+        public String getSnippet() {
+            return mSnippet;
+        }
     }
 }
