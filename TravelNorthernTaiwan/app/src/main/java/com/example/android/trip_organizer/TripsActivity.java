@@ -114,7 +114,7 @@ public class TripsActivity extends android.support.v4.app.Fragment {
 
         }
 
-        Log.d("test", "size = " + DataList.size());
+        Log.d("ARRAY SIZE", "size = " + DataList.size());
     }
 
 }

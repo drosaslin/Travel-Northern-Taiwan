@@ -31,7 +31,7 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(TripsAdapter.ViewHolder holder, int position) {
         String name = DataList.get(position).getName();
-        String region = DataList.get(position).getRegion();
+        String region = "Region: " + DataList.get(position).getRegion();
         //String date;
 
 //        if(DataList.get(position).getFromDate().equals("")){
