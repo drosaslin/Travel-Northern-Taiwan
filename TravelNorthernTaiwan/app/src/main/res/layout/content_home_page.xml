@@ -7,7 +7,7 @@
     android:fillViewport="true"
     tools:showIn="@layout/activity_home_page"
     tools:context="com.example.android.trip_organizer.ChooseRegionActivity"
-    android:background="#ccd7ff"
+    android:background="#efefef"
     android:padding="2dp">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

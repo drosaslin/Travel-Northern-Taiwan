@@ -29,19 +29,19 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.example.android.user_authentication.LoginActivity"
-            android:label="Log in" />
+            android:label="Log in"/>
         <activity
             android:name="com.example.android.user_authentication.SignupActivity"
-            android:label="Sign up" />
+            android:label="Sign up"/>
         <activity
             android:name="com.example.android.trip_organizer.ChooseRegionActivity"
-            android:label="Choose Region" />
+            android:label="Choose Region"/>
         <activity
             android:name="com.example.android.trip_organizer.NewTripActivity"
-            android:label="Create new trip" />
+            android:label="Create new trip"/>
         <activity
             android:name="com.example.android.weather.HourlyDataActivity"
-            android:label="Weather By Hour" />
+            android:label="Weather By Hour"/>
         <activity
             android:name="com.example.android.map.MapsActivity"
             android:label="Map"/>
