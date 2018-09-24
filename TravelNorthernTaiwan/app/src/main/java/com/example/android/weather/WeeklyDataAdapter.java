@@ -1,17 +1,17 @@
 package com.example.android.weather;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
+        import android.support.annotation.NonNull;
+        import android.support.v7.widget.RecyclerView;
+        import android.view.LayoutInflater;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.widget.ImageView;
+        import android.widget.TextView;
 
-import com.example.android.travelnortherntaiwan.R;
+        import com.example.android.travelnortherntaiwan.R;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+        import java.util.ArrayList;
+        import java.util.HashMap;
 
 /**
  * Created by David Rosas on 8/23/2018.

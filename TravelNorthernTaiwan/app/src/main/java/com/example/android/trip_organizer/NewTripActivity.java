@@ -138,10 +138,10 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
 
         //move later to another function
         //sending the user to another view and passing the current trip parameter to the view
-        Intent selectRegion = new Intent(NewTripActivity.this,ChooseRegionActivity.class);
-        selectRegion.putExtra("tripKey", currentKey);
+        Intent chooseRegion = new Intent(NewTripActivity.this,ChooseRegionActivity.class);
+        chooseRegion.putExtra("tripKey", currentKey);
         Log.d("test","key = " + currentKey);
-        startActivity(selectRegion);
+        startActivity(chooseRegion);
     }
 
 
