@@ -127,9 +127,8 @@ public class MapsActivity extends FragmentActivity implements
         //add the markers for every place returned from the api call
         for(Results results : locationsResponse.getResults()) {
             LatLng coordinates = results.getGeometry().getLocation().getLatLng();
-            mMap.addMarker(new MarkerOptions().position(coordinates).title(results.getName()));
-            mMap.setOnMarkerClickListener(this);
-            mClusterManager.addItem(new MyItem(results.getGeometry().getLocation().getLat(), results.getGeometry().getLocation().getLng()));
+            MyItem item = new MyItem(coordinates.latitude, coordinates.longitude, results.getName(), results.getRating());
+            mClusterManager.addItem(item);
         }
 
         //update location list fragment's recycler
