@@ -24,8 +24,6 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_activity_base);
 
-        Log.i("ACTIVITY CREATED", "Drawer");
-
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -61,7 +59,6 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
             case R.id.nav_sign_out:
                 FirebaseAuth.getInstance().signOut();
                 DrawerActivity.this.finish();
-//                startActivity(new Intent(this, UserAuthenticationActivity.class));
         }
 
         drawer.closeDrawer(GravityCompat.START);

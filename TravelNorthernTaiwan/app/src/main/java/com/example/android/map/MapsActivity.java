@@ -1,12 +1,14 @@
 package com.example.android.map;
 
 import android.os.Bundle;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -21,7 +23,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.gson.Gson;
 import com.google.maps.android.clustering.ClusterManager;
@@ -41,11 +42,12 @@ public class MapsActivity extends FragmentActivity implements
     private TextView shopping;
     private TextView nightlife;
     private TextView history;
+    private TabLayout activitiesTab;
     private GoogleMap mMap;
     private LocationsResponse locationsResponse;
     private RequestQueue queue;
     private ClusterManager<MyItem> mClusterManager;
-    private HashMap<String, ArrayList<String>> places;
+    private HashMap<String, ArrayList<String>> activities;
     private HashMap<String, ArrayList<ArrayList<String>>> coordinates;
     private HashMap<String, LatLng> regionLocation;
     private LocationsListFragment locationsListFragment;
@@ -78,31 +80,57 @@ public class MapsActivity extends FragmentActivity implements
         locationDetailsFragment = new LocationDetailsFragment();
 
         //setting up activity's views
-        food = findViewById(R.id.food);
-        shopping = findViewById(R.id.shopping);
-        nightlife = findViewById(R.id.nightlife);
-        history = findViewById(R.id.history);
+        activitiesTab = findViewById(R.id.activities_tab);
+        activitiesTab.setTabMode(TabLayout.MODE_SCROLLABLE);
+//        food = findViewById(R.id.food);
+//        shopping = findViewById(R.id.shopping);
+//        nightlife = findViewById(R.id.nightlife);
+//        history = findViewById(R.id.history);
 
         //storing the views in an list to prevent duplicate code with onclick events
-        activityList = new ArrayList<>();
-        activityList.add(food);
-        activityList.add(shopping);
-        activityList.add(nightlife);
-        activityList.add(history);
+//        activityList = new ArrayList<>();
+//        activityList.add(food);
+//        activityList.add(shopping);
+//        activityList.add(nightlife);
+//        activityList.add(history);
 
+        activitiesTab.addTab(activitiesTab.newTab().setText("food"));
+        activitiesTab.addTab(activitiesTab.newTab().setText("shopping"));
+        activitiesTab.addTab(activitiesTab.newTab().setText("history"));
+        activitiesTab.addTab(activitiesTab.newTab().setText("nightlife"));
+
+        activitiesTab.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                performApiCalls((String)tab.getText());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                cleanView();
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
+
+        activitiesTab.getTabAt(1).select();
+        activitiesTab.getTabAt(0).select();
         //setting up on click events
-        for(TextView activity : activityList) {
-            activity.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    cleanView();
-                    performApiCalls(view);
-                }
-            });
-        }
+//        for(TextView activity : activityList) {
+//            activity.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    cleanView();
+//                    performApiCalls(view);
+//                }
+//            });
+//        }
 
         //call the food onClickListener so that the food locations are displayed by default
-        activityList.get(0).performClick();
+//        activityList.get(0).performClick();
 
         //display the locations list fragment in the slide up panel
         getSupportFragmentManager().beginTransaction().replace(R.id.locations_container, locationsListFragment).commit();
@@ -131,6 +159,7 @@ public class MapsActivity extends FragmentActivity implements
             mClusterManager.addItem(item);
         }
 
+        mClusterManager.cluster();
         //update location list fragment's recycler
         locationsListFragment.updateData(locationsResponse.getResults());
     }
@@ -148,11 +177,9 @@ public class MapsActivity extends FragmentActivity implements
 //        }
 //    }
 
-    private void performApiCalls(View view) {
-        String key = getResources().getResourceEntryName(view.getId());
-
-        //call the google places api for all activities related to the user's choice on its respective region
-        for(String interest : places.get(key)) {
+    private void performApiCalls(String key) {
+        //call the google activities api for all activities related to the user's choice on its respective region
+        for(String interest : activities.get(key)) {
             Log.i("REGION", region);
             for(ArrayList<String> list : coordinates.get(region)) {
                 String latLng = list.get(0);
@@ -210,16 +237,19 @@ public class MapsActivity extends FragmentActivity implements
         if(mMap != null) {
             mMap.clear();
         }
+        if(mClusterManager != null) {
+            mClusterManager.clearItems();
+        }
 
         locationsListFragment.clearData();
     }
 
     private void setActivities() {
-        places = new HashMap<>();
-        places.put("food", new ArrayList<>(Arrays.asList("restaurant", "meal_takeaway", "bakery", "cafe")));
-        places.put("shopping", new ArrayList<>(Arrays.asList("clothing_store", "department_store", "shoe_store", "shopping_mall", "store")));
-        places.put("nightlife", new ArrayList<>(Arrays.asList("bar", "movie_theater", "night_club")));
-        places.put("history", new ArrayList<>(Arrays.asList("library", "museum")));
+        activities = new HashMap<>();
+        activities.put("food", new ArrayList<>(Arrays.asList("restaurant", "meal_takeaway", "bakery", "cafe")));
+        activities.put("shopping", new ArrayList<>(Arrays.asList("clothing_store", "department_store", "shoe_store", "shopping_mall", "store")));
+        activities.put("nightlife", new ArrayList<>(Arrays.asList("bar", "movie_theater", "night_club")));
+        activities.put("history", new ArrayList<>(Arrays.asList("library", "museum")));
     }
 
     private void setCoordinates() {
@@ -430,6 +460,7 @@ public class MapsActivity extends FragmentActivity implements
         private final LatLng mPosition;
         private final String mTitle;
         private final String mSnippet;
+//        private final BitmapDescriptor mIcon;
 
         public MyItem(double lat, double lng) {
             mPosition = new LatLng(lat, lng);

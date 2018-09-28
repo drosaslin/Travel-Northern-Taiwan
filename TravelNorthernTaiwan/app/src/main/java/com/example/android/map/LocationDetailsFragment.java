@@ -1,8 +1,11 @@
 package com.example.android.map;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,16 +24,20 @@ import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 public class LocationDetailsFragment extends Fragment {
+
     private final String GOOGLE_API_KEY = "AIzaSyCc4acsOQV7rnQ92weHYKO14fvL9wkRpKc";
     private String placeId;
     private RequestQueue queue;
     private LocationDetailsResponse placeDetails;
+    private PagerAdapter adapter;
     private TextView placeName;
     private TextView placeAddress;
     private TextView placeOpeningHours;
     private TextView placePhone;
     private TextView placeFee;
     private ImageView placeImage;
+    private TabLayout tabLayout;
+    private ViewPager pager;
 
     @Nullable
     @Override
@@ -44,6 +51,11 @@ public class LocationDetailsFragment extends Fragment {
 
         queue = SingletonRequestQueue.getInstance(getActivity()).getRequestQueue();
 
+        tabLayout = getView().findViewById(R.id.details_tab_layout);
+        tabLayout.addTab(tabLayout.newTab().setText("Reviews"));
+        tabLayout.addTab(tabLayout.newTab().setText("Photos"));
+        tabLayout.setTabGravity(tabLayout.GRAVITY_FILL);
+
         placeName = getView().findViewById(R.id.place_name);
         placeAddress = getView().findViewById(R.id.place_address);
         placeOpeningHours = getView().findViewById(R.id.place_opening_hours);
@@ -51,7 +63,32 @@ public class LocationDetailsFragment extends Fragment {
         placeFee = getView().findViewById(R.id.place_entrance_fee);
         placeImage = getView().findViewById(R.id.place_image);
 
+        pager = getView().findViewById(R.id.view_pager);
+        adapter = new PagerAdapter(getChildFragmentManager(), tabLayout.getTabCount());
+        pager.setAdapter(adapter);
+        pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
+        setTabLayout();
         apiCallPlaceDetails();
+    }
+
+    private void setTabLayout() {
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                pager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
     }
 
     public void setPlaceId(String newPlaceId) {
@@ -79,7 +116,7 @@ public class LocationDetailsFragment extends Fragment {
             Photos photo = placeDetails.getResult().getPhotos().get(0);
             if (photo != null) {
                 String reference = photo.getPhoto_reference();
-                String url = "https://maps.googleapis.com/maps/api/place/photo?&maxwidth=500&photoreference=" + reference + "&key=" + GOOGLE_API_KEY;
+                String url = "https://maps.googleapis.com/maps/api/place/photo?&maxwidth=200&photoreference=" + reference + "&key=" + GOOGLE_API_KEY;
                 Picasso.get().load(url).into(placeImage);
             }
         }
@@ -105,4 +142,9 @@ public class LocationDetailsFragment extends Fragment {
 
         queue.add(stringRequest);
     }
+
+//    @Override
+//    public void onFragmentInteraction(Uri uri) {
+//        //do something
+//    }
 }

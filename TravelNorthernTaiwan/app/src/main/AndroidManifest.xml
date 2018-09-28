@@ -30,28 +30,28 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="com.example.android.user_authentication.LoginActivity"
-            android:screenOrientation="portrait"
-            android:label="Log in"/>
+            android:label="Log in"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.example.android.user_authentication.SignupActivity"
-            android:screenOrientation="portrait"
-            android:label="Sign up"/>
+            android:label="Sign up"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.example.android.trip_organizer.ChooseRegionActivity"
-            android:screenOrientation="portrait"
-            android:label="Choose Region"/>
+            android:label="Choose Region"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.example.android.trip_organizer.NewTripActivity"
-            android:screenOrientation="portrait"
-            android:label="Create new trip"/>
+            android:label="Create new trip"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.example.android.weather.HourlyDataActivity"
-            android:screenOrientation="portrait"
-            android:label="Weather By Hour"/>
+            android:label="Weather By Hour"
+            android:screenOrientation="portrait" />
         <activity
             android:name="com.example.android.map.MapsActivity"
-            android:screenOrientation="portrait"
-            android:label="Map"/>
+            android:label="Map"
+            android:screenOrientation="portrait" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -63,6 +63,8 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCc4acsOQV7rnQ92weHYKO14fvL9wkRpKc" />
+
+        <activity android:name="com.example.android.map.LocationReviewsFragment"></activity>
     </application>
 
 </manifest>
