@@ -1,4 +1,12 @@
-package com.example.android.map;
+package com.example.android.locations_info;
+
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.example.android.map.Geometry;
+import com.example.android.map.Opening_hours;
+import com.example.android.map.Photos;
+import com.example.android.map.Plus_code;
 
 import java.util.ArrayList;
 
@@ -6,7 +14,7 @@ import java.util.ArrayList;
  * Created by David Rosas on 9/16/2018.
  */
 
-class Result {
+class Result implements Parcelable {
     private ArrayList<Photos> photos;
 
     private String id;
@@ -15,7 +23,7 @@ class Result {
 
     private String icon;
 
-    private Reviews[] reviews;
+    private ArrayList<Reviews> reviews;
 
     private String name;
 
@@ -30,6 +38,28 @@ class Result {
     private Opening_hours opening_hours;
 
     private Geometry geometry;
+
+    protected Result(Parcel in) {
+        id = in.readString();
+        place_id = in.readString();
+        icon = in.readString();
+        name = in.readString();
+        formatted_address = in.readString();
+        formatted_phone_number = in.readString();
+        rating = in.readString();
+    }
+
+    public static final Creator<Result> CREATOR = new Creator<Result>() {
+        @Override
+        public Result createFromParcel(Parcel in) {
+            return new Result(in);
+        }
+
+        @Override
+        public Result[] newArray(int size) {
+            return new Result[size];
+        }
+    };
 
     public ArrayList<Photos> getPhotos ()
     {
@@ -71,12 +101,12 @@ class Result {
         this.icon = icon;
     }
 
-    public Reviews[] getReviews ()
+    public ArrayList<Reviews> getReviews ()
     {
         return reviews;
     }
 
-    public void setReviews (Reviews[] reviews)
+    public void setReviews (ArrayList<Reviews> reviews)
     {
         this.reviews = reviews;
     }
@@ -155,5 +185,21 @@ class Result {
     public String toString()
     {
         return "ClassPojo [photos = "+photos+", id = "+id+", place_id = "+place_id+", icon = "+icon+", reviews = "+reviews+", name = "+name+", formatted_address = "+formatted_address+", formatted_phone_number = "+formatted_phone_number+", plus_code = "+plus_code+", rating = "+rating+", opening_hours = "+opening_hours+", geometry = "+geometry+"]";
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id);
+        parcel.writeString(place_id);
+        parcel.writeString(icon);
+        parcel.writeString(name);
+        parcel.writeString(formatted_address);
+        parcel.writeString(formatted_phone_number);
+        parcel.writeString(rating);
     }
 }

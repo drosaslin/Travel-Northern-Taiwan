@@ -1,4 +1,4 @@
-package com.example.android.map;
+package com.example.android.locations_info;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.android.map.Results;
 import com.example.android.travelnortherntaiwan.R;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class LocationsListFragment extends Fragment {
     private OnLocationPressedListener onLocationPressedListener;
 
     public interface OnLocationPressedListener {
-        public void onLocationPressed(String locationId);
+        void onLocationPressed(String locationId);
     }
 
     @Nullable

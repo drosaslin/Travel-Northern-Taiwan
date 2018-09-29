@@ -6,15 +6,16 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.android.locations_info.LocationDetailsFragment;
+import com.example.android.locations_info.LocationsListFragment;
+import com.example.android.locations_info.LocationsResponse;
 import com.example.android.travelnortherntaiwan.R;
 import com.example.android.travelnortherntaiwan.SingletonRequestQueue;
 import com.google.android.gms.maps.CameraUpdateFactory;

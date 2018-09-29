@@ -10,12 +10,6 @@ class HourlyWeather implements Parcelable {
     private String icon;
     private ArrayList<Forecast> data;
 
-    public HourlyWeather() {
-        summary = "";
-        icon = "";
-        data = new ArrayList<>();
-    }
-
     protected HourlyWeather(Parcel in) {
         summary = in.readString();
         icon = in.readString();

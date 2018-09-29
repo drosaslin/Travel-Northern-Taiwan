@@ -16,15 +16,6 @@ public class WeatherData implements Parcelable {
     private HourlyWeather hourly;
     private HourlyWeather daily;
 
-    public WeatherData() {
-        latitude = 0.0;
-        longitude = 0.0;
-        city = "City";
-        currently = new Forecast();
-        hourly = new HourlyWeather();
-        daily = new HourlyWeather();
-    }
-
     protected WeatherData(Parcel in) {
         latitude = in.readDouble();
         longitude = in.readDouble();

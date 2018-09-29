@@ -6,7 +6,7 @@
     android:background="@android:color/white"
     android:clickable="true"
     android:fillViewport="true"
-    tools:context="com.example.android.map.LocationDetailsFragment">
+    tools:context="com.example.android.locations_info.LocationDetailsFragment">
 
     <LinearLayout
         android:orientation="vertical"
@@ -21,11 +21,11 @@
             android:textSize="25sp"
             android:text="Name" />
 
-        <ImageView
-            android:id="@+id/place_image"
-            android:layout_width="match_parent"
-            android:layout_height="100sp"
-            android:src="@android:drawable/ic_menu_directions"/>
+        <!--<ImageView-->
+            <!--android:id="@+id/place_image"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="100sp"-->
+            <!--android:src="@android:drawable/ic_menu_directions"/>-->
 
         <LinearLayout
             android:orientation="horizontal"

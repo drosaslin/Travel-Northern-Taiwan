@@ -1,6 +1,5 @@
-package com.example.android.map;
+package com.example.android.locations_info;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -18,6 +17,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.android.map.Photos;
 import com.example.android.travelnortherntaiwan.R;
 import com.example.android.travelnortherntaiwan.SingletonRequestQueue;
 import com.google.gson.Gson;
@@ -35,7 +35,7 @@ public class LocationDetailsFragment extends Fragment {
     private TextView placeOpeningHours;
     private TextView placePhone;
     private TextView placeFee;
-    private ImageView placeImage;
+//    private ImageView placeImage;
     private TabLayout tabLayout;
     private ViewPager pager;
 
@@ -61,12 +61,9 @@ public class LocationDetailsFragment extends Fragment {
         placeOpeningHours = getView().findViewById(R.id.place_opening_hours);
         placePhone = getView().findViewById(R.id.place_phone_number);
         placeFee = getView().findViewById(R.id.place_entrance_fee);
-        placeImage = getView().findViewById(R.id.place_image);
+//        placeImage = getView().findViewById(R.id.place_image);
 
         pager = getView().findViewById(R.id.view_pager);
-        adapter = new PagerAdapter(getChildFragmentManager(), tabLayout.getTabCount());
-        pager.setAdapter(adapter);
-        pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
 
         setTabLayout();
         apiCallPlaceDetails();
@@ -98,6 +95,10 @@ public class LocationDetailsFragment extends Fragment {
     private void updateUI(String response) {
         placeDetails = new Gson().fromJson(response, LocationDetailsResponse.class);
 
+        adapter = new PagerAdapter(getChildFragmentManager(), tabLayout.getTabCount(), placeDetails);
+        pager.setAdapter(adapter);
+        pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
+
         //set all layout's view if their corresponding values are not null
         if(placeDetails.getResult().getName() != null) {
             placeName.setText(placeDetails.getResult().getName());
@@ -112,14 +113,14 @@ public class LocationDetailsFragment extends Fragment {
             placePhone.setText(placeDetails.getResult().getFormatted_phone_number());
         }
 //        placeImage.setImageResource();
-        if(placeDetails.getResult().getPhotos() != null) {
-            Photos photo = placeDetails.getResult().getPhotos().get(0);
-            if (photo != null) {
-                String reference = photo.getPhoto_reference();
-                String url = "https://maps.googleapis.com/maps/api/place/photo?&maxwidth=200&photoreference=" + reference + "&key=" + GOOGLE_API_KEY;
-                Picasso.get().load(url).into(placeImage);
-            }
-        }
+//        if(placeDetails.getResult().getPhotos() != null) {
+//            Photos photo = placeDetails.getResult().getPhotos().get(0);
+//            if (photo != null) {
+//                String reference = photo.getPhoto_reference();
+//                String url = "https://maps.googleapis.com/maps/api/place/photo?&maxwidth=200&photoreference=" + reference + "&key=" + GOOGLE_API_KEY;
+//                Picasso.get().load(url).into(placeImage);
+//            }
+//        }
     }
 
     private void apiCallPlaceDetails() {
@@ -142,9 +143,4 @@ public class LocationDetailsFragment extends Fragment {
 
         queue.add(stringRequest);
     }
-
-//    @Override
-//    public void onFragmentInteraction(Uri uri) {
-//        //do something
-//    }
 }

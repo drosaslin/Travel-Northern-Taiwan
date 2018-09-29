@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5sp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/reviewer_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="username"/>
+
+        <TextView
+            android:id="@+id/review_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="5sp"
+            android:text="a month ago"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/review_rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5"/>
+
+    <TextView
+        android:id="@+id/review"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="a long review"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1sp"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="10sp"
+        android:background="@color/colorAccent"/>
+
+</LinearLayout>

@@ -1,10 +1,13 @@
 package com.example.android.map;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by David Rosas on 9/5/2018.
  */
 
-public class Photos {
+public class Photos implements Parcelable {
     private String photo_reference;
 
     private String height;
@@ -12,6 +15,25 @@ public class Photos {
     private String[] html_attributions;
 
     private String width;
+
+    protected Photos(Parcel in) {
+        photo_reference = in.readString();
+        height = in.readString();
+        html_attributions = in.createStringArray();
+        width = in.readString();
+    }
+
+    public static final Creator<Photos> CREATOR = new Creator<Photos>() {
+        @Override
+        public Photos createFromParcel(Parcel in) {
+            return new Photos(in);
+        }
+
+        @Override
+        public Photos[] newArray(int size) {
+            return new Photos[size];
+        }
+    };
 
     public String getPhoto_reference ()
     {
@@ -57,5 +79,18 @@ public class Photos {
     public String toString()
     {
         return "ClassPojo [photo_reference = "+photo_reference+", height = "+height+", html_attributions = "+html_attributions+", width = "+width+"]";
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(photo_reference);
+        parcel.writeString(height);
+        parcel.writeStringArray(html_attributions);
+        parcel.writeString(width);
     }
 }

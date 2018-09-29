@@ -1,4 +1,4 @@
-package com.example.android.map;
+package com.example.android.locations_info;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +8,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.android.map.Photos;
+import com.example.android.map.Results;
 import com.example.android.travelnortherntaiwan.R;
 import com.squareup.picasso.Picasso;
 

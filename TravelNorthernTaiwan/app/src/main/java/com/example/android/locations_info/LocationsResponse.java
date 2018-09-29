@@ -1,4 +1,6 @@
-package com.example.android.map;
+package com.example.android.locations_info;
+
+import com.example.android.map.Results;
 
 import java.util.ArrayList;
 
