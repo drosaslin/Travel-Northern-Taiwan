@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -52,7 +53,6 @@ public class MapsActivity extends FragmentActivity implements
     private HashMap<String, ArrayList<ArrayList<String>>> coordinates;
     private HashMap<String, LatLng> regionLocation;
     private LocationsListFragment locationsListFragment;
-    private LocationDetailsFragment locationDetailsFragment;
     private String region;
     private LatLng regionCoordinates;
 
@@ -78,22 +78,10 @@ public class MapsActivity extends FragmentActivity implements
 
         //creating instances of the fragments
         locationsListFragment = new LocationsListFragment();
-        locationDetailsFragment = new LocationDetailsFragment();
 
         //setting up activity's views
         activitiesTab = findViewById(R.id.activities_tab);
         activitiesTab.setTabMode(TabLayout.MODE_SCROLLABLE);
-//        food = findViewById(R.id.food);
-//        shopping = findViewById(R.id.shopping);
-//        nightlife = findViewById(R.id.nightlife);
-//        history = findViewById(R.id.history);
-
-        //storing the views in an list to prevent duplicate code with onclick events
-//        activityList = new ArrayList<>();
-//        activityList.add(food);
-//        activityList.add(shopping);
-//        activityList.add(nightlife);
-//        activityList.add(history);
 
         activitiesTab.addTab(activitiesTab.newTab().setText("food"));
         activitiesTab.addTab(activitiesTab.newTab().setText("shopping"));
@@ -119,19 +107,6 @@ public class MapsActivity extends FragmentActivity implements
 
         activitiesTab.getTabAt(1).select();
         activitiesTab.getTabAt(0).select();
-        //setting up on click events
-//        for(TextView activity : activityList) {
-//            activity.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    cleanView();
-//                    performApiCalls(view);
-//                }
-//            });
-//        }
-
-        //call the food onClickListener so that the food locations are displayed by default
-//        activityList.get(0).performClick();
 
         //display the locations list fragment in the slide up panel
         getSupportFragmentManager().beginTransaction().replace(R.id.locations_container, locationsListFragment).commit();
@@ -437,11 +412,13 @@ public class MapsActivity extends FragmentActivity implements
     public void onLocationPressed(String locationId) {
         /*set the location id in the location details' fragment and put the locations
           details fragment in front of the locations list fragment*/
-        locationDetailsFragment.setPlaceId(locationId);
+        LocationDetailsFragment fragment = new LocationDetailsFragment();
+        fragment.setPlaceId(locationId);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.add(R.id.locations_container, locationDetailsFragment);
+        fragmentTransaction.setCustomAnimations(R.anim.enter_from_bottom, R.anim.exit_from_top, R.anim.enter_from_bottom, R.anim.exit_from_top);
+        fragmentTransaction.add(R.id.locations_container, fragment);
         fragmentTransaction.addToBackStack("locationDetailsStack");
         fragmentTransaction.commit();
     }
@@ -455,6 +432,11 @@ public class MapsActivity extends FragmentActivity implements
         // manager.
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     public class MyItem implements ClusterItem {

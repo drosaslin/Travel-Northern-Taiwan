@@ -28,14 +28,15 @@ public class PagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("data", data);
+
         switch (position) {
             case 0:
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("data", data);
                 reviewsFragment.setArguments(bundle);
                 return reviewsFragment;
             case 1:
-                photosFragment.setData(data);
+                photosFragment.setArguments(bundle);
                 return photosFragment;
             default:
                 return null;

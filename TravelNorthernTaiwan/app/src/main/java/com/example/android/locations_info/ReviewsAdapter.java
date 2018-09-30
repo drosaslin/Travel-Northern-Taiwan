@@ -48,10 +48,6 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsV
         return reviews.size();
     }
 
-    public void setReviews(ArrayList<Reviews> newReviews) {
-        reviews = newReviews;
-    }
-
     public class ReviewsViewHolder extends RecyclerView.ViewHolder {
         TextView reviewer;
         TextView reviewTime;
@@ -61,10 +57,10 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsV
         public ReviewsViewHolder(View itemView) {
             super(itemView);
 
-            reviewer = (itemView).findViewById(R.id.reviewer_name);
-            reviewTime = (itemView).findViewById(R.id.review_time);
-            reviewRating = (itemView).findViewById(R.id.review_rating);
-            review = (itemView).findViewById(R.id.review);
+            reviewer = itemView.findViewById(R.id.reviewer_name);
+            reviewTime = itemView.findViewById(R.id.review_time);
+            reviewRating = itemView.findViewById(R.id.review_rating);
+            review = itemView.findViewById(R.id.review);
         }
     }
 }

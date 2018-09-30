@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -90,6 +91,11 @@ public class LocationDetailsFragment extends Fragment {
 
     public void setPlaceId(String newPlaceId) {
         placeId = newPlaceId;
+    }
+
+    public void resetView() {
+        Toast.makeText(getActivity(), "HELLO", Toast.LENGTH_SHORT).show();
+        tabLayout.getTabAt(0).select();
     }
 
     private void updateUI(String response) {
