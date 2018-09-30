@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.android.travelnortherntaiwan.R;
@@ -34,13 +35,16 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsV
     public void onBindViewHolder(final ReviewsAdapter.ReviewsViewHolder holder, final int position) {
         holder.reviewer.setText(reviews.get(position).getAuthor_name());
         holder.reviewTime.setText(reviews.get(position).getRelative_time_description());
-        holder.reviewRating.setText(reviews.get(position).getRating());
+        holder.reviewRating.setRating(Float.parseFloat(reviews.get(position).getRating()));
         holder.review.setText(reviews.get(position).getText());
     }
 
     @Override
     public int getItemCount() {
-//        return 0;
+        if(reviews == null) {
+            return 0;
+        }
+
         return reviews.size();
     }
 
@@ -51,7 +55,7 @@ public class ReviewsAdapter extends RecyclerView.Adapter<ReviewsAdapter.ReviewsV
     public class ReviewsViewHolder extends RecyclerView.ViewHolder {
         TextView reviewer;
         TextView reviewTime;
-        TextView reviewRating;
+        RatingBar reviewRating;
         TextView review;
 
         public ReviewsViewHolder(View itemView) {
