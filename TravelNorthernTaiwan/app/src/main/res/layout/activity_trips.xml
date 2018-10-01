@@ -8,9 +8,6 @@
     tools:context="com.example.android.trip_organizer.NewTripActivity"
     android:background="#efefef">
 
-
-
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/my_trips_list"
         android:layout_width="match_parent"

@@ -25,6 +25,8 @@ import java.util.HashMap;
 public class NewTripActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     //create function to check if the trip name from the same user already exists
     //date verification or datepicker restriction
+    //change imageview and textview
+    //switch views
 
     private Button mNextBtn;
 
