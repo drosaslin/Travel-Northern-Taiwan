@@ -62,6 +62,7 @@ public class ChooseRegionActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     String tag = (String) view.getTag();
                     mapsActivity.putExtra("region", tag);
+                    mapsActivity.putExtra("tripKey", currentTripKey);
                     mRootReference.child(currentTripKey).child("Region").setValue(tag);
                     startActivity(mapsActivity);
                 }

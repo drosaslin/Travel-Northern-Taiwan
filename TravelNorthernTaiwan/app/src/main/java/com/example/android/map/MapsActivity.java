@@ -39,6 +39,7 @@ public class MapsActivity extends FragmentActivity implements
         LocationsListFragment.OnLocationPressedListener {
 
     private final String GOOGLE_API_KEY = "AIzaSyCc4acsOQV7rnQ92weHYKO14fvL9wkRpKc";
+    private String tripKey;
     private ArrayList<TextView> activityList;
     private TextView food;
     private TextView shopping;
@@ -60,6 +61,8 @@ public class MapsActivity extends FragmentActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map_activity_main);
+
+        tripKey = getIntent().getExtras().getString("tripKey");
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -109,6 +112,9 @@ public class MapsActivity extends FragmentActivity implements
         activitiesTab.getTabAt(0).select();
 
         //display the locations list fragment in the slide up panel
+        Bundle bundle = new Bundle();
+        bundle.putString("tripKey", tripKey);
+        locationsListFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.locations_container, locationsListFragment).commit();
     }
 

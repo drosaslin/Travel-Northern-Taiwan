@@ -1,6 +1,6 @@
 package com.example.android.weather;
 
-        import android.support.annotation.NonNull;
+import android.support.annotation.NonNull;
         import android.support.v7.widget.RecyclerView;
         import android.view.LayoutInflater;
         import android.view.View;
@@ -20,7 +20,6 @@ package com.example.android.weather;
 public class WeeklyDataAdapter extends RecyclerView.Adapter<WeeklyDataAdapter.ViewHolder> {
     private ArrayList<Forecast> forecasts;
     private HashMap<String, Integer> weatherIcons;
-
 
     public WeeklyDataAdapter(ArrayList<Forecast> newForecast) {
         forecasts = newForecast;

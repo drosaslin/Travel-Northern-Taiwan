@@ -10,11 +10,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.android.map.Results;
 import com.example.android.travelnortherntaiwan.R;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class LocationsListFragment extends Fragment {
     private RecyclerView recycler;
@@ -35,7 +37,10 @@ public class LocationsListFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        adapter = new LocationAdapter(new ArrayList<Results>());
+        Bundle bundle = getArguments();
+        String tripKey = (String) bundle.get("tripKey");
+
+        adapter = new LocationAdapter(new ArrayList<Results>(), getActivity(), tripKey);
         adapter.setListener(this);
         recycler = getView().findViewById(R.id.locations_recycler);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));

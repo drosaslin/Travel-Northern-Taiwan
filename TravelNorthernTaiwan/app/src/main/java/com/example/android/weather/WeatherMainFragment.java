@@ -1,11 +1,14 @@
 package com.example.android.weather;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -14,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -22,14 +26,20 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.example.android.travelnortherntaiwan.R;
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -37,17 +47,19 @@ import java.util.Map;
 
 public class WeatherMainFragment extends android.support.v4.app.Fragment implements Serializable {
     private static final String WEATHER_KEY = "db4321093bdd7e123918dc6fa6e9c1e3";
-    private static final String GOOGLE_KEY = "AIzaSyB90nYIuqGFdjpxYP_EGlgacRKYROXyUtc";
     private int requestsFinished;
     private double latitude;
     private double longitude;
     private ProgressBar progressBar;
-    private Map<String, String> coordinates;
+    private LinkedHashMap<String, ArrayList<String>> coordinates;
     private ArrayList<WeatherData> weatherData;
     private RequestQueue queue;
     private RecyclerView recycler;
     private SummaryWeatherAdapter adapter;
     private FusedLocationProviderClient locationProviderClient;
+    private LocationRequest locationRequest;
+    private LocationCallback locationCallback;
+    private LatLng currentLocation;
 
     @Nullable
     @Override
@@ -63,20 +75,26 @@ public class WeatherMainFragment extends android.support.v4.app.Fragment impleme
         latitude = 0.0;
         longitude = 0.0;
 
-//        progressBar = getView().findViewById(R.id.loading_circle);
+        locationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+        locationRequest = new LocationRequest();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(5000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+
         recycler = getView().findViewById(R.id.provinces_recycler);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
         weatherData = new ArrayList<>();
         coordinates = new LinkedHashMap<>();
 
-        setProvinces();
-        populateData();
-
         progressBar = new ProgressBar(getActivity(), null, android.R.attr.progressBarStyleLarge);
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(100,100);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(100, 100);
         LinearLayout layout = getView().findViewById(R.id.weather_main);
-        layout.addView(progressBar,params);
+        layout.addView(progressBar, params);
         progressBar.setVisibility(View.VISIBLE);  //To show ProgressBar
+
+        setLocationCallBack();
+        startLocationUpdates();
     }
 
     public void populateData() {
@@ -88,8 +106,7 @@ public class WeatherMainFragment extends android.support.v4.app.Fragment impleme
     public void setWeather(String province) {
         queue = com.example.android.travelnortherntaiwan.SingletonRequestQueue.getInstance(getActivity()).getRequestQueue();
 
-        String url = "https://api.darksky.net/forecast/" + WEATHER_KEY + "/" + coordinates.get(province) + "?units=si";
-        Log.d("Find", province);
+        String url = "https://api.darksky.net/forecast/" + WEATHER_KEY + "/" + coordinates.get(province).get(0) + "?units=si";
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -117,86 +134,110 @@ public class WeatherMainFragment extends android.support.v4.app.Fragment impleme
         if(requestsFinished == coordinates.size()) {
             setProvincesNames();
             progressBar.setVisibility(View.GONE);     // To Hide ProgressBar
-//            progressBar.setVisibility(View.GONE);
             adapter = new SummaryWeatherAdapter(weatherData, getActivity());
             recycler.setAdapter(adapter);
 
             requestsFinished = 0;
-
-//            for(WeatherData weather : weatherData)
-//                weather.showData();
         }
     }
 
     public void setProvincesNames() {
         for(WeatherData weather : weatherData) {
-            for(Map.Entry<String, String> entry : coordinates.entrySet()) {
+            for(Map.Entry<String, ArrayList<String>> entry : coordinates.entrySet()) {
                 //set the names of the provinces if the coordinates match
-                if(entry.getValue().contains(Double.toString(weather.getLatitude())) &&
-                        entry.getValue().contains(Double.toString(weather.getLongitude()))) {
-                    Log.i("String", entry.getValue() + "-" + entry.getKey());
+                if(entry.getValue().get(0).contains(Double.toString(weather.getLatitude())) &&
+                        entry.getValue().get(0).contains(Double.toString(weather.getLongitude()))) {
+                    Log.i("String", entry.getValue().get(0) + "-" + entry.getKey());
                     weather.setCity(entry.getKey());
                 }
             }
         }
     }
 
-    public void setProvinces() {
-//        String latlng = getDeviceLocation();
-//        String city = getCurrentCity();
+    public void setProvinces() throws IOException {
+        String city = getCurrentCity();
+        Toast.makeText(getActivity(), city, Toast.LENGTH_SHORT).show();
+        if(!coordinates.isEmpty()) {
+            coordinates.clear();
+        }
 
         //latitude and longitude of the provinces
-        coordinates.put("City", "25.2341,122.3213");
-        coordinates.put("Taipei", "25.0330,121.5654");
-        coordinates.put("New Taipei", "25.0170,121.4628");
-        coordinates.put("Keelung", "25.1276,121.7392");
-        coordinates.put("Hsinchu", "24.8138,120.9675");
-        coordinates.put("Taoyuan", "24.9936,121.3010");
-        coordinates.put("Yilan", "24.7021,121.7378");
+        coordinates.put(city, new ArrayList<>(Arrays.asList(currentLocation.latitude + "," + currentLocation.longitude, "0")));
+        coordinates.put("Taipei", new ArrayList<>(Arrays.asList("25.0330,121.5654", "1")));
+        coordinates.put("New Taipei", new ArrayList<>(Arrays.asList("25.0170,121.4628", "2")));
+        coordinates.put("Keelung", new ArrayList<>(Arrays.asList("25.1276,121.7392", "3")));
+        coordinates.put("Hsinchu", new ArrayList<>(Arrays.asList("24.8138,120.9675", "4")));
+        coordinates.put("Taoyuan", new ArrayList<>(Arrays.asList("24.9936,121.3010", "5")));
+        coordinates.put("Yilan", new ArrayList<>(Arrays.asList("24.7021,121.7378", "6")));
     }
 
-    private String getDeviceLocation() {
-        locationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
-
-        try {
-            Task location = locationProviderClient.getLastLocation();
-            location.addOnCompleteListener(new OnCompleteListener() {
-                @Override
-                public void onComplete(@NonNull Task task) {
-                    if(task.isSuccessful()) {
-                        Location currentLocation = (Location) task.getResult();
-                        latitude = currentLocation.getLatitude();
-                        longitude = currentLocation.getLongitude();
-                        Log.d("Location", Double.toString(latitude) + " " + Double.toString(longitude));
-                    }
-                    else {
-                        Log.d("Location", "Unsuccessfull");
+    private void setLocationCallBack() {
+        locationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
+                for (Location location : locationResult.getLocations()) {
+                    if (location != null) {
+                        currentLocation = new LatLng(location.getLatitude(), location.getLongitude());
+                        try {
+                            setProvinces();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        populateData();
+                        locationProviderClient.removeLocationUpdates(locationCallback);
                     }
                 }
-            });
-        }
-        catch (SecurityException e) {
-            Log.d("Location", "Exception");
-        }
-
-        return Double.toString(latitude) + "," + Double.toString(longitude);
+            }
+        };
     }
 
-    private String getCurrentCity() {
-        String city;
-        Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
-        List<Address> addresses = null;
-
-        try {
-            addresses = geocoder.getFromLocation(latitude, longitude, 1);
-        } catch (IOException e) {
-            e.printStackTrace();
+    private void startLocationUpdates() {
+        if (ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(getActivity(), "permissions", Toast.LENGTH_SHORT).show();
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
         }
+        locationProviderClient.requestLocationUpdates(locationRequest, locationCallback, null);
+    }
 
-        city = "HI";
-        Log.d("Index", Integer.toString(addresses.size()));
-        //city = (addresses != null) ? addresses.get(0).getLocality() : "City";
+    private String getCurrentCity() throws IOException {
+        Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+        try {
+            List<Address> addresses = geocoder.getFromLocation(currentLocation.latitude, currentLocation.longitude, 1);
+            String cityName = addresses.get(0).getLocality();
+            String stateName = addresses.get(0).getAddressLine(1);
+            String countryName = addresses.get(0).getAddressLine(2);
+            return cityName;
+        }
+        catch (IOException e) {
 
-        return city;
+        }
+//        String city;
+//        Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
+//        List<Address> addresses = null;
+//
+//        try {
+//            addresses = geocoder.getFromLocation(latitude, longitude, 1);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        city = "HI";
+//        Log.d("Index", Integer.toString(addresses.size()));
+//        //city = (addresses != null) ? addresses.get(0).getLocality() : "City";
+        return "";
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+//        startLocationUpdates();
     }
 }
