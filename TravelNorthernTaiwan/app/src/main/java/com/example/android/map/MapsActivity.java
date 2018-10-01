@@ -25,9 +25,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
+import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.gson.Gson;
 import com.google.maps.android.clustering.ClusterManager;
+import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -127,7 +129,7 @@ public class MapsActivity extends FragmentActivity implements
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-
+        Toast.makeText(getApplicationContext(), "toast", Toast.LENGTH_SHORT).show();
         return false;
     }
 
@@ -433,11 +435,25 @@ public class MapsActivity extends FragmentActivity implements
         // Initialize the manager with the context and the map.
         // (Activity extends context, so we can pass 'this' in the constructor.)
         mClusterManager = new ClusterManager<>(this, mMap);
+        DefaultClusterRenderer<MyItem> renderer = new DefaultClusterRenderer<MyItem>(getApplicationContext(), mMap, mClusterManager);
+        renderer.setMinClusterSize(10);
+        mClusterManager.setRenderer(renderer);
 
         // Point the map's listeners at the listeners implemented by the cluster
         // manager.
         mMap.setOnCameraIdleListener(mClusterManager);
-        mMap.setOnMarkerClickListener(mClusterManager);
+        mMap.setOnMarkerClickListener(mClusterManager);;
+
+        mClusterManager.setOnClusterClickListener(new ClusterManager.OnClusterClickListener<MyItem>() {
+                    @Override
+                    public boolean onClusterClick(final Cluster<MyItem> cluster) {
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+                                cluster.getPosition(), (float) Math.floor(mMap
+                                        .getCameraPosition().zoom + 1)), 300,
+                                null);
+                        return true;
+                    }
+                });
     }
 
     @Override
@@ -449,13 +465,6 @@ public class MapsActivity extends FragmentActivity implements
         private final LatLng mPosition;
         private final String mTitle;
         private final String mSnippet;
-//        private final BitmapDescriptor mIcon;
-
-        public MyItem(double lat, double lng) {
-            mPosition = new LatLng(lat, lng);
-            mTitle = "";
-            mSnippet = "";
-        }
 
         public MyItem(double lat, double lng, String title, String snippet) {
             mPosition = new LatLng(lat, lng);

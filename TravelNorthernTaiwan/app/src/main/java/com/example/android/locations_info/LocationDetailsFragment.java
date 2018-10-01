@@ -93,11 +93,6 @@ public class LocationDetailsFragment extends Fragment {
         placeId = newPlaceId;
     }
 
-    public void resetView() {
-        Toast.makeText(getActivity(), "HELLO", Toast.LENGTH_SHORT).show();
-        tabLayout.getTabAt(0).select();
-    }
-
     private void updateUI(String response) {
         placeDetails = new Gson().fromJson(response, LocationDetailsResponse.class);
 
