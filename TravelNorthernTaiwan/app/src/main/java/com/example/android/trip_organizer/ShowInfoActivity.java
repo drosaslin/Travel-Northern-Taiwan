@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.travelnortherntaiwan.R;
@@ -23,8 +24,19 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 public class ShowInfoActivity extends AppCompatActivity{
-    public void onCreate(){
+    private EditText mTripName;
+    private EditText mToDate;
+    private EditText mFromDate;
+    private EditText mBudget;
+    private TextView mRegion;
 
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    private DatabaseReference mRootReference;
+
+    public void onCreate(){
         setContentView(R.layout.activity_trip_info);
+
+
     }
 }

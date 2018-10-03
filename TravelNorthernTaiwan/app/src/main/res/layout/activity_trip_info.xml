@@ -76,6 +76,13 @@
                 android:layout_height="wrap_content"
                 android:text="Manage" />
 
+            <Button
+                android:id="@+id/saveChanges"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save"
+                android:layout_gravity="end"/>
+
 
         </LinearLayout>
     </LinearLayout>
