@@ -152,7 +152,7 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
         basicInfoReference.child(currentTripKey).child("From").setValue(fromDate);
         basicInfoReference.child(currentTripKey).child("To").setValue(toDate);
         basicInfoReference.child(currentTripKey).child("Budget").setValue(budget);
-        basicInfoReference.child(currentTripKey).child("Author").setValue(currentUser);
+        basicInfoReference.child(currentTripKey).child("Author").setValue(userName);
         basicInfoReference.child(currentTripKey).child("Region").setValue(currentRegion);
 
         budgetReference.child(currentTripKey).child("Budget").setValue(stringToDouble(budget));
