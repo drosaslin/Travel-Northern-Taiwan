@@ -25,10 +25,11 @@
         android:padding="16dp">
 
         <TextView
+            android:id="@+id/regionField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="10dp"
-            android:text="Region: Taipei"
+            android:text="Region: "
             android:textSize="20sp"
             android:textStyle="bold" />
 

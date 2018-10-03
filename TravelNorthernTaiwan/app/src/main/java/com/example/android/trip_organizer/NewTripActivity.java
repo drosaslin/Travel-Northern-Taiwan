@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.map.MapsActivity;
@@ -38,7 +39,8 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
     private EditText mToDate;
     private EditText mFromDate;
     private EditText mBudget;
-    private ImageView mRegion;
+    private TextView mRegion;
+    private ImageView mRegionImg;
 
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
@@ -66,21 +68,23 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
         mFromDate = (EditText) findViewById(R.id.fromDate);
         mBudget = (EditText) findViewById(R.id.budget);
         mNextBtn = (Button) findViewById(R.id.next_btn);
-        mRegion = (ImageView) findViewById(R.id.regionImage);
+        mRegionImg = (ImageView) findViewById(R.id.regionImage);
+        mRegion = (TextView) findViewById(R.id.regionField);
+        mRegion.setText(mRegion.getText() + currentRegion);
 
         //fix this
         if(currentRegion.equals("Yilan")){
-            mRegion.setImageDrawable(getResources().getDrawable(R.drawable.main_page_yilan, getApplicationContext().getTheme()));
+            mRegionImg.setImageDrawable(getResources().getDrawable(R.drawable.main_page_yilan, getApplicationContext().getTheme()));
         }else if(currentRegion.equals("Taipei")){
-            mRegion.setImageDrawable(getResources().getDrawable(R.drawable.main_page_taipei, getApplicationContext().getTheme()));
+            mRegionImg.setImageDrawable(getResources().getDrawable(R.drawable.main_page_taipei, getApplicationContext().getTheme()));
         }else if(currentRegion.equals("New Taipei")){
-            mRegion.setImageDrawable(getResources().getDrawable(R.drawable.main_page_newtaipei, getApplicationContext().getTheme()));
+            mRegionImg.setImageDrawable(getResources().getDrawable(R.drawable.main_page_newtaipei, getApplicationContext().getTheme()));
         }else if(currentRegion.equals("Hsinchu")){
-            mRegion.setImageDrawable(getResources().getDrawable(R.drawable.main_page_hsinchu, getApplicationContext().getTheme()));
+            mRegionImg.setImageDrawable(getResources().getDrawable(R.drawable.main_page_hsinchu, getApplicationContext().getTheme()));
         }else if(currentRegion.equals("Taoyuan")){
-            mRegion.setImageDrawable(getResources().getDrawable(R.drawable.main_page_taoyuan, getApplicationContext().getTheme()));
+            mRegionImg.setImageDrawable(getResources().getDrawable(R.drawable.main_page_taoyuan, getApplicationContext().getTheme()));
         }else{
-            mRegion.setImageDrawable(getResources().getDrawable(R.drawable.main_page_keelung, getApplicationContext().getTheme()));
+            mRegionImg.setImageDrawable(getResources().getDrawable(R.drawable.main_page_keelung, getApplicationContext().getTheme()));
         }
 
 
