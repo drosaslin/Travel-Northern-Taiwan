@@ -70,6 +70,8 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
         mNextBtn = (Button) findViewById(R.id.next_btn);
         mRegionImg = (ImageView) findViewById(R.id.regionImage);
         mRegion = (TextView) findViewById(R.id.regionField);
+
+        //Setting region name in view
         mRegion.setText(mRegion.getText() + currentRegion);
 
         //fix this

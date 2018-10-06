@@ -33,6 +33,11 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
         return new TripsAdapter.ViewHolder(view);
     }
 
+    public void clearData() {
+        DataList.clear();
+        notifyDataSetChanged();
+    }
+
     @Override
     public void onBindViewHolder(TripsAdapter.ViewHolder holder, int position) {
         String name = DataList.get(position).getName();

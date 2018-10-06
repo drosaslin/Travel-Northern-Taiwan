@@ -66,6 +66,7 @@ public class TripsActivity extends android.support.v4.app.Fragment {
         mRootReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                clearCards();
                 showData(dataSnapshot);
                 mAdapter = new TripsAdapter(DataList, getActivity());
                 mRecyclerView.setAdapter(mAdapter);
@@ -115,6 +116,12 @@ public class TripsActivity extends android.support.v4.app.Fragment {
         }
 
         Log.d("ARRAY SIZE", "size = " + DataList.size());
+    }
+
+    private void clearCards(){
+        if(mAdapter != null) {
+            mAdapter.clearData();
+        }
     }
 
 }
