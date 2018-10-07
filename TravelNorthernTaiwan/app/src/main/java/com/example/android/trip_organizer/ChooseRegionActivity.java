@@ -88,7 +88,7 @@ public class ChooseRegionActivity extends AppCompatActivity {
         infoMap.put("Region", tag);
 
         expensesMap.put("Budget",Double.valueOf(0));
-        expensesMap.put("Hotel",Double.valueOf(0));
+        expensesMap.put("Accommodation",Double.valueOf(0));
         expensesMap.put("Tickets",Double.valueOf(0));
         expensesMap.put("Souvenirs", Double.valueOf(0));
         expensesMap.put("Food",Double.valueOf(0));

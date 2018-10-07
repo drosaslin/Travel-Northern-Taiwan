@@ -162,9 +162,9 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
         basicInfoReference.child(currentTripKey).child("Region").setValue(currentRegion);
 
         budgetReference.child(currentTripKey).child("Budget").setValue(stringToDouble(budget));
-        budgetReference.child(currentTripKey).child("Hotel").setValue(Double.valueOf(0));
+        budgetReference.child(currentTripKey).child("Accommodation").setValue(Double.valueOf(0));
         budgetReference.child(currentTripKey).child("Tickets").setValue(Double.valueOf(0));
-        budgetReference.child(currentTripKey).child("Sourvenirs").setValue(Double.valueOf(0));
+        budgetReference.child(currentTripKey).child("Souvenirs").setValue(Double.valueOf(0));
         budgetReference.child(currentTripKey).child("Food").setValue(Double.valueOf(0));
         budgetReference.child(currentTripKey).child("Others").setValue(Double.valueOf(0));
 
