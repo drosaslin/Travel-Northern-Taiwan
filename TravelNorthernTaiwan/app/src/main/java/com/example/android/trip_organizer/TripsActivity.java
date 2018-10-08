@@ -88,7 +88,7 @@ public class TripsActivity extends android.support.v4.app.Fragment {
     }
 
     private void showData(DataSnapshot dataSnapshot) {
-        for(DataSnapshot ds : dataSnapshot.getChildren()){//gets the userId
+        for(DataSnapshot ds : dataSnapshot.getChildren()){//gets the tripKey
             if(ds.child("Author").getValue()!=null && ds.child("Author").getValue().equals(currentUser.getUid())){
                 TripBasicInfo tInfo = new TripBasicInfo();
                 tInfo.setName(ds.child("TripName").getValue().toString());
@@ -105,7 +105,7 @@ public class TripsActivity extends android.support.v4.app.Fragment {
 
                 Log.d("test", "key " + tInfo.getKey());
                 Log.d("test", "name " + tInfo.getName());
-                Log.d("test", "regoin " + tInfo.getRegion());
+                Log.d("test", "region " + tInfo.getRegion());
                 Log.d("test", "to " + tInfo.getToDate());
                 Log.d("test", "from " + tInfo.getFromDate());
 

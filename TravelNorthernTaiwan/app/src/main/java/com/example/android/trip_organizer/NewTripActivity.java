@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.android.map.MapsActivity;
 import com.example.android.travelnortherntaiwan.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,7 +22,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
-import java.util.HashMap;
 
 public class NewTripActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     //create function to check if the trip name from the same user already exists
@@ -170,7 +168,7 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
 
         //move later to another function
         //sending the user to another view and passing the current trip parameter to the view
-        Intent mapActivity = new Intent(NewTripActivity.this,MapsActivity.class);
+        Intent mapActivity = new Intent(this,ShowInfoActivity.class);
         mapActivity.putExtra("tripKey", currentTripKey);
         mapActivity.putExtra("region", currentRegion);
         Log.d("test","key = " + currentTripKey);
