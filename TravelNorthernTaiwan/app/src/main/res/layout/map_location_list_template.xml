@@ -47,6 +47,8 @@
         android:layout_alignParentEnd="true"
         android:layout_margin="10sp"
         android:src="@drawable/ic_add"
+        android:tag="add"
         android:layout_alignBottom="@+id/info"/>
+        <!--android:backgroundTint="#3335FF"-->
 
 </RelativeLayout>

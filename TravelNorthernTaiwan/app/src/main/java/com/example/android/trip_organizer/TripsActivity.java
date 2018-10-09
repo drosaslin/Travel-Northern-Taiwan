@@ -55,7 +55,7 @@ public class TripsActivity extends android.support.v4.app.Fragment {
         currentUser = mAuth.getCurrentUser();
 
         mRootReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://travel-northern-taiwan.firebaseio.com/BasicTripInfo");
-        mRecyclerView = (RecyclerView)getView().findViewById(R.id.my_trips_list);
+        mRecyclerView = getView().findViewById(R.id.my_trips_list);
 
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView = getView().findViewById(R.id.my_trips_list);
@@ -86,9 +86,10 @@ public class TripsActivity extends android.support.v4.app.Fragment {
     }
 
     private void showData(DataSnapshot dataSnapshot) {
-        for(DataSnapshot ds : dataSnapshot.getChildren()){//gets the userId
-
-            if(ds.child("Author").getValue().equals(currentUser.getUid())){
+        for(DataSnapshot ds : dataSnapshot.getChildren()){//gets the tripkey
+            String key = ds.getKey();
+            Log.d("CURRENTUSER", ds.child(key).toString());
+            if(ds.child("Author").getValue().toString().equals(currentUser.getUid())){
                 TripBasicInfo tInfo = new TripBasicInfo();
                 tInfo.setName(ds.child("TripName").getValue().toString());
                 tInfo.setKey(ds.getKey());

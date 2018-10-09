@@ -1,11 +1,17 @@
 package com.example.android.map;
 
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,12 +47,8 @@ public class MapsActivity extends FragmentActivity implements
         LocationsListFragment.OnLocationPressedListener {
 
     private final String GOOGLE_API_KEY = "AIzaSyCc4acsOQV7rnQ92weHYKO14fvL9wkRpKc";
+    FloatingActionButton saveTripButton;
     private String tripKey;
-    private ArrayList<TextView> activityList;
-    private TextView food;
-    private TextView shopping;
-    private TextView nightlife;
-    private TextView history;
     private TabLayout activitiesTab;
     private GoogleMap mMap;
     private LocationsResponse locationsResponse;
@@ -80,6 +82,14 @@ public class MapsActivity extends FragmentActivity implements
         setCoordinates();
         setRegionLocation();
         setRegion();
+
+        saveTripButton = findViewById(R.id.save_trip_button);
+        saveTripButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MapsActivity.this, "SAVING", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         //creating instances of the fragments
         locationsListFragment = new LocationsListFragment();
