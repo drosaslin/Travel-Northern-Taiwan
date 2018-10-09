@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.travelnortherntaiwan.R;
@@ -20,13 +22,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
-import java.util.HashMap;
 
 public class NewTripActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     //create function to check if the trip name from the same user already exists
     //date verification or datepicker restriction
     //change imageview and textview
     //switch views
+    private String currentTripKey;
+    private String currentRegion;
 
     private Button mNextBtn;
 
@@ -34,6 +37,8 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
     private EditText mToDate;
     private EditText mFromDate;
     private EditText mBudget;
+    private TextView mRegion;
+    private ImageView mRegionImg;
 
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
@@ -45,6 +50,12 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+
+        //obtaining the current trip's key
+        currentRegion = getIntent().getStringExtra("region");
+        currentTripKey = getIntent().getStringExtra("tripKey");
+        //String currentRegion = getIntent().getStringExtra("region");
+
         setContentView(R.layout.activity_new_trip);
 
         mAuth = FirebaseAuth.getInstance();
@@ -55,9 +66,31 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
         mFromDate = (EditText) findViewById(R.id.fromDate);
         mBudget = (EditText) findViewById(R.id.budget);
         mNextBtn = (Button) findViewById(R.id.next_btn);
+        mRegionImg = (ImageView) findViewById(R.id.regionImage);
+        mRegion = (TextView) findViewById(R.id.regionField);
+
+        //Setting region name in view
+        mRegion.setText(mRegion.getText() + currentRegion);
+
+        //fix this
+        if(currentRegion.equals("Yilan")){
+            mRegionImg.setImageDrawable(getResources().getDrawable(R.drawable.main_page_yilan, getApplicationContext().getTheme()));
+        }else if(currentRegion.equals("Taipei")){
+            mRegionImg.setImageDrawable(getResources().getDrawable(R.drawable.main_page_taipei, getApplicationContext().getTheme()));
+        }else if(currentRegion.equals("New Taipei")){
+            mRegionImg.setImageDrawable(getResources().getDrawable(R.drawable.main_page_newtaipei, getApplicationContext().getTheme()));
+        }else if(currentRegion.equals("Hsinchu")){
+            mRegionImg.setImageDrawable(getResources().getDrawable(R.drawable.main_page_hsinchu, getApplicationContext().getTheme()));
+        }else if(currentRegion.equals("Taoyuan")){
+            mRegionImg.setImageDrawable(getResources().getDrawable(R.drawable.main_page_taoyuan, getApplicationContext().getTheme()));
+        }else{
+            mRegionImg.setImageDrawable(getResources().getDrawable(R.drawable.main_page_keelung, getApplicationContext().getTheme()));
+        }
+
 
         //Get db reference
-        mRootReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://travel-northern-taiwan.firebaseio.com");
+        String url = "https://travel-northern-taiwan.firebaseio.com/";
+        mRootReference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
 
         mFromDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,40 +143,36 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
         String fromDate = mFromDate.getText().toString().trim();
         String budget = mBudget.getText().toString().trim();
 
+        DatabaseReference budgetReference = mRootReference.child("ExpensesByTrip");
+        DatabaseReference basicInfoReference = mRootReference.child("BasicTripInfo");
+
         if(!isValidInput(tripName, toDate, fromDate, budget)){
             return;
         }
 
-        //obtaining a randomly generated key for trip
-        String currentKey = mRootReference.push().getKey();
+        Log.d("CURRENT TRIP", " is " + currentTripKey);
+        //add region
+        basicInfoReference.child(currentTripKey).child("TripName").setValue(tripName);
+        basicInfoReference.child(currentTripKey).child("From").setValue(fromDate);
+        basicInfoReference.child(currentTripKey).child("To").setValue(toDate);
+        basicInfoReference.child(currentTripKey).child("Budget").setValue(budget);
+        basicInfoReference.child(currentTripKey).child("Author").setValue(userName);
+        basicInfoReference.child(currentTripKey).child("Region").setValue(currentRegion);
 
-        //Declaring hashmaps for BasicTripInfo and ExpensesByTrip
-        HashMap<String, String> infoMap =  new HashMap<String, String>();
-        HashMap<String, Double> expensesMap =  new HashMap<String, Double>();
-
-        infoMap.put("TripName", tripName);
-        infoMap.put("From", fromDate);
-        infoMap.put("To", toDate);
-        infoMap.put("Author", userName);
-
-        expensesMap.put("Budget",stringToDouble(budget));
-        expensesMap.put("Hotel",Double.valueOf(0));
-        expensesMap.put("Tickets",Double.valueOf(0));
-        expensesMap.put("Souvenirs", Double.valueOf(0));
-        expensesMap.put("Food",Double.valueOf(0));
-        expensesMap.put("Others",Double.valueOf(0));
-
-        //sending the data to the firebase database
-        mRootReference.child("BasicTripInfo").child(currentKey).setValue(infoMap);
-        mRootReference.child("ExpensesByTrip").child(currentKey).setValue(expensesMap);
-
+        budgetReference.child(currentTripKey).child("Budget").setValue(stringToDouble(budget));
+        budgetReference.child(currentTripKey).child("Accommodation").setValue(Double.valueOf(0));
+        budgetReference.child(currentTripKey).child("Tickets").setValue(Double.valueOf(0));
+        budgetReference.child(currentTripKey).child("Souvenirs").setValue(Double.valueOf(0));
+        budgetReference.child(currentTripKey).child("Food").setValue(Double.valueOf(0));
+        budgetReference.child(currentTripKey).child("Others").setValue(Double.valueOf(0));
 
         //move later to another function
         //sending the user to another view and passing the current trip parameter to the view
-        Intent chooseRegion = new Intent(NewTripActivity.this,ChooseRegionActivity.class);
-        chooseRegion.putExtra("tripKey", currentKey);
-        Log.d("test","key = " + currentKey);
-        startActivity(chooseRegion);
+        Intent mapActivity = new Intent(this,ShowInfoActivity.class);
+        mapActivity.putExtra("tripKey", currentTripKey);
+        mapActivity.putExtra("region", currentRegion);
+        Log.d("test","key = " + currentTripKey);
+        startActivity(mapActivity);
     }
 
 
