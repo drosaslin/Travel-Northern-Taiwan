@@ -144,22 +144,12 @@ public class SecondActivity extends AppCompatActivity {
         Budget = Integer.valueOf(dataSnapshot.child(currentTripKey).child("Budget").getValue().toString());
         Accommodation = Integer.valueOf(dataSnapshot.child(currentTripKey).child("Accommodation").getValue().toString());
         Food = Integer.valueOf(dataSnapshot.child(currentTripKey).child("Food").getValue().toString());
-        //Shopping = Integer.valueOf(dataSnapshot.child(currentTripKey).child("Shopping").getValue().toString());
+        Shopping = Integer.valueOf(dataSnapshot.child(currentTripKey).child("Shopping").getValue().toString());
         Souvenirs = Integer.valueOf(dataSnapshot.child(currentTripKey).child("Souvenirs").getValue().toString());
         Tickets = Integer.valueOf(dataSnapshot.child(currentTripKey).child("Tickets").getValue().toString());
         Others = Integer.valueOf(dataSnapshot.child(currentTripKey).child("Others").getValue().toString());
 
-        Log.d("AddNewTest", "budget -> " + dataSnapshot.child(currentTripKey).child("Budget").getValue());
-        Log.d("AddNewTest", "accommodation -> " + dataSnapshot.child(currentTripKey).child("Accommodation").getValue());
-        Log.d("AddNewTest", "food -> " + dataSnapshot.child(currentTripKey).child("Food").getValue());
-        //Log.dAddN"newTest", "shopping -> " + dataSnapshot.child(currentTripKey).child("shopping").getValue());
-        Log.d("AddNewTest", "souvenir -> " + dataSnapshot.child(currentTripKey).child("Souvenirs").getValue());
-        Log.d("AddNewTest", "ticket -> " + dataSnapshot.child(currentTripKey).child("Tickets").getValue());
-        Log.d("AddNewTest", "other -> " + dataSnapshot.child(currentTripKey).child("Others").getValue());
         setTripBudgetInfo(money, expenseCategory);
-        /*tempTripBudget = new TripBudget(Budget, Accommodation, Food, Souvenirs, Tickets, Others);
-        tempTripBudget.setTripBudgetInfo(money, expenseCategory);
-        mRef.child(currentTripKey).setValue(tempTripBudget);*/
     }
 
     public void setTripBudgetInfo(int money, String expenseCategory){
@@ -176,9 +166,10 @@ public class SecondActivity extends AppCompatActivity {
                 Food += money;
                 mRef.child(currentTripKey).child("Food").setValue(Food);
                 break;
-            /*case "Shopping":
-                setShopping(money);
-                break;*/
+            case "Shopping":
+                Shopping += money;
+                mRef.child(currentTripKey).child("Shopping").setValue(Shopping);
+                break;
             case "Souvenirs":
                 Souvenirs += money;
                 mRef.child(currentTripKey).child("Souvenirs").setValue(Souvenirs);
