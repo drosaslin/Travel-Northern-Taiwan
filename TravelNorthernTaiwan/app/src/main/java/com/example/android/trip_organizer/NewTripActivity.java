@@ -165,6 +165,7 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
         budgetReference.child(currentTripKey).child("Souvenirs").setValue(Double.valueOf(0));
         budgetReference.child(currentTripKey).child("Food").setValue(Double.valueOf(0));
         budgetReference.child(currentTripKey).child("Others").setValue(Double.valueOf(0));
+        budgetReference.child(currentTripKey).child("Shopping").setValue(Double.valueOf(0));
 
         //move later to another function
         //sending the user to another view and passing the current trip parameter to the view
