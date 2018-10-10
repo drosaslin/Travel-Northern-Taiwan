@@ -70,6 +70,7 @@
 
         <activity android:name="com.example.android.locations_info.LocationReviewsFragment" />
         <activity android:name="com.example.android.trip_organizer.BudgetManagerActivity"></activity>
+        <activity android:name="com.example.android.trip_organizer.SecondActivity"></activity>
     </application>
 
 </manifest>

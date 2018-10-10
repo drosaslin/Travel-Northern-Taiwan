@@ -93,7 +93,10 @@ public class ShowInfoActivity extends AppCompatActivity{
         manageBudgetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(ShowInfoActivity.this, BudgetManagerActivity.class));
+                //push trip key to BudgetManagerActivity
+                Intent intent = new Intent(ShowInfoActivity.this, BudgetManagerActivity.class);
+                intent.putExtra("tripKey", currentTripKey);
+                startActivity(intent);
             }
         });
     }
