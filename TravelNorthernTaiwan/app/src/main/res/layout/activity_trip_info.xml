@@ -92,20 +92,28 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/backgroundColor"
-        android:orientation="vertical">
-
-        <!--<android.support.v7.widget.RecyclerView
-            android:id="@+id/my_trips_list"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:scrollbars="vertical"
-            />-->
+            android:layout_height="match_parent"
+            android:background="@color/backgroundColor">
 
-    </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/backgroundColor"
+                android:orientation="vertical">
+
+                <com.transferwise.sequencelayout.SequenceLayout
+                    android:id="@+id/sequence_layout"
+                    android:layout_marginTop="20sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                </com.transferwise.sequencelayout.SequenceLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/ggg"
@@ -129,8 +137,7 @@
             android:focusable="true"
             app:fabSize="normal"
             app:srcCompat="@drawable/ic_map"
-            android:layout_margin="6dp"
-            />
+            android:layout_margin="6dp" />
     </FrameLayout>
 
 </LinearLayout>
