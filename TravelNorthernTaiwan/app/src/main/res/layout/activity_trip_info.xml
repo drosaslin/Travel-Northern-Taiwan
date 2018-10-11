@@ -107,19 +107,30 @@
 
     </LinearLayout>
 
-
-
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/ggg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:clickable="true"
+            android:focusable="true"
+            app:fabSize="mini"
+            app:srcCompat="@drawable/ic_save"
+            android:layout_margin="6dp"
+            android:backgroundTint="@color/colorAccentExtra"
+            app:borderWidth="0dp"
+            />
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/map_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="top|end"
+            android:layout_gravity="bottom|end"
             android:clickable="true"
             android:focusable="true"
             app:fabSize="normal"
             app:srcCompat="@drawable/ic_map"
             android:layout_margin="6dp"
             />
-
     </FrameLayout>
+
 </LinearLayout>
