@@ -6,6 +6,7 @@ public class TripBasicInfo {
     String FromDate;
     String Region;
     String Key;
+    Double Budget;
 
     public TripBasicInfo() {
         Name = "";
@@ -13,6 +14,7 @@ public class TripBasicInfo {
         FromDate = "";
         Region = "";
         Key = "";
+        Budget = Double.valueOf(0);
     }
 
     public String getName() {
@@ -54,4 +56,8 @@ public class TripBasicInfo {
     public void setKey(String key) {
         Key = key;
     }
+
+    public Double getBudget(){return Budget;}
+
+    public void setBudget(Double budget){Budget = budget;}
 }

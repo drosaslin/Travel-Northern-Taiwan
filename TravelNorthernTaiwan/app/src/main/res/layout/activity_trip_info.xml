@@ -13,13 +13,14 @@
         android:padding="16dp">
 
         <TextView
+            android:id="@+id/regionField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingBottom="6dp"
-            android:text="Region: Taipei"
+            android:text="Region: "
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/colorPrimaryDark"/>
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/tripName"
@@ -57,24 +58,31 @@
         </LinearLayout>
 
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <EditText
                 android:id="@+id/budget"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
                 android:hint="Budget"
-                android:inputType="number"
-                android:layout_marginEnd="10dp"/>
+                android:inputType="number" />
 
             <Button
                 android:id="@+id/manageBudget"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Manage" />
+
+            <Button
+                android:id="@+id/saveChanges"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="Save" />
 
 
         </LinearLayout>
@@ -90,19 +98,19 @@
         android:background="@color/backgroundColor"
         android:orientation="vertical">
 
-        <android.support.v7.widget.RecyclerView
+        <!--<android.support.v7.widget.RecyclerView
             android:id="@+id/my_trips_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:scrollbars="vertical"
-            />
+            />-->
 
     </LinearLayout>
 
 
 
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/add_trip_button"
+            android:id="@+id/map_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="top|end"

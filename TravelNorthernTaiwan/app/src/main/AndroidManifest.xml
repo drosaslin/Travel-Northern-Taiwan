@@ -68,7 +68,9 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCc4acsOQV7rnQ92weHYKO14fvL9wkRpKc" />
 
-        <activity android:name="com.example.android.locations_info.LocationReviewsFragment"></activity>
+        <activity android:name="com.example.android.locations_info.LocationReviewsFragment" />
+        <activity android:name="com.example.android.trip_organizer.BudgetManagerActivity"></activity>
+        <activity android:name="com.example.android.trip_organizer.SecondActivity"></activity>
     </application>
 
 </manifest>

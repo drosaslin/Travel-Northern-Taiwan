@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
                 ticket = (ticketEditText.getText().toString() != null && ticketEditText.getText().toString() != "") ? Integer.valueOf(ticketEditText.getText().toString()):0;
                 AnyChartView anyChartView = (AnyChartView) findViewById(R.id.any_chart_view);
                 Pie pie = AnyChart.pie();
+
                 List<DataEntry> data = new ArrayList<>();
                 data.add(new ValueDataEntry("Shopping", shopping));
                 data.add(new ValueDataEntry("Shopping", food));

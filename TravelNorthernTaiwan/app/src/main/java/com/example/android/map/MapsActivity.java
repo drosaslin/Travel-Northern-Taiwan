@@ -7,6 +7,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SlidingPaneLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -41,6 +42,7 @@ import com.google.maps.android.clustering.ClusterItem;
 import com.google.gson.Gson;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
+import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,7 +55,8 @@ public class MapsActivity extends FragmentActivity implements
         LocationsListFragment.OnLocationDeletedListener{
 
     private final String GOOGLE_API_KEY = "AIzaSyCc4acsOQV7rnQ92weHYKO14fvL9wkRpKc";
-    FloatingActionButton saveTripButton;
+    private FloatingActionButton saveTripButton;
+    private SlidingUpPanelLayout panel;
     private String tripKey;
     private TabLayout activitiesTab;
     private GoogleMap mMap;
@@ -88,6 +91,8 @@ public class MapsActivity extends FragmentActivity implements
         //getting the instance of the request queue
         queue = SingletonRequestQueue.getInstance(this).getRequestQueue();
 
+        panel = findViewById(R.id.sliding_layout);
+        panel.getPanelState();
 
         //setting up all necessary data
         setActivities();
@@ -487,7 +492,7 @@ public class MapsActivity extends FragmentActivity implements
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.enter_from_bottom, R.anim.exit_from_top, R.anim.enter_from_bottom, R.anim.exit_from_top);
-        fragmentTransaction.add(R.id.locations_container, fragment);
+        fragmentTransaction.add(R.id.locations_container, fragment, "DetailsFragmentUp");
         fragmentTransaction.addToBackStack("locationDetailsStack");
         fragmentTransaction.commit();
     }
