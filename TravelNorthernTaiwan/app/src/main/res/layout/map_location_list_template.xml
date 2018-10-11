@@ -40,15 +40,12 @@
 
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
+    <CheckBox
         android:id="@+id/add_trip_button"
-        android:layout_width="30sp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
         android:layout_margin="10sp"
-        android:src="@drawable/ic_add"
-        android:tag="add"
+        android:layout_alignParentEnd="true"
         android:layout_alignBottom="@+id/info"/>
-        <!--android:backgroundTint="#3335FF"-->
 
 </RelativeLayout>

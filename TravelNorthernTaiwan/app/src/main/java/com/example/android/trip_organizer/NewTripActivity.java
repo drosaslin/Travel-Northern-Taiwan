@@ -13,6 +13,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.android.travelnortherntaiwan.Messenger;
 import com.example.android.travelnortherntaiwan.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -43,9 +44,13 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
 
     private boolean isToDateFocused = false;
 
+    private Messenger messenger;
+
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_trip);
+
+        messenger = Messenger.getInstance();
 
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -140,6 +145,7 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
 
         //move later to another function
         //sending the user to another view and passing the current trip parameter to the view
+        messenger.addCount();
         Intent chooseRegion = new Intent(NewTripActivity.this,ChooseRegionActivity.class);
         chooseRegion.putExtra("tripKey", currentKey);
         Log.d("test","key = " + currentKey);
@@ -181,5 +187,15 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
             }
         }
         return newValue;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Toast.makeText(this, Integer.toString(messenger.getCount()), Toast.LENGTH_SHORT).show();
+        if(messenger.getCount() == 4) {
+            messenger.setCount(0);
+            finish();
+        }
     }
 }

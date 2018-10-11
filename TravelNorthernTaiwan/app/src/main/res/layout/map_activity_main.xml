@@ -62,7 +62,11 @@
                 android:layout_height="50dp"
                 android:layout_width="match_parent"
                 android:background="#2ab243"
-                android:text="PANEL"/>
+                android:text="Destinations"
+                android:textColor="#ffffff"
+                android:gravity="center_vertical"
+                android:paddingLeft="5sp"
+                android:textSize="20sp"/>
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"

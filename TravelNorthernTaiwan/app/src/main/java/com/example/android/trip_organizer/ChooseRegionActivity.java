@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.android.map.MapsActivity;
+import com.example.android.travelnortherntaiwan.Messenger;
 import com.example.android.travelnortherntaiwan.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,7 +24,7 @@ public class ChooseRegionActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private DatabaseReference mRootReference;
-
+    private Messenger messenger;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,8 @@ public class ChooseRegionActivity extends AppCompatActivity {
         //obtaining the current trip's key
         final String currentTripKey = getIntent().getExtras().getString("tripKey");
         Log.d("test2", currentTripKey);
+
+        messenger = Messenger.getInstance();
 
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -60,6 +63,7 @@ public class ChooseRegionActivity extends AppCompatActivity {
             card.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    messenger.addCount();
                     String tag = (String) view.getTag();
                     mapsActivity.putExtra("region", tag);
                     mapsActivity.putExtra("tripKey", currentTripKey);
@@ -70,5 +74,13 @@ public class ChooseRegionActivity extends AppCompatActivity {
         }
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Toast.makeText(this, Integer.toString(messenger.getCount()), Toast.LENGTH_SHORT).show();
+        if(messenger.getCount() == 3) {
+            messenger.addCount();
+            finish();
+        }
+    }
 }

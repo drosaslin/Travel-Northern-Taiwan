@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.android.map.Location;
 import com.example.android.map.Results;
 import com.example.android.travelnortherntaiwan.R;
 
@@ -20,9 +21,19 @@ public class LocationsListFragment extends Fragment {
     private RecyclerView recycler;
     private LocationListAdapter adapter;
     private OnLocationPressedListener onLocationPressedListener;
+    private OnLocationAddedListener onLocationAddedListener;
+    private OnLocationDeletedListener onLocationDeletedListener;
 
     public interface OnLocationPressedListener {
-        void onLocationPressed(String locationId);
+        void onLocationPressed(String locationId, Location location);
+    }
+
+    public interface  OnLocationAddedListener {
+        void onLocationAdded(Location location);
+    }
+
+    public interface OnLocationDeletedListener {
+        void onLocationDeleted(Location location);
     }
 
     @Nullable
@@ -59,8 +70,17 @@ public class LocationsListFragment extends Fragment {
         }
     }
 
-    public void updateActivity(String locationId) {
-        onLocationPressedListener.onLocationPressed(locationId);
+    public void updateActivity(String locationId, Location location) {
+        onLocationPressedListener.onLocationPressed(locationId, location);
+    }
+
+    public void updateMap(Location location, boolean add) {
+        if(add) {
+            onLocationAddedListener.onLocationAdded(location);
+        }
+        else {
+            onLocationDeletedListener.onLocationDeleted(location);
+        }
     }
 
     @Override
@@ -71,6 +91,20 @@ public class LocationsListFragment extends Fragment {
 
         try {
             onLocationPressedListener = (OnLocationPressedListener) activity;
+        }
+        catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + "must override onLocationPressed method");
+        }
+
+        try {
+            onLocationAddedListener = (OnLocationAddedListener) activity;
+        }
+        catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + "must override onLocationPressed method");
+        }
+
+        try {
+            onLocationDeletedListener = (OnLocationDeletedListener) activity;
         }
         catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + "must override onLocationPressed method");
