@@ -106,7 +106,7 @@ public class TripsActivity extends android.support.v4.app.Fragment {
 
                 Log.d("test", "key " + tInfo.getKey());
                 Log.d("test", "name " + tInfo.getName());
-                Log.d("test", "regoin " + tInfo.getRegion());
+                Log.d("test", "region " + tInfo.getRegion());
                 Log.d("test", "to " + tInfo.getToDate());
                 Log.d("test", "from " + tInfo.getFromDate());
 

@@ -130,10 +130,11 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
         calendar.set(Calendar.MONTH,month);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
+        //Month starts from 0, so it has to be added +1 to show the correct date
         if(isToDateFocused){
-            mToDate.setText(new StringBuilder().append(year).append("/").append(month).append("/").append(dayOfMonth)); //yyyy/MM/dd
+            mToDate.setText(new StringBuilder().append(year).append("/").append(month+1).append("/").append(dayOfMonth)); //yyyy/MM/dd
         }else{
-            mFromDate.setText(new StringBuilder().append(year).append("/").append(month).append("/").append(dayOfMonth)); //yyyy/MM/dd
+            mFromDate.setText(new StringBuilder().append(year).append("/").append(month+1).append("/").append(dayOfMonth)); //yyyy/MM/dd
         }
     }
 
@@ -175,8 +176,7 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
 
         //move later to another function
         //sending the user to another view and passing the current trip parameter to the view
-        messenger.addCount();
-        Intent mapActivity = new Intent(this,MapsActivity.class);
+        Intent mapActivity = new Intent(this,ShowInfoActivity.class);
         mapActivity.putExtra("tripKey", currentTripKey);
         mapActivity.putExtra("region", currentRegion);
         Log.d("test","key = " + currentTripKey);
