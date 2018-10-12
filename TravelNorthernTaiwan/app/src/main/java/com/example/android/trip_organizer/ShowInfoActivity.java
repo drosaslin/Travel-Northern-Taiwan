@@ -174,16 +174,9 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
 
     private void GetItinerary(DataSnapshot ds) {
         ArrayList<String> placeIds = new ArrayList<>();
-
         for(DataSnapshot dataSnapshot : ds.getChildren()){
             if(dataSnapshot.getValue()!=null && !dataSnapshot.getValue().equals("")){
                 placeIds.add(dataSnapshot.getValue().toString());
-//                myItemList.add(new MyAdapter.MyItem(false, "10/10", "Title"));
-//                myItemList.add(new MyAdapter.MyItem(false, "10/11", "Title1"));
-//                myItemList.add(new MyAdapter.MyItem(false, "10/12", "Title2"));
-//                myItemList.add(new MyAdapter.MyItem(false, "10/13", "Title3"));
-//                sequenceAdapter = new MyAdapter(myItemList);
-//                sequenceLayout.setAdapter(sequenceAdapter);
             }
         }
 
