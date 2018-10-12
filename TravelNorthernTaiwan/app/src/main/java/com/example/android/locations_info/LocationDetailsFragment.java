@@ -201,13 +201,13 @@ public class LocationDetailsFragment extends Fragment {
 
     private void apiCallPlaceDetails() {
         String url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&fields=price_level,name,rating,formatted_address,formatted_phone_number,geometry,icon,id,opening_hours,photos,place_id,plus_code,rating,reviews&key=" + GOOGLE_API_KEY;
-
+        Log.d("PLACEURL1", url);
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.i("Response", response);
+//                        Log.i("Response", response);
                         updateUI(response);
                     }
                 }, new Response.ErrorListener() {

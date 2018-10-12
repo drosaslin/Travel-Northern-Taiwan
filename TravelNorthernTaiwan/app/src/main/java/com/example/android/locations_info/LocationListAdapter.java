@@ -83,6 +83,7 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
         holder.addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Log.d("PLACEID", locations.get(position).getId());
                 locations.get(position).setAddedStatus(!locations.get(position).getAddedStatus());
                 updateItinerary(position, holder);
             }
@@ -134,12 +135,12 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
     }
 
     private void addToItinerary(int position) {
-        tripDestinations.addDestination(locations.get(position).getId());
+        tripDestinations.addDestination(locations.get(position).getPlace_id());
         updateDatabase();
     }
 
     private void deleteFromItinerary(int position) {
-        tripDestinations.deleteDestination(locations.get(position).getId());
+        tripDestinations.deleteDestination(locations.get(position).getPlace_id());
         updateDatabase();
     }
 

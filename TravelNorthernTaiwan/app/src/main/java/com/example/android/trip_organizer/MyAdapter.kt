@@ -20,19 +20,16 @@ class MyAdapter(private val items: List<MyItem>) : SequenceAdapter<MyAdapter.MyI
         with(sequenceStep) {
             setActive(item.isActive)
             setAnchor(item.formattedDate)
-            setAnchorTextAppearance(1)
+            setAnchorTextAppearance(2)
             setTitle(item.title)
-            setTitleTextAppearance(1)
-            setSubtitle("text")
+            setTitleTextAppearance(2)
+            setSubtitle(item.subtitle)
             setSubtitleTextAppearance(1)
         }
     }
 
-    fun updateData() {
-
-    }
-
     data class MyItem(var isActive: Boolean,
                       var formattedDate: String,
-                      var title: String)
+                      var title: String,
+                      var subtitle: String)
 }
