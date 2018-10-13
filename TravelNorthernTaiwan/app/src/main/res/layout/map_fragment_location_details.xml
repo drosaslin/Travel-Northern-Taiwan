@@ -87,25 +87,38 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical">
+            android:orientation="horizontal">
 
-            <ImageView
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/map_money_icon"/>
+                android:gravity="center_vertical">
 
-            <TextView
-                android:id="@+id/place_entrance_fee"
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/map_money_icon"/>
+
+                <TextView
+                    android:id="@+id/place_entrance_fee"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:textColor="#000000"
+                    android:text=""/>
+
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/details_add_trip_button"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textColor="#000000"
-                android:text=""/>
-
-        </LinearLayout>
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="8sp" />
+        </RelativeLayout>
 
         <android.support.design.widget.TabLayout
             android:id="@+id/details_tab_layout"

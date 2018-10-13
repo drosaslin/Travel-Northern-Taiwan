@@ -1,7 +1,9 @@
 package com.example.android.trip_organizer;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,11 +41,19 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(TripsAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(TripsAdapter.ViewHolder holder, final int position) {
         String name = DataList.get(position).getName();
         String region = "Region: " + DataList.get(position).getRegion();
         holder.cardName.setText(name);
         holder.cardRegion.setText(region);
+        holder.tripCard.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ShowInfoActivity.class);
+                intent.putExtra("tripKey", DataList.get(position).getKey());
+                context.startActivity(intent);
+            }
+        });
 //        holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -61,14 +71,16 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
         TextView cardName;
         TextView cardDate;
         TextView cardRegion;
-        RelativeLayout relativeLayout;
+        CardView tripCard;
+//        RelativeLayout relativeLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            relativeLayout = (itemView).findViewById(R.id.my_trips_list);
+//            relativeLayout = (itemView).findViewById(R.id.my_trips_list);
             cardName = (itemView).findViewById(R.id.tripName);
             //cardDate = (itemView).findViewById(R.id.tripDate);
             cardRegion = (itemView).findViewById(R.id.tripRegion);
+            tripCard = (itemView).findViewById(R.id.trip_card);
         }
     }
 }

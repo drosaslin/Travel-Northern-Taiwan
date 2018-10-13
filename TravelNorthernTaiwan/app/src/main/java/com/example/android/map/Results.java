@@ -7,6 +7,8 @@ import java.util.ArrayList;
  */
 
 public class Results {
+    private boolean addedStatus = false;
+
     private String icon;
 
     private String place_id;
@@ -161,6 +163,14 @@ public class Results {
     public void setTypes (String[] types)
     {
         this.types = types;
+    }
+
+    public boolean getAddedStatus(){
+        return addedStatus;
+    }
+
+    public void setAddedStatus(boolean status) {
+        addedStatus = status;
     }
 
     @Override

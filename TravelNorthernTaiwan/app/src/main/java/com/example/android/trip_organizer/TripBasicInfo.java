@@ -1,5 +1,7 @@
 package com.example.android.trip_organizer;
 
+import java.util.ArrayList;
+
 public class TripBasicInfo {
     String Name;
     String ToDate;

@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.example.android.map.MapsActivity;
+import com.example.android.travelnortherntaiwan.Messenger;
 import com.example.android.travelnortherntaiwan.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -22,10 +23,11 @@ import java.util.HashMap;
 public class ChooseRegionActivity extends AppCompatActivity {
     CardView taipeiCard, newTaipeiCard, keelungCard, yilanCard, hsinchuCard, taoyuanCard;
     ArrayList<CardView> cards;
+    private String tripKey;
     private FirebaseAuth mAuth;
     private FirebaseUser currentUser;
     private DatabaseReference mRootReference;
-
+    private Messenger messenger;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,8 +35,10 @@ public class ChooseRegionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home_page);
 
         //obtaining the current trip's key
-        //final String currentTripKey = getIntent().getExtras().getString("tripKey");
+//        tripKey = getIntent().getExtras().getString("tripKey");
         //Log.d("test2", currentTripKey);
+
+        messenger = Messenger.getInstance();
 
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -62,6 +66,7 @@ public class ChooseRegionActivity extends AppCompatActivity {
             card.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    messenger.addCount();
                     String tag = (String) view.getTag();
                     GenerateTripKey(tag);
                     //mapsActivity.putExtra("region", tag);
@@ -99,15 +104,26 @@ public class ChooseRegionActivity extends AppCompatActivity {
         mRootReference.child("ExpensesByTrip").child(currentKey).setValue(expensesMap);
         mRootReference.child("Itinerary").child(currentKey);
 
-
         //move later to another function
         //sending the user to another view and passing the current trip parameter to the view
         Intent newTrip = new Intent(ChooseRegionActivity.this,NewTripActivity.class);
-        newTrip.putExtra("tripKey", currentKey.toString());
+        tripKey = currentKey.toString();
+        newTrip.putExtra("tripKey", tripKey);
         newTrip.putExtra("region", tag);
         Log.d("test","key = " + currentKey);
         startActivity(newTrip);
     }
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Toast.makeText(this, Integer.toString(messenger.getCount()), Toast.LENGTH_SHORT).show();
+        if(messenger.getCount() == 4) {
+            messenger.setCount(0);
+            Intent intent = new Intent(this, ShowInfoActivity.class);
+            intent.putExtra("tripKey", tripKey);
+            startActivity(intent);
+            finish();
+        }
+    }
 }

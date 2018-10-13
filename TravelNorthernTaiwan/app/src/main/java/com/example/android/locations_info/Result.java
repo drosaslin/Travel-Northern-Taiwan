@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * Created by David Rosas on 9/16/2018.
  */
 
-class Result implements Parcelable {
+public class Result implements Parcelable {
     private ArrayList<Photos> photos;
 
     private String id;

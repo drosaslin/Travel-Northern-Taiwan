@@ -55,8 +55,12 @@ public class BudgetManagerActivity extends AppCompatActivity {
     private ExpenseAdapter mAdapter;
     public PieChart pieChart;
     private Vibrator v ;
-    private Uri notification;
-    private Ringtone r;
+    private VibrationEffect vibrationEffect;
+    private long[] timings = {1000,2000,3000,2000,1000};
+    private int[] amplitudes = {64, 128, 255, 128, 64};
+    private int repeat = 2;
+    //private Uri notification;
+    //private Ringtone r;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -143,10 +147,11 @@ public class BudgetManagerActivity extends AppCompatActivity {
                             //Toast.makeText(BudgetManagerActivity.this, "over budget !", Toast.LENGTH_SHORT).show();
                             // Vibrate for 500 milliseconds
                             v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
-                            v.vibrate(500);
-                            notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+                            vibrationEffect = VibrationEffect.createWaveform(timings, amplitudes, repeat);
+                            v.vibrate(vibrationEffect);
+                            /*notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
                             r = RingtoneManager.getRingtone(getApplicationContext(), notification);
-                            r.play();
+                            r.play();*/
                             new FancyAlertDialog.Builder(BudgetManagerActivity.this)
                                     .setTitle("Warning")
                                     .setBackgroundColor(Color.parseColor("#FF0000"))  //Don't pass R.color.colorvalue
@@ -162,7 +167,7 @@ public class BudgetManagerActivity extends AppCompatActivity {
                                         @Override
                                         public void OnClick() {
                                             Toast.makeText(getApplicationContext(),"Ok",Toast.LENGTH_SHORT).show();
-                                            r.stop();
+                                            //r.stop();
                                         }
                                     })
                                     .OnNegativeClicked(new FancyAlertDialogListener() {
@@ -171,7 +176,7 @@ public class BudgetManagerActivity extends AppCompatActivity {
                                             Toast.makeText(getApplicationContext(),"Cancel",Toast.LENGTH_SHORT).show();
                                             setTripBudgetInfo(-1*money, expenseCategory);
                                             setPieChart();
-                                            r.stop();
+                                            //r.stop();
                                         }
                                     })
                                     .build();

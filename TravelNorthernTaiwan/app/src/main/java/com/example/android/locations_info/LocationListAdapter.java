@@ -5,11 +5,13 @@ import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,26 +36,23 @@ import java.util.LinkedHashMap;
 
 public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapter.LocationsViewHolder> {
     private final String GOOGLE_API_KEY = "AIzaSyCc4acsOQV7rnQ92weHYKO14fvL9wkRpKc";
-    private final String ADD_TAG = "add";
-    private final String DELETE_TAG = "delete";
 
     private Context context;
+    private TripDestinations tripDestinations;
     private ArrayList<Results> locations;
     private LocationsListFragment locationsListFragment;
     private String tripKey;
     private FirebaseAuth mAuth;
-    private FirebaseUser currentUser;
     private DatabaseReference mRootReference;
-    LinkedHashMap<String, String> itinerary;
     HashMap<Integer, Boolean> buttonState;
 
     public LocationListAdapter(ArrayList<Results> newLocations, Context newContext, String newTripKey) {
         locations = newLocations;
         context = newContext;
         tripKey = newTripKey;
+        tripDestinations = TripDestinations.getInstance();
         buttonState = new HashMap<>();
         mAuth = FirebaseAuth.getInstance();
-        currentUser = mAuth.getCurrentUser();
         mRootReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://travel-northern-taiwan.firebaseio.com");
 
         setDatabase();
@@ -77,16 +76,16 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
             }
         }
 
-        holder.placeName.setText(locations.get(position).getName() + " " + position);
+        holder.placeName.setText(locations.get(position).getName());
         holder.placeRating.setText(locations.get(position).getRating());
 
+        holder.addButton.setChecked(locations.get(position).getAddedStatus());
         holder.addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                updateItinerary(position, view);
-                String tag = (String)view.getTag();
-                String color = (tag.equals(ADD_TAG)) ? "#FF336A" : "#3335FF";
-                holder.addButton.setBackgroundColor(Color.parseColor("#3335FF"));
+                Log.d("PLACEID", locations.get(position).getId());
+                locations.get(position).setAddedStatus(!locations.get(position).getAddedStatus());
+                updateItinerary(position, holder);
             }
         });
 
@@ -118,72 +117,50 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
     }
 
     public void notifyListener(int position) {
-        locationsListFragment.updateActivity(locations.get(position).getPlace_id());
+        locationsListFragment.updateActivity(locations.get(position).getPlace_id(), locations.get(position).getGeometry().getLocation());
     }
 
-    private void updateItinerary(int position, View view){
-        String tag = (String) view.getTag();
-        if(tag.equals(ADD_TAG)) {
-            Log.d("UPDATING", tag);
+    private void updateItinerary(int position, LocationListAdapter.LocationsViewHolder holder){
+        if(holder.addButton.isChecked()) {
             addToItinerary(position);
-            view.setTag(DELETE_TAG);
-            ((FloatingActionButton)view).setRippleColor(Color.parseColor("#FF336A"));
+            locationsListFragment.updateMap(locations.get(position).getGeometry().getLocation(), true);
         }
         else {
-            Log.d("UPDATING", tag);
             deleteFromItinerary(position);
-            view.setTag(ADD_TAG);
-            ((FloatingActionButton)view).setRippleColor(Color.parseColor("#3335FF"));
+            locationsListFragment.updateMap(locations.get(position).getGeometry().getLocation(), false);
         }
 
-        Log.d("TAGLOG", tag);
-        String message = (tag.equals(ADD_TAG)) ? "Destination Added": "Destination Deleted";
+        String message = (holder.addButton.isChecked()) ? "Destination Added": "Destination Deleted";
         Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
     }
 
     private void addToItinerary(int position) {
-        for (String trip : itinerary.keySet()) {
-            if (itinerary.get(trip).equals("")) {
-                itinerary.put(trip, locations.get(position).getId());
-                updateDatabase();
-                break;
-            }
-        }
+        tripDestinations.addDestination(locations.get(position).getPlace_id());
+        updateDatabase();
     }
 
     private void deleteFromItinerary(int position) {
-        for(String trip : itinerary.keySet()) {
-            if (itinerary.get(trip).equals(locations.get(position).getId())) {
-                itinerary.put(trip, "");
-                reorderItinerary();
-                updateDatabase();
-                break;
-            }
-        }
+        tripDestinations.deleteDestination(locations.get(position).getPlace_id());
+        updateDatabase();
     }
 
     private void updateDatabase() {
-        for (String trip : itinerary.keySet()) {
-            mRootReference.child("Itinerary").child(tripKey).child(trip).setValue(itinerary.get(trip));
-        }
-    }
-
-    public void reorderItinerary() {
-        int size = itinerary.size();
-        for(int n = 0; n < size; n++) {
-            if(n < size - 1) {
-                String index = Integer.toString(n);
-                String nextIndex = Integer.toString(n + 1);
-                if(itinerary.get(index).equals("")) {
-                    itinerary.put(index, itinerary.get(nextIndex));
-                    itinerary.put(nextIndex, "");
-                }
+        //updates the data in the database based on the items inside tripDestinations
+        int arraySize = tripDestinations.getDestinations().size();
+        for(int n = 0; n < 10; n++ ) {
+            //inserting all destinations added. Insert a blank character to all indexes without destinations
+            if(n < arraySize) {
+                mRootReference.child("Itinerary").child(tripKey).child(Integer.toString(n)).setValue(tripDestinations.getDestination(n));
+            }
+            else {
+                mRootReference.child("Itinerary").child(tripKey).child(Integer.toString(n)).setValue("");
             }
         }
     }
 
     private void setDatabase() {
-        itinerary = new LinkedHashMap<>();
+        //creating the desired itinerary structure in firebase
+        LinkedHashMap<String, String> itinerary = new LinkedHashMap<>();
 
         for(int n = 0; n < 10; n++) {
             itinerary.put(Integer.toString(n), "");
@@ -196,7 +173,7 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
         TextView placeName;
         TextView placeRating;
         ImageView placePhoto;
-        FloatingActionButton addButton;
+        CheckBox addButton;
 
         public LocationsViewHolder(View itemView) {
             super(itemView);

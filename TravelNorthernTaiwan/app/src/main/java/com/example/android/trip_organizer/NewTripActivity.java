@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.android.map.MapsActivity;
+import com.example.android.travelnortherntaiwan.Messenger;
 import com.example.android.travelnortherntaiwan.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -48,6 +50,8 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
 
     private boolean isToDateFocused = false;
 
+    private Messenger messenger;
+
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 
@@ -57,6 +61,8 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
         //String currentRegion = getIntent().getStringExtra("region");
 
         setContentView(R.layout.activity_new_trip);
+
+        messenger = Messenger.getInstance();
 
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
@@ -124,10 +130,11 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
         calendar.set(Calendar.MONTH,month);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
+        //Month starts from 0, so it has to be added +1 to show the correct date
         if(isToDateFocused){
-            mToDate.setText(new StringBuilder().append(year).append("/").append(month).append("/").append(dayOfMonth)); //yyyy/MM/dd
+            mToDate.setText(new StringBuilder().append(year).append("/").append(month+1).append("/").append(dayOfMonth)); //yyyy/MM/dd
         }else{
-            mFromDate.setText(new StringBuilder().append(year).append("/").append(month).append("/").append(dayOfMonth)); //yyyy/MM/dd
+            mFromDate.setText(new StringBuilder().append(year).append("/").append(month+1).append("/").append(dayOfMonth)); //yyyy/MM/dd
         }
     }
 
@@ -141,7 +148,7 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
         String userName = currentUser.getUid();
         String toDate = mToDate.getText().toString().trim();//check datepicker
         String fromDate = mFromDate.getText().toString().trim();
-        String budget = mBudget.getText().toString().trim();
+        String budget = (mBudget.getText().toString().trim().isEmpty()) ? "0" : mBudget.getText().toString().trim();
 
         DatabaseReference budgetReference = mRootReference.child("ExpensesByTrip");
         DatabaseReference basicInfoReference = mRootReference.child("BasicTripInfo");
@@ -169,13 +176,13 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
 
         //move later to another function
         //sending the user to another view and passing the current trip parameter to the view
-        Intent mapActivity = new Intent(this,ShowInfoActivity.class);
+        messenger.addCount();
+        Intent mapActivity = new Intent(this,MapsActivity.class);
         mapActivity.putExtra("tripKey", currentTripKey);
         mapActivity.putExtra("region", currentRegion);
         Log.d("test","key = " + currentTripKey);
         startActivity(mapActivity);
     }
-
 
 
     //display error if trip name is null or trip already exists
@@ -211,5 +218,15 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
             }
         }
         return newValue;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Toast.makeText(this, Integer.toString(messenger.getCount()), Toast.LENGTH_SHORT).show();
+        if(messenger.getCount() == 3) {
+            messenger.addCount();
+            finish();
+        }
     }
 }
