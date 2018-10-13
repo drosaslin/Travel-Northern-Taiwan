@@ -5,7 +5,6 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.example.android.travelnortherntaiwan"
-        minSdkVersion 23
         minSdkVersion 26
         targetSdkVersion 26
         versionCode 1

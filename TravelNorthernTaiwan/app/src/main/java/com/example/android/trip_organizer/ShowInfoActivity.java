@@ -51,7 +51,7 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
     private EditText mTripName;
     private EditText mToDate;
     private EditText mFromDate;
-    private EditText mBudget;
+    private TextView mRest;
     private TextView mRegion;
 
     private Button manageBudgetBtn;
@@ -64,11 +64,14 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
     private FirebaseUser currentUser;
     private DatabaseReference mBasicInfoRef;
     private DatabaseReference mItineraryRef;
+    private DatabaseReference mBudgetRef;
 
     private TripBasicInfo infoToDisplay;
 
     private boolean isToDateFocused = false;
     private DatePickerDialog fromDatepicker , toDatepicker;
+
+    private float Budget, Accommodation, Food, Shopping, Souvenirs, Tickets, Others;
 
     int counter = 0;
 
@@ -88,11 +91,12 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
         //Database references for the basic trip information and the itinerary
         mBasicInfoRef = FirebaseDatabase.getInstance().getReferenceFromUrl(refUrl + "BasicTripInfo/" + currentTripKey);
         mItineraryRef = FirebaseDatabase.getInstance().getReferenceFromUrl(refUrl + "Itinerary/" + currentTripKey);
+        mBudgetRef = FirebaseDatabase.getInstance().getReferenceFromUrl(refUrl + "ExpensesByTrip/" + currentTripKey);
 
         mTripName = (EditText)findViewById(R.id.tripName);
         mToDate = (EditText)findViewById(R.id.toDate);
         mFromDate = (EditText)findViewById(R.id.fromDate);
-        mBudget = (EditText)findViewById(R.id.budget);
+        mRest = (TextView) findViewById(R.id.rest);
         mRegion = (TextView) findViewById(R.id.regionField);
 
         manageBudgetBtn = (Button)findViewById(R.id.manageBudget);
@@ -108,6 +112,19 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
                 DisplayInfo(infoToDisplay);
                 /*mAdapter = new TripsAdapter(DataList, getActivity());
                 mRecyclerView.setAdapter(mAdapter);*/
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        mBudgetRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                GetBudget(dataSnapshot);
+                DisplayRest();
             }
 
             @Override
@@ -187,6 +204,23 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
         }
     }
 
+    private void GetBudget(DataSnapshot ds) {
+        Budget        = Float.parseFloat(ds.child("Budget").getValue().toString());
+        Accommodation = Float.parseFloat(ds.child("Accommodation").getValue().toString());
+        Food          = Float.parseFloat(ds.child("Food").getValue().toString());
+        Shopping      = Float.parseFloat(ds.child("Shopping").getValue().toString());
+        Souvenirs     = Float.parseFloat(ds.child("Souvenirs").getValue().toString());
+        Tickets       = Float.parseFloat(ds.child("Tickets").getValue().toString());
+        Others        = Float.parseFloat(ds.child("Others").getValue().toString());
+        Log.d("GetBudget", "budget -> " + Budget);
+        Log.d("GetBudget", "Accommodation -> " + Accommodation);
+        Log.d("GetBudget", "Food -> " + Food);
+        Log.d("GetBudget", "Shopping -> " + Shopping);
+        Log.d("GetBudget", "Souvenirs -> " + Souvenirs);
+        Log.d("GetBudget", "Tickets -> " + Tickets);
+        Log.d("GetBudget", "Others -> " + Others);
+    }
+
     @Override
     public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
         /*Calendar calendar = Calendar.getInstance();
@@ -205,8 +239,14 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
         mTripName.setText(infoToDisplay.getName(), TextView.BufferType.EDITABLE);
         mToDate.setText(infoToDisplay.getToDate(), TextView.BufferType.EDITABLE);
         mFromDate.setText(infoToDisplay.getFromDate(), TextView.BufferType.EDITABLE);
-        mBudget.setText(infoToDisplay.getBudget().toString(), TextView.BufferType.EDITABLE);
         mRegion.setText("Region: " + infoToDisplay.getRegion());
+    }
+
+    private void DisplayRest(){
+        float restF = Budget-(Accommodation + Food + Shopping + Souvenirs + Tickets + Others);
+        String rest = Float.toString(restF);
+        mRest.setText(rest);
+        Log.d("GetBudget", "rest -> " + rest);
     }
 
     private void SaveInfo(){
