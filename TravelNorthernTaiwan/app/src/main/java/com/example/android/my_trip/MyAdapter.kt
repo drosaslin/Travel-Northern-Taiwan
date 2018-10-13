@@ -1,4 +1,4 @@
-package com.example.android.trip_organizer
+package com.example.android.my_trip
 
 import com.transferwise.sequencelayout.SequenceAdapter
 import com.transferwise.sequencelayout.SequenceStep

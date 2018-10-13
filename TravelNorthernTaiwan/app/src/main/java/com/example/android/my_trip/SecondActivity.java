@@ -1,4 +1,4 @@
-package com.example.android.trip_organizer;
+package com.example.android.my_trip;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +14,8 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.android.travelnortherntaiwan.R;
+import com.example.android.trip_organizer.TripItem;
+import com.example.android.trip_organizer.TripNameAdapter;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;

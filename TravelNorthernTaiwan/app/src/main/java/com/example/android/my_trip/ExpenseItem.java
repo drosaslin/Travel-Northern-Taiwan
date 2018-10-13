@@ -1,4 +1,4 @@
-package com.example.android.trip_organizer;
+package com.example.android.my_trip;
 
 public class ExpenseItem {
     private String mCategoryName;

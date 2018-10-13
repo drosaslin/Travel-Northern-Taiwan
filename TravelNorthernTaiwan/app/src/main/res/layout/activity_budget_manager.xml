@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.android.trip_organizer.BudgetManagerActivity">
+    tools:context="com.example.android.my_trip.BudgetManagerActivity">
 
     <ScrollView android:id="@+id/contencrollView"
         android:layout_height="match_parent"

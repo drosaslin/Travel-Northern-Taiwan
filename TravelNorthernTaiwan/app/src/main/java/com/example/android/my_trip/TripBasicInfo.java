@@ -1,4 +1,4 @@
-package com.example.android.trip_organizer;
+package com.example.android.my_trip;
 
 import java.util.ArrayList;
 

@@ -1,15 +1,14 @@
-package com.example.android.trip_organizer;
+package com.example.android.my_trip;
 
 import android.app.DatePickerDialog;
 import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
-import android.service.autofill.SaveInfo;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
+import android.support.design.internal.NavigationMenu;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -25,6 +24,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.android.locations_info.LocationDetailsResponse;
 import com.example.android.travelnortherntaiwan.R;
 import com.example.android.travelnortherntaiwan.SingletonRequestQueue;
+import com.example.android.trip_organizer.DatePickerFragment;
+import com.example.android.weather.HourlyDataActivity;
+import com.example.android.weather.WeatherData;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -35,12 +37,19 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.transferwise.sequencelayout.SequenceLayout;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.HashMap;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.LinkedHashMap;
+
+import io.github.yavski.fabspeeddial.FabSpeedDial;
 
 public class ShowInfoActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
     private final String GOOGLE_API_KEY = "AIzaSyCc4acsOQV7rnQ92weHYKO14fvL9wkRpKc";
+    private static final String WEATHER_KEY = "db4321093bdd7e123918dc6fa6e9c1e3";
 
     private RequestQueue queue;
 
@@ -56,7 +65,7 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
 
     private Button manageBudgetBtn;
     private Button saveInfoBtn;
-    private FloatingActionButton mapBtn;
+    private FabSpeedDial showMoreButton;
 
     private String currentTripKey;
 
@@ -66,7 +75,8 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
     private DatabaseReference mItineraryRef;
 
     private TripBasicInfo infoToDisplay;
-
+    private LinkedHashMap<String, ArrayList<String>> coordinates;
+    private WeatherData weatherData;
     private boolean isToDateFocused = false;
     private DatePickerDialog fromDatepicker , toDatepicker;
 
@@ -75,6 +85,7 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trip_info);
+        setProvinces();
         currentTripKey = getIntent().getExtras().getString("tripKey");
         String refUrl = "https://travel-northern-taiwan.firebaseio.com/";
         Toast.makeText(getApplicationContext(), "CREATED", Toast.LENGTH_SHORT).show();
@@ -89,15 +100,16 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
         mBasicInfoRef = FirebaseDatabase.getInstance().getReferenceFromUrl(refUrl + "BasicTripInfo/" + currentTripKey);
         mItineraryRef = FirebaseDatabase.getInstance().getReferenceFromUrl(refUrl + "Itinerary/" + currentTripKey);
 
-        mTripName = (EditText)findViewById(R.id.tripName);
-        mToDate = (EditText)findViewById(R.id.toDate);
-        mFromDate = (EditText)findViewById(R.id.fromDate);
-        mBudget = (EditText)findViewById(R.id.budget);
-        mRegion = (TextView) findViewById(R.id.regionField);
+        mTripName = findViewById(R.id.tripName);
+        mToDate = findViewById(R.id.toDate);
+        mFromDate = findViewById(R.id.fromDate);
+        mBudget = findViewById(R.id.budget);
+        mRegion = findViewById(R.id.regionField);
 
-        manageBudgetBtn = (Button)findViewById(R.id.manageBudget);
-        saveInfoBtn = (Button)findViewById(R.id.saveChanges);
-        mapBtn = (FloatingActionButton)findViewById(R.id.map_button);
+        manageBudgetBtn = findViewById(R.id.manageBudget);
+        saveInfoBtn = findViewById(R.id.saveChanges);
+        showMoreButton = findViewById(R.id.selection_button);
+        setActionButton();
 
         infoToDisplay = new TripBasicInfo();
 
@@ -106,6 +118,7 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 GetBasicInfo(dataSnapshot);
                 DisplayInfo(infoToDisplay);
+
                 /*mAdapter = new TripsAdapter(DataList, getActivity());
                 mRecyclerView.setAdapter(mAdapter);*/
             }
@@ -159,6 +172,40 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
             @Override
             public void onClick(View view) {
                 SaveInfo();
+            }
+        });
+    }
+
+    private void setActionButton() {
+        showMoreButton.setMenuListener(new FabSpeedDial.MenuListener() {
+            @Override
+            public boolean onPrepareMenu(NavigationMenu navigationMenu) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemSelected(MenuItem menuItem) {
+                Intent intent;
+                if(menuItem.getItemId() == R.id.action_weather) {
+                    Toast.makeText(ShowInfoActivity.this, infoToDisplay.getRegion(), Toast.LENGTH_SHORT).show();
+                    try {
+                        prepareWeatherData();
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+//                    intent = new Intent(getApplicationContext(), OnTripWeather.class);
+//                    intent.putExtra("region", infoToDisplay.getRegion());
+//                    startActivity(intent);
+                }
+                if(menuItem.getItemId() == R.id.action_map) {
+                    Toast.makeText(ShowInfoActivity.this, "map clicked", Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            }
+
+            @Override
+            public void onMenuClosed() {
+
             }
         });
     }
@@ -252,5 +299,56 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
             sequenceLayout.setAdapter(sequenceAdapter);
             counter = 0;
         }
+    }
+
+    public void prepareWeatherData() throws ParseException {
+        queue = com.example.android.travelnortherntaiwan.SingletonRequestQueue.getInstance(getApplicationContext()).getRequestQueue();
+        DateFormat dateFormat = new SimpleDateFormat("yyy/MM/dd");
+
+        Date tripDate = (infoToDisplay.getFromDate().equals("")) ? new Date() : dateFormat.parse(infoToDisplay.getFromDate());
+        String unixDate = Long.toString(tripDate.getTime() / 1000L);
+
+        String url = "https://api.darksky.net/forecast/" + WEATHER_KEY + "/" + coordinates.get(infoToDisplay.getRegion()).get(0) + "," +  unixDate + "?units=si";
+        Log.d("URLLL", url);
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.i("Response", response);
+                        openTripWeather(response);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("Find", "Fail");
+            }
+        });
+
+        queue.add(stringRequest);
+    }
+
+    public void openTripWeather(String response) {
+        weatherData = new Gson().fromJson(response, WeatherData.class);
+        weatherData.unixToDate();
+        Log.d("TIMEEEEE", weatherData.getHourly().getData().get(0).getFormattedTime());
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("WeatherData", weatherData);
+        Intent intent = new Intent(getApplicationContext(), HourlyDataActivity.class);
+        intent.putExtras(bundle);
+        startActivity(intent);
+    }
+
+    public void setProvinces() {
+        coordinates = new LinkedHashMap<>();
+
+        coordinates.put("Taipei", new ArrayList<>(Arrays.asList("25.0330,121.5654", "1")));
+        coordinates.put("New Taipei", new ArrayList<>(Arrays.asList("25.0170,121.4628", "2")));
+        coordinates.put("Keelung", new ArrayList<>(Arrays.asList("25.1276,121.7392", "3")));
+        coordinates.put("Hsinchu", new ArrayList<>(Arrays.asList("24.8138,120.9675", "4")));
+        coordinates.put("Taoyuan", new ArrayList<>(Arrays.asList("24.9936,121.3010", "5")));
+        coordinates.put("Yilan", new ArrayList<>(Arrays.asList("24.7021,121.7378", "6")));
     }
 }
