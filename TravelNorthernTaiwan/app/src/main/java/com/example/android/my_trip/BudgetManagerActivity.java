@@ -1,12 +1,23 @@
 package com.example.android.my_trip;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Handler;
+import android.os.VibrationEffect;
 import android.support.annotation.NonNull;
+import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +36,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.shashank.sony.fancydialoglib.Animation;
+import com.shashank.sony.fancydialoglib.FancyAlertDialog;
+import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
+import com.shashank.sony.fancydialoglib.Icon;
+import android.os.Vibrator;
 
 import java.util.ArrayList;
 
@@ -38,12 +54,22 @@ public class BudgetManagerActivity extends AppCompatActivity {
     private String tripName, expenseCategory, currentTripKey;
     private ExpenseAdapter mAdapter;
     public PieChart pieChart;
+    private Vibrator v ;
+    private VibrationEffect vibrationEffect;
+    private long[] timings = {1500};
+    private int[] amplitudes = {255};
+    private int repeat = -1;
+    private Uri notification;
+    private Ringtone r;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_budget_manager);
         getSupportActionBar().setTitle("Budget Manager");
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+
+
 
         tripName = null;
 
@@ -107,6 +133,7 @@ public class BudgetManagerActivity extends AppCompatActivity {
             public void onClick(View view){
                 money = Float.parseFloat(textMoney.getText().toString());
                 if(TextUtils.isEmpty(textMoney.getText().toString().trim())){
+                    Log.d("test", "empty");
                     Toast.makeText(BudgetManagerActivity.this, "Please input money", Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -115,27 +142,55 @@ public class BudgetManagerActivity extends AppCompatActivity {
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         getData(dataSnapshot);
                         setTripBudgetInfo(money, expenseCategory);
-                        Log.d("newTest", "Budget -> " + Budget);
-                        Log.d("newTest", "Accommodation -> " + Accommodation);
-                        Log.d("newTest", "Food -> " + Food);
-                        Log.d("newTest", "Shopping -> " + Shopping);
-                        Log.d("newTest", "Souvenirs -> " + Souvenirs);
-                        Log.d("newTest", "Tickets -> " + Tickets);
-                        Log.d("newTest", "Others -> " + Others);
+
+                        if (Budget<Accommodation + Food + Shopping + Souvenirs + Tickets + Others){
+                            //Toast.makeText(BudgetManagerActivity.this, "over budget !", Toast.LENGTH_SHORT).show();
+                            // Vibrate for 500 milliseconds
+                            v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                            vibrationEffect = VibrationEffect.createWaveform(timings, amplitudes, repeat);
+                            v.vibrate(vibrationEffect);
+                            notification = RingtoneManager.getDefaultUri(RingtoneManager.URI_COLUMN_INDEX);
+                            r = RingtoneManager.getRingtone(getApplicationContext(), notification);
+                            r.play();
+                            new FancyAlertDialog.Builder(BudgetManagerActivity.this)
+                                    .setTitle("Warning")
+                                    .setBackgroundColor(Color.parseColor("#FF0000"))  //Don't pass R.color.colorvalue
+                                    .setMessage("Oooooover budget")
+                                    .setNegativeBtnText("Cancel")
+                                    .setPositiveBtnBackground(Color.parseColor("#FF4081"))  //Don't pass R.color.colorvalue
+                                    .setPositiveBtnText("Ok")
+                                    .setNegativeBtnBackground(Color.parseColor("#FFA9A7A8"))  //Don't pass R.color.colorvalue
+                                    .setAnimation(Animation.SLIDE  )
+                                    .isCancellable(true)
+                                    .setIcon(R.drawable.ic_error_outline_black_24dp, Icon.Visible)
+                                    .OnPositiveClicked(new FancyAlertDialogListener() {
+                                        @Override
+                                        public void OnClick() {
+                                            Toast.makeText(getApplicationContext(),"Ok",Toast.LENGTH_SHORT).show();
+                                            r.stop();
+                                        }
+                                    })
+                                    .OnNegativeClicked(new FancyAlertDialogListener() {
+                                        @Override
+                                        public void OnClick() {
+                                            Toast.makeText(getApplicationContext(),"Cancel",Toast.LENGTH_SHORT).show();
+                                            setTripBudgetInfo(-1*money, expenseCategory);
+                                            setPieChart();
+                                            r.stop();
+                                        }
+                                    })
+                                    .build();
+                        }
                         setPieChart();
                     }
 
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) { }
                 });
-                Log.d("newTest", "setChart -> ");
+
                 textMoney.getText().clear();
             }
         });
-        /*mSectionsStatePagerAdapter = new SectionsStatePagerAdapter(getSupportFragmentManager());
-        mViewPager = (ViewPager)findViewById(R.id.container);*/
-        //setup the pager
-        /*setupViewPager(mViewPager);*/
     }
 
     private void initExpenseList() {
@@ -215,7 +270,19 @@ public class BudgetManagerActivity extends AppCompatActivity {
         pieData.setValueTextSize(10f);
         pieData.setValueTextColor(Color.YELLOW);
 
-
         pieChart.setData(pieData);
+
+        float restF = Budget-(Accommodation + Food + Shopping + Souvenirs + Tickets + Others);
+        String rest = Float.toString(restF);
+
+        pieChart.setCenterText("Remaining\n" + rest);
+        pieChart.setCenterTextSize(30);
+
+
+        if(restF<=0)pieChart.setCenterTextColor(Color.RED);
+        else if(restF<=1000)pieChart.setCenterTextColor(Color.MAGENTA);
+        else pieChart.setCenterTextColor(Color.BLACK);
+
+        Log.d("rest", "rest -> " + Float.toString(Budget-(Accommodation + Food + Shopping + Souvenirs + Tickets + Others)));
     }
 }

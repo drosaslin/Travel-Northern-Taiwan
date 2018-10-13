@@ -8,11 +8,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.android.my_trip.ShowInfoActivity;
 import com.example.android.my_trip.TripBasicInfo;
 import com.example.android.travelnortherntaiwan.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 
@@ -20,10 +23,12 @@ import java.util.ArrayList;
 public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> {
     ArrayList<TripBasicInfo> DataList;
     Context context;
+    private DatabaseReference mRootReference;
 
     public TripsAdapter(ArrayList<TripBasicInfo> newTripList, Context newContext) {
         DataList = newTripList;
         context = newContext;
+        mRootReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://travel-northern-taiwan.firebaseio.com/");
     }
 
     @NonNull
@@ -53,6 +58,16 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
                 context.startActivity(intent);
             }
         });
+
+        //Deleting a card
+        holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mRootReference.child("BasicTripInfo").child(DataList.get(position).getKey()).removeValue();
+                mRootReference.child("Itinerary").child(DataList.get(position).getKey()).removeValue();
+                mRootReference.child("ExpensesByTrip").child(DataList.get(position).getKey()).removeValue();
+            }
+        });
 //        holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
@@ -71,6 +86,7 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
         TextView cardDate;
         TextView cardRegion;
         CardView tripCard;
+        ImageView deleteBtn;
 //        RelativeLayout relativeLayout;
 
         public ViewHolder(View itemView) {
@@ -80,6 +96,7 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
             //cardDate = (itemView).findViewById(R.id.tripDate);
             cardRegion = (itemView).findViewById(R.id.tripRegion);
             tripCard = (itemView).findViewById(R.id.trip_card);
+            deleteBtn = (itemView).findViewById(R.id.deleteBtn);
         }
     }
 }
