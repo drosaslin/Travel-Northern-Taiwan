@@ -56,6 +56,9 @@ public class DrawerActivity extends AppCompatActivity implements NavigationView.
             case R.id.nav_weather:
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new WeatherMainFragment()).commit();
                 break;
+            case R.id.nav_about_us:
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new AboutUsFragment()).commit();
+                break;
             case R.id.nav_sign_out:
                 FirebaseAuth.getInstance().signOut();
                 DrawerActivity.this.finish();
