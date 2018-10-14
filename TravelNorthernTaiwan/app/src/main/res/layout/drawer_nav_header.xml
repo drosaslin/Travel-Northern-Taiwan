@@ -5,21 +5,23 @@
     android:background="@drawable/side_nav_bar"
     android:gravity="bottom"
     android:padding="16dp"
-    android:theme="@style/Base.ThemeOverlay.AppCompat.Dark">
+    android:theme="@style/Base.ThemeOverlay.AppCompat.Dark"
+    android:backgroundTint="@color/colorPrimary">
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
         android:src="@mipmap/ic_launcher_round"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingTop="8dp"
-        android:text="Android Studio"
+        android:text="Welcome!"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"/>
 
     <TextView
+        android:id="@+id/userEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="android.studio@android.com"/>
