@@ -13,6 +13,8 @@ public class LocationsResponse {
 
     private ArrayList<Results> results;
 
+    private Result result;
+
     private String[] html_attributions;
 
     private String status;
@@ -61,5 +63,13 @@ public class LocationsResponse {
     public String toString()
     {
         return "ClassPojo [next_page_token = "+next_page_token+", results = "+results+", html_attributions = "+html_attributions+", status = "+status+"]";
+    }
+
+    public Result getResult() {
+        return result;
+    }
+
+    public void setResult(Result result) {
+        this.result = result;
     }
 }

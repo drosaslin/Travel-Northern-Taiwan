@@ -9,7 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import com.example.android.map.MapsActivity;
+import com.example.android.my_trip.ShowInfoActivity;
 import com.example.android.travelnortherntaiwan.Messenger;
 import com.example.android.travelnortherntaiwan.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -66,7 +66,9 @@ public class ChooseRegionActivity extends AppCompatActivity {
             card.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    messenger.addCount();
+                    if(messenger.getCount() == 0) {
+                        messenger.addCount();
+                    }
                     String tag = (String) view.getTag();
                     GenerateTripKey(tag);
                     //mapsActivity.putExtra("region", tag);

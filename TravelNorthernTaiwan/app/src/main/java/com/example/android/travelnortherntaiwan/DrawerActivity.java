@@ -10,24 +10,43 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.example.android.trip_organizer.TripsActivity;
 import com.example.android.weather.WeatherMainFragment;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class DrawerActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private Toolbar toolbar;
     private DrawerLayout drawer;
+    private TextView userEmail;
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    private String email;
+
+    private NavigationView navigationView;
+    private View header;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.drawer_activity_base);
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        header = navigationView.getHeaderView(0);
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+        email = currentUser.getEmail();
 
         toolbar = findViewById(R.id.toolbar);
+        userEmail = (TextView) header.findViewById(R.id.userEmail);
+
         setSupportActionBar(toolbar);
 
         drawer = findViewById(R.id.drawer_layout);
+
+        userEmail.setText(email);
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 

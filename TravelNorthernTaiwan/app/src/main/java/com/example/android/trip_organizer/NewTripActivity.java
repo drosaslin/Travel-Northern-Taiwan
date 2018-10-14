@@ -176,7 +176,9 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
 
         //move later to another function
         //sending the user to another view and passing the current trip parameter to the view
-        messenger.addCount();
+        if(messenger.getCount() == 1) {
+            messenger.addCount();
+        }
         Intent mapActivity = new Intent(this,MapsActivity.class);
         mapActivity.putExtra("tripKey", currentTripKey);
         mapActivity.putExtra("region", currentRegion);

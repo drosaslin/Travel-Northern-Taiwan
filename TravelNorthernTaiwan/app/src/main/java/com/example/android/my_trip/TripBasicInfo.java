@@ -1,8 +1,8 @@
-package com.example.android.trip_organizer;
+package com.example.android.my_trip;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 
-public class TripBasicInfo {
+public class TripBasicInfo implements Serializable {
     String Name;
     String ToDate;
     String FromDate;

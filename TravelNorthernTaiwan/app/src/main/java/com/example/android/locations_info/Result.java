@@ -39,14 +39,20 @@ public class Result implements Parcelable {
 
     private Geometry geometry;
 
+
     protected Result(Parcel in) {
+        photos = in.createTypedArrayList(Photos.CREATOR);
         id = in.readString();
         place_id = in.readString();
         icon = in.readString();
+        reviews = in.createTypedArrayList(Reviews.CREATOR);
         name = in.readString();
         formatted_address = in.readString();
         formatted_phone_number = in.readString();
+        plus_code = in.readParcelable(Plus_code.class.getClassLoader());
         rating = in.readString();
+        opening_hours = in.readParcelable(Opening_hours.class.getClassLoader());
+        geometry = in.readParcelable(Geometry.class.getClassLoader());
     }
 
     public static final Creator<Result> CREATOR = new Creator<Result>() {
@@ -194,12 +200,17 @@ public class Result implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeTypedList(photos);
         parcel.writeString(id);
         parcel.writeString(place_id);
         parcel.writeString(icon);
+        parcel.writeTypedList(reviews);
         parcel.writeString(name);
         parcel.writeString(formatted_address);
         parcel.writeString(formatted_phone_number);
+        parcel.writeParcelable(plus_code, i);
         parcel.writeString(rating);
+        parcel.writeParcelable(opening_hours, i);
+        parcel.writeParcelable(geometry, i);
     }
 }

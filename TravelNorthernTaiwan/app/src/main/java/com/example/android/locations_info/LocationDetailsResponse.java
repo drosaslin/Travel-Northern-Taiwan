@@ -19,17 +19,6 @@ public class LocationDetailsResponse implements Parcelable {
         status = in.readString();
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeStringArray(html_attributions);
-        dest.writeString(status);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
     public static final Creator<LocationDetailsResponse> CREATOR = new Creator<LocationDetailsResponse>() {
         @Override
         public LocationDetailsResponse createFromParcel(Parcel in) {
@@ -41,6 +30,19 @@ public class LocationDetailsResponse implements Parcelable {
             return new LocationDetailsResponse[size];
         }
     };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
+        parcel.writeParcelable(result, i);
+        parcel.writeStringArray(html_attributions);
+        parcel.writeString(status);
+    }
 
     public Result getResult ()
     {

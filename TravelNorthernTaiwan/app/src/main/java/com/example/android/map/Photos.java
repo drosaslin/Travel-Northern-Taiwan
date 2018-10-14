@@ -16,6 +16,7 @@ public class Photos implements Parcelable {
 
     private String width;
 
+
     protected Photos(Parcel in) {
         photo_reference = in.readString();
         height = in.readString();

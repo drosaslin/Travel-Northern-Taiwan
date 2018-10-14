@@ -10,6 +10,7 @@
     android:paddingRight="16dp">
 
     <ImageView
+        android:contentDescription="logo"
         android:id="@+id/imageView2"
         android:layout_width="292dp"
         android:layout_height="152dp"
@@ -27,7 +28,7 @@
     <LinearLayout
         android:layout_width="120dp"
         android:layout_height="2dp"
-        android:background="@android:color/black"
+        android:background="@color/colorPrimaryDark"
         android:orientation="horizontal"
         android:layout_marginBottom="15dp"
         android:visibility="visible"/>

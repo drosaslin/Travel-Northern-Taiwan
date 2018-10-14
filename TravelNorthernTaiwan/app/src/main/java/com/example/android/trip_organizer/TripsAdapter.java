@@ -9,15 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.android.my_trip.ShowInfoActivity;
+import com.example.android.my_trip.TripBasicInfo;
 import com.example.android.travelnortherntaiwan.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> {

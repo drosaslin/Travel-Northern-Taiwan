@@ -48,8 +48,6 @@ import java.util.Map;
 public class WeatherMainFragment extends android.support.v4.app.Fragment implements Serializable {
     private static final String WEATHER_KEY = "db4321093bdd7e123918dc6fa6e9c1e3";
     private int requestsFinished;
-    private double latitude;
-    private double longitude;
     private ProgressBar progressBar;
     private LinkedHashMap<String, ArrayList<String>> coordinates;
     private ArrayList<WeatherData> weatherData;
@@ -72,8 +70,6 @@ public class WeatherMainFragment extends android.support.v4.app.Fragment impleme
         super.onActivityCreated(savedInstanceState);
 
         requestsFinished = 0;
-        latitude = 0.0;
-        longitude = 0.0;
 
         locationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
@@ -212,32 +208,16 @@ public class WeatherMainFragment extends android.support.v4.app.Fragment impleme
         try {
             List<Address> addresses = geocoder.getFromLocation(currentLocation.latitude, currentLocation.longitude, 1);
             String cityName = addresses.get(0).getLocality();
-            String stateName = addresses.get(0).getAddressLine(1);
-            String countryName = addresses.get(0).getAddressLine(2);
             return cityName;
         }
         catch (IOException e) {
 
         }
-//        String city;
-//        Geocoder geocoder = new Geocoder(getActivity(), Locale.getDefault());
-//        List<Address> addresses = null;
-//
-//        try {
-//            addresses = geocoder.getFromLocation(latitude, longitude, 1);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//
-//        city = "HI";
-//        Log.d("Index", Integer.toString(addresses.size()));
-//        //city = (addresses != null) ? addresses.get(0).getLocality() : "City";
         return "";
     }
 
     @Override
     public void onResume() {
         super.onResume();
-//        startLocationUpdates();
     }
 }

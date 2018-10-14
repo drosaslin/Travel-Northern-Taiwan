@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 
-class HourlyWeather implements Parcelable {
+public class HourlyWeather implements Parcelable {
     private String summary;
     private String icon;
     private ArrayList<Forecast> data;

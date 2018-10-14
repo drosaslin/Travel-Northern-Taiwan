@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -54,7 +54,7 @@
             android:label="Map"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.example.android.trip_organizer.ShowInfoActivity"
+            android:name="com.example.android.my_trip.ShowInfoActivity"
             android:label="Trip information"
             android:screenOrientation="portrait" />
         <!--
@@ -70,8 +70,10 @@
             android:value="AIzaSyCc4acsOQV7rnQ92weHYKO14fvL9wkRpKc" />
 
         <activity android:name="com.example.android.locations_info.LocationReviewsFragment" />
-        <activity android:name="com.example.android.trip_organizer.BudgetManagerActivity"></activity>
-        <activity android:name="com.example.android.trip_organizer.SecondActivity"></activity>
+        <activity android:name="com.example.android.my_trip.BudgetManagerActivity" />
+        <activity android:name="com.example.android.my_trip.SecondActivity" />
+        <activity android:name="com.example.android.weather.OnTripWeather" />
+        <activity android:name="com.example.android.my_trip.MyTripMap"></activity>
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.example.android.trip_organizer;
+package com.example.android.my_trip;
 
 import android.content.Context;
 import android.content.Intent;
@@ -23,6 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
+
 import com.example.android.travelnortherntaiwan.R;
 import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.PieChart;
@@ -42,7 +43,6 @@ import com.shashank.sony.fancydialoglib.Icon;
 import android.os.Vibrator;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class BudgetManagerActivity extends AppCompatActivity {
     private ArrayList<ExpenseItem> mExpenseList;
