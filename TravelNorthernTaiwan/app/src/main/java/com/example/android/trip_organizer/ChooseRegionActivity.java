@@ -66,7 +66,9 @@ public class ChooseRegionActivity extends AppCompatActivity {
             card.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    messenger.addCount();
+                    if(messenger.getCount() == 0) {
+                        messenger.addCount();
+                    }
                     String tag = (String) view.getTag();
                     GenerateTripKey(tag);
                     //mapsActivity.putExtra("region", tag);

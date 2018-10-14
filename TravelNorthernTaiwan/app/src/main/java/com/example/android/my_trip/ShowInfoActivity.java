@@ -37,6 +37,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.transferwise.sequencelayout.SequenceLayout;
 
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -80,6 +81,7 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
     private WeatherData weatherData;
     private boolean isToDateFocused = false;
     private DatePickerDialog fromDatepicker , toDatepicker;
+    private ArrayList<LocationDetailsResponse> destinationsDetails;
 
     private float Budget, Accommodation, Food, Shopping, Souvenirs, Tickets, Others;
 
@@ -95,6 +97,8 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
 
+
+        destinationsDetails = new ArrayList<>();
         queue = SingletonRequestQueue.getInstance(getApplicationContext()).getRequestQueue();
         sequenceLayout = findViewById(R.id.sequence_layout);
         myItemList = new ArrayList<>();
@@ -202,7 +206,6 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
 
             @Override
             public boolean onMenuItemSelected(MenuItem menuItem) {
-                Intent intent;
                 if(menuItem.getItemId() == R.id.action_weather) {
                     Toast.makeText(ShowInfoActivity.this, infoToDisplay.getRegion(), Toast.LENGTH_SHORT).show();
                     try {
@@ -210,12 +213,19 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
-//                    intent = new Intent(getApplicationContext(), OnTripWeather.class);
-//                    intent.putExtra("region", infoToDisplay.getRegion());
-//                    startActivity(intent);
                 }
                 if(menuItem.getItemId() == R.id.action_map) {
                     Toast.makeText(ShowInfoActivity.this, "map clicked", Toast.LENGTH_SHORT).show();
+                    Log.e("DEBUGING1", destinationsDetails.get(0).toString());
+
+                    Bundle bundle = new Bundle();
+//                    bundle.putParcelable("destinationsDetails", destinationsDetails.get(0));
+                    Intent intent = new Intent(ShowInfoActivity.this, MyTripMap.class);
+                    intent.putExtra("basicInfo", infoToDisplay);
+                    intent.putExtra("destinationsDetails", destinationsDetails.get(0));
+//                    intent.putExtras(bundle);
+//                    intent.putExtras("destinationsDetails", destinationsDetails);
+                    getApplicationContext().startActivity(intent);
                 }
                 return true;
             }
@@ -329,6 +339,7 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
 
     private void addToItineraryList(String response, int size) {
         LocationDetailsResponse placeDetails = new Gson().fromJson(response, LocationDetailsResponse.class);
+        destinationsDetails.add(placeDetails);
 
         myItemList.add(new MyAdapter.MyItem(false, "", placeDetails.getResult().getName(), ""));
 

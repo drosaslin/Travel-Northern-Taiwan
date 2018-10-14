@@ -14,6 +14,16 @@ public class Opening_hours implements Parcelable {
         open_now = in.readString();
     }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(open_now);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
     public static final Creator<Opening_hours> CREATOR = new Creator<Opening_hours>() {
         @Override
         public Opening_hours createFromParcel(Parcel in) {
@@ -42,13 +52,4 @@ public class Opening_hours implements Parcelable {
         return "ClassPojo [open_now = "+open_now+"]";
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeString(open_now);
-    }
 }
