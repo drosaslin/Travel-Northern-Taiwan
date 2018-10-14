@@ -83,6 +83,7 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
     private DatePickerDialog fromDatepicker , toDatepicker;
     private ArrayList<LocationDetailsResponse> destinationsDetails;
 
+    private ValueEventListener budgetListener, itineraryListener, basicInfoListener;
     private float Budget, Accommodation, Food, Shopping, Souvenirs, Tickets, Others;
 
     int counter = 0;
@@ -121,53 +122,12 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
 
         infoToDisplay = new TripBasicInfo();
 
-        mBasicInfoRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                GetBasicInfo(dataSnapshot);
-                DisplayInfo(infoToDisplay);
-
-                /*mAdapter = new TripsAdapter(DataList, getActivity());
-                mRecyclerView.setAdapter(mAdapter);*/
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-        mBudgetRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                GetBudget(dataSnapshot);
-                DisplayRest();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
         mFromDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 isToDateFocused = false;
                 DialogFragment fromDatePicker = new DatePickerFragment();
                 fromDatePicker.show(getFragmentManager(), "date picker");
-            }
-        });
-
-        mItineraryRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                GetItinerary(dataSnapshot);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
 
@@ -401,5 +361,58 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
         coordinates.put("Hsinchu", new ArrayList<>(Arrays.asList("24.8138,120.9675", "4")));
         coordinates.put("Taoyuan", new ArrayList<>(Arrays.asList("24.9936,121.3010", "5")));
         coordinates.put("Yilan", new ArrayList<>(Arrays.asList("24.7021,121.7378", "6")));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mBasicInfoRef.removeEventListener(basicInfoListener);
+        mItineraryRef.removeEventListener(itineraryListener);
+        mBudgetRef.removeEventListener(budgetListener);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        basicInfoListener = mBasicInfoRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                GetBasicInfo(dataSnapshot);
+                DisplayInfo(infoToDisplay);
+
+                /*mAdapter = new TripsAdapter(DataList, getActivity());
+                mRecyclerView.setAdapter(mAdapter);*/
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        budgetListener = mBudgetRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                GetBudget(dataSnapshot);
+                DisplayRest();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+        itineraryListener = mItineraryRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                GetItinerary(dataSnapshot);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 }
