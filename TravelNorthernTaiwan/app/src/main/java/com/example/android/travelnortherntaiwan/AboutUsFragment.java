@@ -38,7 +38,7 @@ public class AboutUsFragment extends android.support.v4.app.Fragment {
         super.onActivityCreated(savedInstanceState);
 
         textViewContent = getView().findViewById(R.id.textView_content);
-        /*String content = "Every time we think about travelling in Taiwan, Taipei is the first thing " +
+        String content = "Every time we think about travelling in Taiwan, Taipei is the first thing " +
                 "that comes to our mind because it’s the capital city or maybe because it’s Taiwan’s " +
                 "most famous region. However, other regions in Taiwan are worth visiting as well, so " +
                 "one of our motivations could be to promote tourism to other regions in the North of " +
@@ -46,8 +46,8 @@ public class AboutUsFragment extends android.support.v4.app.Fragment {
                 "\tAdditionally, travelling might get slightly stressful, especially if we are planning " +
                 "the trip by ourselves, so we intend to offer a travel guide that also has useful tools " +
                 "such as budget planning, weather information, and a to-do list, so the user won’t " +
-                "have to download several apps because all the necessary tools are in the same application.\n";*/
-        String content = "A";
+                "have to download several apps because all the necessary tools are in the same application.\n";
+        //String content = "A";
         textViewContent.setText(content);
 
         CircleMenu circleMenu = getView().findViewById(R.id.circle_menu);
@@ -78,7 +78,7 @@ public class AboutUsFragment extends android.support.v4.app.Fragment {
     private void buildGifDialog(int index){
         String[] title = {"Daniel", "Genesis", "David"};
         String[] introduction = {"Hello! I am an engineer.", "Hello! I am an engineer2.", "Hello! I am an engineer3."};
-        int[] gif = {R.drawable.gif_dog, R.drawable.gif_cat, R.drawable.gif_cat};
+        int[] gif = {R.drawable.gif_dog, R.drawable.gif_cat, R.drawable.gif_guinea};
         new FancyGifDialog.Builder(getActivity())
                 .setTitle(title[index])
                 .setMessage(introduction[index])
@@ -111,8 +111,8 @@ public class AboutUsFragment extends android.support.v4.app.Fragment {
         i.setType("message/rfc822");
         i.putExtra(Intent.EXTRA_EMAIL  , email);
         Log.d("email", "index2 -> " + index2 + "emailAddress -> " + email[index2]);
-        i.putExtra(Intent.EXTRA_SUBJECT, "subject of email");
-        i.putExtra(Intent.EXTRA_TEXT   , "body of email");
+        i.putExtra(Intent.EXTRA_SUBJECT, "Thanks to use our App!");
+        i.putExtra(Intent.EXTRA_TEXT   , "Thanks to use our App!");
         try {
             startActivity(Intent.createChooser(i, "Send mail..."));
         } catch (android.content.ActivityNotFoundException ex) {
