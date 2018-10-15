@@ -131,12 +131,13 @@ public class BudgetManagerActivity extends AppCompatActivity {
         submitBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-                money = Float.parseFloat(textMoney.getText().toString());
+
                 if(TextUtils.isEmpty(textMoney.getText().toString().trim())){
                     Log.d("test", "empty");
                     Toast.makeText(BudgetManagerActivity.this, "Please input money", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                money = Float.parseFloat(textMoney.getText().toString());
                 mRef.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
