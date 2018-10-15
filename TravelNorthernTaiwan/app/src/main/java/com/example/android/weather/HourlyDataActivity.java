@@ -52,9 +52,10 @@ public class HourlyDataActivity extends AppCompatActivity {
 
     private void updateGUI() {
         if(weatherData != null) {
-            String temperature = Integer.toString(Math.round(weatherData.getCurrently().getTemperature()));
-            String precipitation = Float.toString(weatherData.getCurrently().getPrecipProbability());
-            String windSp = Double.toString(weatherData.getCurrently().getWindSpeed());
+            float precip = weatherData.getCurrently().getPrecipProbability() + 100;
+            String precipitation = Integer.toString((int)precip) + "%";
+            String temperature = Integer.toString(Math.round(weatherData.getCurrently().getTemperature())) + "°";
+            String windSp = Integer.toString((int)weatherData.getCurrently().getWindSpeed()) + " km/h";
             String icon = weatherData.getCurrently().getIcon();
 
             place.setText(weatherData.getCity());

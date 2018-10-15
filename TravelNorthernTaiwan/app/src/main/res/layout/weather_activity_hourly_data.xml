@@ -5,26 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:layout_gravity="center_vertical"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="150sp">
+        android:layout_height="2sp"
+        android:background="@color/colorPrimary"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="150sp"
+        android:layout_gravity="center_vertical"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:gravity="center_vertical"
             android:layout_marginLeft="14sp"
-            android:layout_marginTop="14sp">
+            android:layout_marginTop="14sp"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/current_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Province"
-                android:textSize="25sp"/>
+                android:textSize="25sp" />
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -35,23 +41,23 @@
                     android:layout_width="100sp"
                     android:layout_height="100sp"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/weather_wi_cloudy"/>
+                    android:src="@drawable/weather_wi_cloudy" />
 
                 <TextView
                     android:id="@+id/current_temperature"
                     android:layout_width="wrap_content"
                     android:layout_height="100sp"
-                    android:gravity="center_vertical"
                     android:layout_marginLeft="30sp"
                     android:layout_toRightOf="@id/current_weather"
-                    android:textSize="55sp"
-                    android:text="40"/>
+                    android:gravity="center_vertical"
+                    android:text="40"
+                    android:textSize="55sp" />
 
                 <LinearLayout
-                    android:layout_toRightOf="@id/current_temperature"
-                    android:layout_marginLeft="30sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="30sp"
+                    android:layout_toRightOf="@id/current_temperature"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -64,7 +70,7 @@
                             android:layout_width="50sp"
                             android:layout_height="50sp"
                             android:scaleType="fitCenter"
-                            android:src="@drawable/weather_wi_raindrops"/>
+                            android:src="@drawable/weather_wi_raindrops" />
 
                         <TextView
                             android:id="@+id/precipitation_prob"
@@ -72,7 +78,7 @@
                             android:layout_height="50sp"
                             android:layout_toRightOf="@id/drop_image"
                             android:gravity="center_vertical"
-                            android:text="13%"/>
+                            android:text="13%" />
 
                     </LinearLayout>
 
@@ -86,14 +92,14 @@
                             android:layout_width="50sp"
                             android:layout_height="50sp"
                             android:scaleType="fitCenter"
-                            android:src="@drawable/weather_wi_windy"/>
+                            android:src="@drawable/weather_wi_windy" />
 
                         <TextView
                             android:id="@+id/wind_speed"
                             android:layout_width="wrap_content"
                             android:layout_height="50sp"
                             android:gravity="center_vertical"
-                            android:text="14Km/h"/>
+                            android:text="14Km/h" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -115,6 +121,11 @@
         android:layout_height="wrap_content">
 
     </android.support.v7.widget.RecyclerView>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2sp"
+        android:background="@color/colorPrimary"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/daily_recycler"

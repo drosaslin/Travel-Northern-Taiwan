@@ -9,6 +9,7 @@
         android:orientation="horizontal"
         android:layout_gravity="center_vertical"
         android:layout_width="match_parent"
+        android:gravity="center_horizontal"
         android:layout_height="150sp">
 
         <LinearLayout
@@ -42,14 +43,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="100sp"
                     android:gravity="center_vertical"
-                    android:layout_marginLeft="30sp"
+                    android:layout_marginLeft="27sp"
                     android:layout_toRightOf="@id/current_weather"
                     android:textSize="55sp"
                     android:text="40"/>
 
                 <LinearLayout
                     android:layout_toRightOf="@id/current_temperature"
-                    android:layout_marginLeft="30sp"
+                    android:layout_marginLeft="27sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">

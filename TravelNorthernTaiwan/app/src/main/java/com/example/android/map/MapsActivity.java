@@ -140,7 +140,6 @@ public class MapsActivity extends FragmentActivity implements
         });
 
         activitiesTab.getTabAt(1).select();
-        activitiesTab.getTabAt(0).select();
 
         //display the locations list fragment in the slide up panel
         Bundle bundle = new Bundle();
@@ -216,27 +215,6 @@ public class MapsActivity extends FragmentActivity implements
 
         queue.add(stringRequest);
     }
-
-//    private void apiCallNextToken(String token) {
-//        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=" + token + "&key=" + GOOGLE_API_KEY;
-//
-//        // Request a string response from the provided URL.
-//        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        Log.i("Response", response);
-//                        updateMap(response);
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.d("Find", "Fail");
-//            }
-//        });
-//
-//        queue.add(stringRequest);
-//    }
 
     private void cleanView() {
         //clear all the markers from the map and items from the locations list

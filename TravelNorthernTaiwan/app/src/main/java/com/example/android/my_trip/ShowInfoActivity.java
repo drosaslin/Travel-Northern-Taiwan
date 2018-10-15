@@ -83,7 +83,7 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
     private DatePickerDialog fromDatepicker , toDatepicker;
     private ArrayList<LocationDetailsResponse> destinationsDetails;
 
-    private ValueEventListener budgetListener, itineraryListener, basicInfoListener;
+    private ValueEventListener budgetListener, basicInfoListener;
     private float Budget, Accommodation, Food, Shopping, Souvenirs, Tickets, Others;
 
     int counter = 0;
@@ -94,10 +94,9 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
         setProvinces();
         currentTripKey = getIntent().getExtras().getString("tripKey");
         String refUrl = "https://travel-northern-taiwan.firebaseio.com/";
-        Toast.makeText(getApplicationContext(), "CREATED", Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getApplicationContext(), "CREATED", Toast.LENGTH_SHORT).show();
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
-
 
         destinationsDetails = new ArrayList<>();
         queue = SingletonRequestQueue.getInstance(getApplicationContext()).getRequestQueue();
@@ -108,12 +107,13 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
         mBasicInfoRef = FirebaseDatabase.getInstance().getReferenceFromUrl(refUrl + "BasicTripInfo/" + currentTripKey);
         mItineraryRef = FirebaseDatabase.getInstance().getReferenceFromUrl(refUrl + "Itinerary/" + currentTripKey);
         mBudgetRef = FirebaseDatabase.getInstance().getReferenceFromUrl(refUrl + "ExpensesByTrip/" + currentTripKey);
+        Log.d("ITINERARY", mItineraryRef.getRef().toString());
 
-        mTripName = (EditText)findViewById(R.id.tripName);
-        mToDate = (EditText)findViewById(R.id.toDate);
-        mFromDate = (EditText)findViewById(R.id.fromDate);
-        mRest = (TextView) findViewById(R.id.rest);
-        mRegion = (TextView) findViewById(R.id.regionField);
+        mTripName = findViewById(R.id.tripName);
+        mToDate = findViewById(R.id.toDate);
+        mFromDate = findViewById(R.id.fromDate);
+        mRest = findViewById(R.id.rest);
+        mRegion = findViewById(R.id.regionField);
 
         manageBudgetBtn = findViewById(R.id.manageBudget);
         saveInfoBtn = findViewById(R.id.saveChanges);
@@ -175,17 +175,9 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
                     }
                 }
                 if(menuItem.getItemId() == R.id.action_map) {
-                    Toast.makeText(ShowInfoActivity.this, "map clicked", Toast.LENGTH_SHORT).show();
-                    Log.e("DEBUGING1", destinationsDetails.get(0).toString());
-
-                    Bundle bundle = new Bundle();
-//                    bundle.putParcelable("destinationsDetails", destinationsDetails.get(0));
                     Intent intent = new Intent(ShowInfoActivity.this, MyTripMap.class);
                     intent.putExtra("basicInfo", infoToDisplay);
-                    intent.putExtra("destinationsDetails", destinationsDetails.get(0));
-//                    intent.putExtras(bundle);
-//                    intent.putExtras("destinationsDetails", destinationsDetails);
-                    getApplicationContext().startActivity(intent);
+                    startActivity(intent);
                 }
                 return true;
             }
@@ -208,9 +200,19 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
 
     private void GetItinerary(DataSnapshot ds) {
         ArrayList<String> placeIds = new ArrayList<>();
+        boolean flag = false;
         for(DataSnapshot dataSnapshot : ds.getChildren()){
             if(dataSnapshot.getValue()!=null && !dataSnapshot.getValue().equals("")){
-                placeIds.add(dataSnapshot.getValue().toString());
+                for(LocationDetailsResponse tripInfo : destinationsDetails) {
+                    if(tripInfo.getResult().getPlace_id().trim().equals(dataSnapshot.getValue().toString().trim())) {
+                        flag = true;
+                        break;
+                    }
+                }
+                if(!flag) {
+                    placeIds.add(dataSnapshot.getValue().toString());
+                }
+                flag = false;
             }
         }
 
@@ -284,8 +286,6 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
                     public void onResponse(String response) {
                         Log.i("Response", response);
                         addToItineraryList(response, size);
-//                        myItemList.add(new MyAdapter.MyItem(true, ))
-//                        updateUI(response);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -300,6 +300,9 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
     private void addToItineraryList(String response, int size) {
         LocationDetailsResponse placeDetails = new Gson().fromJson(response, LocationDetailsResponse.class);
         destinationsDetails.add(placeDetails);
+        for(LocationDetailsResponse destination : destinationsDetails) {
+            Log.d("DETAILS", destination.getResult().getName());
+        }
 
         myItemList.add(new MyAdapter.MyItem(false, "", placeDetails.getResult().getName(), ""));
 
@@ -367,7 +370,6 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
     protected void onPause() {
         super.onPause();
         mBasicInfoRef.removeEventListener(basicInfoListener);
-        mItineraryRef.removeEventListener(itineraryListener);
         mBudgetRef.removeEventListener(budgetListener);
     }
 
@@ -403,7 +405,7 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
             }
         });
 
-        itineraryListener = mItineraryRef.addValueEventListener(new ValueEventListener() {
+        mItineraryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 GetItinerary(dataSnapshot);
