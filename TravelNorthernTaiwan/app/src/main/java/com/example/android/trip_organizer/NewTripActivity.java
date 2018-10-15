@@ -194,19 +194,6 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
             Toast.makeText(getApplicationContext(), "Please enter a name for your trip", Toast.LENGTH_SHORT).show();
             return false;
         }
-// else if (!toDate.isEmpty() && (Integer.parseInt(toDateToken[0]) < Integer.parseInt(fromDateToken[0]))){
-//            Toast.makeText(getApplicationContext(), "Please check your dates", Toast.LENGTH_SHORT).show();
-//            return false;
-//        }else if (!toDate.isEmpty() && Integer.parseInt(toDateToken[0]) == Integer.parseInt(fromDateToken[0]) &&
-//                Integer.parseInt(toDateToken[1]) > Integer.parseInt(fromDateToken[1])){
-//            Toast.makeText(getApplicationContext(), "Please check your dates", Toast.LENGTH_SHORT).show();
-//            return false;
-//        }else if (!toDate.isEmpty() && Integer.parseInt(toDateToken[0]) == Integer.parseInt(fromDateToken[0]) &&
-//                Integer.parseInt(toDateToken[1]) == Integer.parseInt(fromDateToken[1]) &&
-//                Integer.parseInt(toDateToken[2]) > Integer.parseInt(fromDateToken[2])){
-//            Toast.makeText(getApplicationContext(), "Please check your dates", Toast.LENGTH_SHORT).show();
-//            return false;
-//        }
         return true;
     }
 

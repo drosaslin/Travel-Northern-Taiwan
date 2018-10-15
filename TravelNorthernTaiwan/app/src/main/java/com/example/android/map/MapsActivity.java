@@ -106,6 +106,7 @@ public class MapsActivity extends FragmentActivity implements
             public void onClick(View view) {
                 Toast.makeText(MapsActivity.this, "SAVING", Toast.LENGTH_SHORT).show();
                 messenger.addCount();
+                locationsListFragment.onDestroy();
                 finish();
             }
         });
@@ -169,19 +170,6 @@ public class MapsActivity extends FragmentActivity implements
         //update location list fragment's recycler
         locationsListFragment.updateData(locationsResponse.getResults());
     }
-
-//    private void getMoreResults() {
-//        if(locationsResponse.getNext_page_token() != null) {
-//            Handler handler = new Handler();
-//            handler.postDelayed(new Runnable() {
-//                public void run() {
-//                    String token = locationsResponse.getNext_page_token();
-//                    Log.i("TOKEN", token);
-//                    apiCallNextToken(token);
-//                }
-//            }, 5000);
-//        }
-//    }
 
     private void performApiCalls(String key) {
         //call the google activities api for all activities related to the user's choice on its respective region
@@ -531,5 +519,11 @@ public class MapsActivity extends FragmentActivity implements
         public String getPlaceId() {
             return mPlaceId;
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
     }
 }

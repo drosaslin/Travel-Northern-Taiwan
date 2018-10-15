@@ -156,12 +156,12 @@ public class MyTripMap extends AppCompatActivity implements
     private void GetItinerary(DataSnapshot ds) {
         Log.d("BASEFUEGO", "ho");
         ArrayList<String> placeIds = new ArrayList<>();
-        for(DataSnapshot dataSnapshot : ds.getChildren()) {
-            Log.d("BASEFUEGO", dataSnapshot.getValue().toString());
-            if (dataSnapshot.getValue() != null && !dataSnapshot.getValue().equals("")) {
-                placeIds.add(dataSnapshot.getValue().toString());
-            }
-        }
+//        for(DataSnapshot dataSnapshot : ds.getChildren()) {
+//            Log.d("BASEFUEGO", dataSnapshot.getValue().toString());
+//            if (dataSnapshot.getValue() != null && !dataSnapshot.getValue().equals("")) {
+//                placeIds.add(dataSnapshot.getValue().toString());
+//            }
+//        }
 
         int size = placeIds.size();
         for(int n = 0; n < size; n++) {

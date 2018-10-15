@@ -56,6 +56,9 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
         mRootReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://travel-northern-taiwan.firebaseio.com");
 
         setDatabase();
+        for(String destinations : tripDestinations.getDestinations()) {
+            Log.d("DESTINATIONS", destinations);
+        }
     }
 
     @NonNull
@@ -121,6 +124,7 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
     }
 
     private void updateItinerary(int position, LocationListAdapter.LocationsViewHolder holder){
+        Log.d("ADDINGGG", "adding");
         if(holder.addButton.isChecked()) {
             addToItinerary(position);
             locationsListFragment.updateMap(locations.get(position).getGeometry().getLocation(), true);
@@ -135,6 +139,9 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
     }
 
     private void addToItinerary(int position) {
+        for(String destination : tripDestinations.getDestinations()) {
+            Log.d("ITIINERARY", destination);
+        }
         tripDestinations.addDestination(locations.get(position).getPlace_id());
         updateDatabase();
     }
@@ -147,6 +154,9 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
     private void updateDatabase() {
         //updates the data in the database based on the items inside tripDestinations
         int arraySize = tripDestinations.getDestinations().size();
+        for(String destinations : tripDestinations.getDestinations()) {
+            Log.d("DESTINATIONS", destinations);
+        }
         for(int n = 0; n < 10; n++ ) {
             //inserting all destinations added. Insert a blank character to all indexes without destinations
             if(n < arraySize) {
@@ -167,6 +177,10 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
         }
 
         mRootReference.child("Itinerary").child(tripKey).setValue(itinerary);
+    }
+
+    public void finish() {
+        tripDestinations.clearItinerary();
     }
 
     public class LocationsViewHolder extends RecyclerView.ViewHolder {

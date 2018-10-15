@@ -110,4 +110,11 @@ public class LocationsListFragment extends Fragment {
             throw new ClassCastException(activity.toString() + "must override onLocationPressed method");
         }
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        recycler = null;
+        adapter.finish();
+    }
 }
