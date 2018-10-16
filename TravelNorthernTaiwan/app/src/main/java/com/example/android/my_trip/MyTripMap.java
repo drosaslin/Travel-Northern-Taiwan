@@ -1,18 +1,24 @@
 package com.example.android.my_trip;
 
+import android.graphics.Bitmap;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.android.locations_info.LocationDetailsFragment;
 import com.example.android.locations_info.LocationDetailsResponse;
 import com.example.android.locations_info.LocationsListFragment;
 import com.example.android.locations_info.LocationsResponse;
+import com.example.android.locations_info.Result;
 import com.example.android.map.Location;
 import com.example.android.map.RegionsCoordinates;
 import com.example.android.map.Results;
@@ -57,7 +63,6 @@ public class MyTripMap extends AppCompatActivity implements
     private FirebaseUser currentUser;
     private DatabaseReference mItineraryRef;
     private LocationsListFragment locationsListFragment;
-    private int counter = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,20 +89,11 @@ public class MyTripMap extends AppCompatActivity implements
         mItineraryRef = FirebaseDatabase.getInstance().getReferenceFromUrl(refUrl + "Itinerary/" + myTrip.getKey());
         Log.d("ITINERARY", mItineraryRef.getRef().toString());
 
-        mItineraryRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                GetItinerary(dataSnapshot);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
+        setFirebaseListener();
 
         Bundle bundle = new Bundle();
         bundle.putString("tripKey", myTrip.getKey());
+        bundle.putBoolean("newTrip", false);
         locationsListFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.locations_container, locationsListFragment).commit();
     }
@@ -110,7 +106,6 @@ public class MyTripMap extends AppCompatActivity implements
 
     private void apiCallPlaceDetails(String placeId, final int size) {
         String url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&fields=price_level,name,rating,formatted_address,formatted_phone_number,geometry,icon,id,opening_hours,photos,place_id,plus_code,rating,reviews&key=" + GOOGLE_API_KEY;
-
 
         // Request a string response from the provided URL.
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
@@ -132,23 +127,38 @@ public class MyTripMap extends AppCompatActivity implements
 
     private void addToItineraryList(String response, int size) {
         LocationDetailsResponse placeDetails = new Gson().fromJson(response, LocationDetailsResponse.class);
-        Results destination = new Gson().fromJson(response, Results.class);
+//        Results results = new Gson().fromJson(response, Results.class);
+        Results results = setResults(placeDetails);
 
+        Log.d("DESTINATION", results.toString());
         placeMarker(placeDetails);
 
-        destinationList.getResults().add(destination);
+        destinationList.getResults().add(results);
         destinationsDetail.add(placeDetails);
         for(LocationDetailsResponse dest : destinationsDetail) {
             Log.d("DETAILS", dest.getResult().getName());
         }
 
-        locationsListFragment.updateData(destinationList.getResults());
+        locationsListFragment.updateData(results);
+    }
+
+    private Results setResults(LocationDetailsResponse locationDetailsResponse) {
+        Results results = new Results();
+        results.setName(locationDetailsResponse.getResult().getName());
+        results.setPlace_id(locationDetailsResponse.getResult().getPlace_id());
+        results.setPhotos(locationDetailsResponse.getResult().getPhotos());
+        results.setGeometry(locationDetailsResponse.getResult().getGeometry());
+        results.setOpening_hours(locationDetailsResponse.getResult().getOpening_hours());
+        results.setRating(locationDetailsResponse.getResult().getRating());
+
+        return results;
     }
 
     private void placeMarker(LocationDetailsResponse placeDetails) {
         MarkerOptions marker = new MarkerOptions();
         marker.position(placeDetails.getResult().getGeometry().getLocation().getLatLng());
         marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+        marker.flat(true);
 
         mMap.addMarker(marker);
     }
@@ -156,12 +166,12 @@ public class MyTripMap extends AppCompatActivity implements
     private void GetItinerary(DataSnapshot ds) {
         Log.d("BASEFUEGO", "ho");
         ArrayList<String> placeIds = new ArrayList<>();
-//        for(DataSnapshot dataSnapshot : ds.getChildren()) {
-//            Log.d("BASEFUEGO", dataSnapshot.getValue().toString());
-//            if (dataSnapshot.getValue() != null && !dataSnapshot.getValue().equals("")) {
-//                placeIds.add(dataSnapshot.getValue().toString());
-//            }
-//        }
+        for(DataSnapshot dataSnapshot : ds.getChildren()) {
+            Log.d("BASEFUEGO", dataSnapshot.getValue().toString());
+            if (dataSnapshot.getValue() != null && !dataSnapshot.getValue().equals("")) {
+                placeIds.add(dataSnapshot.getValue().toString());
+            }
+        }
 
         int size = placeIds.size();
         for(int n = 0; n < size; n++) {
@@ -189,7 +199,22 @@ public class MyTripMap extends AppCompatActivity implements
 
     @Override
     public void onLocationPressed(String locationId, Location location) {
+        /*set the location id in the location details' fragment and put the locations
+        details fragment in front of the locations list fragment*/
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location.getLatLng(), 16));
 
+        LocationDetailsFragment fragment = new LocationDetailsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("tripKey", myTrip.getKey());
+        fragment.setArguments(bundle);
+        fragment.setPlaceId(locationId);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.enter_from_bottom, R.anim.exit_from_top, R.anim.enter_from_bottom, R.anim.exit_from_top);
+        fragmentTransaction.add(R.id.locations_container, fragment, "DetailsFragmentUp");
+        fragmentTransaction.addToBackStack("locationDetailsStack");
+        fragmentTransaction.commit();
     }
 
     @Override

@@ -145,6 +145,7 @@ public class MapsActivity extends FragmentActivity implements
         //display the locations list fragment in the slide up panel
         Bundle bundle = new Bundle();
         bundle.putString("tripKey", tripKey);
+        bundle.putBoolean("newTrip", true);
         locationsListFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.locations_container, locationsListFragment).commit();
     }

@@ -63,7 +63,7 @@ public class LocationDetailsFragment extends Fragment {
 
         Bundle bundle = getArguments();
         tripKey = (String) bundle.get("tripKey");
-
+        Log.d("FRAGMENTKEY", tripKey);
         queue = SingletonRequestQueue.getInstance(getActivity()).getRequestQueue();
         destinations = TripDestinations.getInstance();
 
@@ -87,7 +87,6 @@ public class LocationDetailsFragment extends Fragment {
                 updateItinerary();
             }
         });
-//        placeImage = getView().findViewById(R.id.place_image);
 
         pager = getView().findViewById(R.id.view_pager);
 
@@ -132,6 +131,7 @@ public class LocationDetailsFragment extends Fragment {
     private void updateUI(String response) {
         placeDetails = new Gson().fromJson(response, LocationDetailsResponse.class);
         setTripButton();
+        Log.d("DETALLES", placeDetails.toString());
 
         adapter = new PagerAdapter(getChildFragmentManager(), tabLayout.getTabCount(), placeDetails);
         pager.setAdapter(adapter);
@@ -150,15 +150,6 @@ public class LocationDetailsFragment extends Fragment {
         if(placeDetails.getResult().getFormatted_phone_number() != null) {
             placePhone.setText(placeDetails.getResult().getFormatted_phone_number());
         }
-//        placeImage.setImageResource();
-//        if(placeDetails.getResult().getPhotos() != null) {
-//            Photos photo = placeDetails.getResult().getPhotos().get(0);
-//            if (photo != null) {
-//                String reference = photo.getPhoto_reference();
-//                String url = "https://maps.googleapis.com/maps/api/place/photo?&maxwidth=200&photoreference=" + reference + "&key=" + GOOGLE_API_KEY;
-//                Picasso.get().load(url).into(placeImage);
-//            }
-//        }
     }
 
     private void updateItinerary(){
@@ -207,7 +198,7 @@ public class LocationDetailsFragment extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-//                        Log.i("Response", response);
+                        Log.i("Response", response);
                         updateUI(response);
                     }
                 }, new Response.ErrorListener() {

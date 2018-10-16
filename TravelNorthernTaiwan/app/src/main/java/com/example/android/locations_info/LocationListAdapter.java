@@ -44,18 +44,22 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
     private String tripKey;
     private FirebaseAuth mAuth;
     private DatabaseReference mRootReference;
+    private boolean isNewTrip;
     HashMap<Integer, Boolean> buttonState;
 
-    public LocationListAdapter(ArrayList<Results> newLocations, Context newContext, String newTripKey) {
+    public LocationListAdapter(ArrayList<Results> newLocations, Context newContext, String newTripKey, boolean newTrip) {
         locations = newLocations;
         context = newContext;
         tripKey = newTripKey;
+        isNewTrip = newTrip;
         tripDestinations = TripDestinations.getInstance();
         buttonState = new HashMap<>();
         mAuth = FirebaseAuth.getInstance();
         mRootReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://travel-northern-taiwan.firebaseio.com");
 
-        setDatabase();
+        if(isNewTrip) {
+            setDatabase();
+        }
         for(String destinations : tripDestinations.getDestinations()) {
             Log.d("DESTINATIONS", destinations);
         }
@@ -82,22 +86,27 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
         holder.placeName.setText(locations.get(position).getName());
         holder.placeRating.setText(locations.get(position).getRating());
 
-        holder.addButton.setChecked(locations.get(position).getAddedStatus());
-        holder.addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("PLACEID", locations.get(position).getId());
-                locations.get(position).setAddedStatus(!locations.get(position).getAddedStatus());
-                updateItinerary(position, holder);
-            }
-        });
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 notifyListener(position);
             }
         });
+
+        if(isNewTrip) {
+            holder.addButton.setChecked(locations.get(position).getAddedStatus());
+            holder.addButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d("PLACEID", locations.get(position).getId());
+                    locations.get(position).setAddedStatus(!locations.get(position).getAddedStatus());
+                    updateItinerary(position, holder);
+                }
+            });
+        }
+        else {
+            holder.addButton.setVisibility(View.GONE);
+        }
     }
 
     @Override
