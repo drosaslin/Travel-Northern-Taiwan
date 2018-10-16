@@ -106,7 +106,6 @@ public class MapsActivity extends FragmentActivity implements
             public void onClick(View view) {
                 Toast.makeText(MapsActivity.this, "SAVING", Toast.LENGTH_SHORT).show();
                 messenger.addCount();
-                locationsListFragment.onDestroy();
                 finish();
             }
         });
@@ -207,7 +206,6 @@ public class MapsActivity extends FragmentActivity implements
 
     private void cleanView() {
         //clear all the markers from the map and items from the locations list
-
         if(mMap != null) {
             mMap.clear();
         }
@@ -216,6 +214,17 @@ public class MapsActivity extends FragmentActivity implements
         }
 
         locationsListFragment.clearData();
+        displaySelectedDestinations();
+    }
+
+    private void displaySelectedDestinations() {
+        for(Marker marker : itineraryMarkers) {
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(marker.getPosition());
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+            markerOptions.zIndex(1.0f);
+            mMap.addMarker(markerOptions);
+        }
     }
 
     private void setActivities() {

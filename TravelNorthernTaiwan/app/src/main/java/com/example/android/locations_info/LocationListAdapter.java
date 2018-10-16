@@ -94,7 +94,7 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
         });
 
         if(isNewTrip) {
-            holder.addButton.setChecked(locations.get(position).getAddedStatus());
+            holder.addButton.setChecked(isDestinationAlreadySelected(position));
             holder.addButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -130,6 +130,16 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
 
     public void notifyListener(int position) {
         locationsListFragment.updateActivity(locations.get(position).getPlace_id(), locations.get(position).getGeometry().getLocation());
+    }
+
+    private boolean isDestinationAlreadySelected(int position) {
+        for(String destinationId : tripDestinations.getDestinations()) {
+            if(destinationId.equals(locations.get(position).getPlace_id())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private void updateItinerary(int position, LocationListAdapter.LocationsViewHolder holder){

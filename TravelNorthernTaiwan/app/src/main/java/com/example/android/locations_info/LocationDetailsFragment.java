@@ -43,7 +43,6 @@ public class LocationDetailsFragment extends Fragment {
     private TextView placeOpeningHours;
     private TextView placePhone;
     private TextView placeFee;
-//    private ImageView placeImage;
     private TabLayout tabLayout;
     private CheckBox addTripButton;
     private ViewPager pager;
@@ -97,7 +96,7 @@ public class LocationDetailsFragment extends Fragment {
     private void setTripButton() {
         if(destinations.getDestinations() != null) {
             for (String destination : destinations.getDestinations()) {
-                if (destination.equals(placeDetails.getResult().getId())) {
+                if (destination.equals(placeDetails.getResult().getPlace_id())) {
                     addTripButton.setChecked(true);
                     break;
                 }

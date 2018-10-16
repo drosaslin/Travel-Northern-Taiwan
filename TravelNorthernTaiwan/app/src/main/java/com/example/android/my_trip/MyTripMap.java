@@ -1,6 +1,7 @@
 package com.example.android.my_trip;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -31,6 +32,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -63,6 +65,7 @@ public class MyTripMap extends AppCompatActivity implements
     private FirebaseUser currentUser;
     private DatabaseReference mItineraryRef;
     private LocationsListFragment locationsListFragment;
+    private PolylineOptions polylineOptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +82,8 @@ public class MyTripMap extends AppCompatActivity implements
         regionsCoordinates = new RegionsCoordinates();
         queue = SingletonRequestQueue.getInstance(getApplicationContext()).getRequestQueue();
 
+        polylineOptions = new PolylineOptions().width(5).color(Color.BLUE);
+
         myTrip = (TripBasicInfo)getIntent().getExtras().get("basicInfo");
         locationsListFragment = new LocationsListFragment();
 
@@ -87,7 +92,6 @@ public class MyTripMap extends AppCompatActivity implements
 
         String refUrl = "https://travel-northern-taiwan.firebaseio.com/";
         mItineraryRef = FirebaseDatabase.getInstance().getReferenceFromUrl(refUrl + "Itinerary/" + myTrip.getKey());
-        Log.d("ITINERARY", mItineraryRef.getRef().toString());
 
         setFirebaseListener();
 
@@ -160,7 +164,9 @@ public class MyTripMap extends AppCompatActivity implements
         marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
         marker.flat(true);
 
+        polylineOptions.add(marker.getPosition());
         mMap.addMarker(marker);
+        mMap.addPolyline(polylineOptions);
     }
 
     private void GetItinerary(DataSnapshot ds) {
