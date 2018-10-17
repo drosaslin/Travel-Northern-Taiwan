@@ -78,7 +78,7 @@ public class LocationDetailsFragment extends Fragment {
         Bundle bundle = getArguments();
         tripKey = (String) bundle.get("tripKey");
         newTrip = (Boolean) bundle.get("newTrip");
-        tripPosition = (Integer) bundle.get("holderPosition");
+//        tripPosition = (Integer) bundle.get("holderPosition");
         queue = SingletonRequestQueue.getInstance(getActivity()).getRequestQueue();
         destinations = TripDestinations.getInstance();
         tripDate = null;
@@ -248,7 +248,7 @@ public class LocationDetailsFragment extends Fragment {
     }
 
     private void updateItinerary(){
-        onLocationAddedListener.onLocationAdded(tripPosition);
+//        onLocationAddedListener.onLocationAdded(tripPosition);
 
         if(addTripButton.isChecked()) {
             addToItinerary();
