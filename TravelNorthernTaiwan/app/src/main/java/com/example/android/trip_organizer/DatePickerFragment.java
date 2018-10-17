@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.os.Bundle;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class DatePickerFragment extends DialogFragment {
     @Override
@@ -14,7 +15,10 @@ public class DatePickerFragment extends DialogFragment {
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
+        long now = System.currentTimeMillis() - 1000;
 
-        return new DatePickerDialog(getActivity(), (DatePickerDialog.OnDateSetListener) getActivity(),year, month, day);
+        DatePickerDialog dp = new DatePickerDialog(getActivity(), (DatePickerDialog.OnDateSetListener) getActivity(),year, month, day);
+        dp.getDatePicker().setMinDate(new Date().getTime());
+        return dp;
     }
 }

@@ -155,9 +155,6 @@ public class MyTrip extends AppCompatActivity implements DatePickerDialog.OnDate
                     startActivity(intent);
                 }
                 if(menuItem.getItemId() == R.id.action_tasks) {
-                    Toast.makeText(MyTrip.this, "map clicked", Toast.LENGTH_SHORT).show();
-                    Log.e("DEBUGING1", destinationsDetails.get(0).toString());
-
                     Bundle bundle = new Bundle();
                     Intent intent = new Intent(MyTrip.this, ToDoListActivity.class);
                     intent.putExtra("tripKey", infoToDisplay.getKey());
