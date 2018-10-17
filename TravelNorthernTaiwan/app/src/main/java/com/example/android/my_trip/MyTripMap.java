@@ -1,6 +1,5 @@
 package com.example.android.my_trip;
 
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
@@ -8,7 +7,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,7 +17,6 @@ import com.example.android.locations_info.LocationDetailsFragment;
 import com.example.android.locations_info.LocationDetailsResponse;
 import com.example.android.locations_info.LocationsListFragment;
 import com.example.android.locations_info.LocationsResponse;
-import com.example.android.locations_info.Result;
 import com.example.android.map.Location;
 import com.example.android.map.RegionsCoordinates;
 import com.example.android.map.Results;
@@ -30,7 +27,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -42,11 +38,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 
 public class MyTripMap extends AppCompatActivity implements
         OnMapReadyCallback,
@@ -204,7 +196,7 @@ public class MyTripMap extends AppCompatActivity implements
     }
 
     @Override
-    public void onLocationPressed(String locationId, Location location) {
+    public void onLocationPressed(String locationId, Location location, int position) {
         /*set the location id in the location details' fragment and put the locations
         details fragment in front of the locations list fragment*/
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location.getLatLng(), 16));

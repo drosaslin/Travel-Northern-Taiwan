@@ -191,7 +191,7 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
     private boolean isValidInput(String tripName, String toDate, String fromDate, String budget){
         String[] toDateToken = toDate.split("/"), fromDateToken = fromDate.split("/");
         if(TextUtils.isEmpty(tripName)){
-            Toast.makeText(getApplicationContext(), "Please enter a name for your trip", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), "Please enter a name for your trip", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

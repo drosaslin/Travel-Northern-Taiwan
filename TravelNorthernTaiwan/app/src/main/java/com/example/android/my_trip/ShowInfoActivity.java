@@ -179,6 +179,9 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
                     intent.putExtra("basicInfo", infoToDisplay);
                     startActivity(intent);
                 }
+                if(menuItem.getItemId() == R.id.action_tasks) {
+
+                }
                 return true;
             }
 
