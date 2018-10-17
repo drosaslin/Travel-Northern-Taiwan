@@ -91,9 +91,10 @@ public class ToDoListActivity extends AppCompatActivity {
         for(DataSnapshot ds : dataSnapshot.getChildren()){
             Task task = new Task();
             String tripTask = ds.getKey().toString();
+            Boolean done = (Boolean) ds.getValue();
 
             task.setTask(tripTask);
-            task.setIsDone(false);
+            task.setIsDone(done);
             task.setTripKey(currentKey);
 
             DataList.add(task);

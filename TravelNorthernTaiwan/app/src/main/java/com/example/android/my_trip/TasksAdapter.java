@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -46,14 +47,9 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(final TasksAdapter.ViewHolder holder, final int position) {
         String task = DataList.get(position).getTask();
-        String isDone = task.substring(task.length()-1);
+        final boolean isDone = DataList.get(position).getIsDone();
         holder.taskName.setText(task);
-        if(isDone.equals("1")){
-            holder.isDoneChecked.setChecked(true);
-        }
-        else{
-            holder.isDoneChecked.setChecked(false);
-        }
+        holder.isDoneChecked.setChecked(DataList.get(position).getIsDone());
 
         //Deleting a card
         holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
@@ -72,6 +68,14 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder>{
 //                    }
 ////                    mRootReference.child("TripTasks").child(DataList.get(position).getTripKey()).child(DataList.get(position).toString()).removeValue();
 //                }
+            }
+        });
+
+        holder.isDoneChecked.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+                DataList.get(position).setIsDone(isChecked);
+                mRootReference.child("TripTasks").child(DataList.get(position).getTripKey()).child(DataList.get(position).getTask()).setValue(buttonView.isChecked());
             }
         });
     }
