@@ -44,8 +44,7 @@ public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback,
         LocationsListFragment.OnLocationPressedListener,
         LocationsListFragment.OnLocationAddedListener,
-        LocationsListFragment.OnLocationDeletedListener,
-        LocationDetailsFragment.OnLocationAddedListener{
+        LocationsListFragment.OnLocationDeletedListener{
 
     private final String GOOGLE_API_KEY = "AIzaSyCc4acsOQV7rnQ92weHYKO14fvL9wkRpKc";
     private FloatingActionButton saveTripButton;
@@ -493,11 +492,16 @@ public class MapsActivity extends FragmentActivity implements
         return (markerOne.latitude == markerTwo.latitude && markerOne.longitude == markerTwo.longitude);
     }
 
-    @Override
-    public void onLocationAdded(int position) {
-        Log.d("TESTING", "1");
-        locationsListFragment.recyclerItemUpdate(position);
-    }
+//    @Override
+//    public void onLocationAdded(int position) {
+//        Log.d("TESTING", "1");
+//        locationsListFragment.recyclerItemUpdate(position);
+//    }
+
+//    @Override
+//    public void onLocationPressed(String locationId, Location location) {
+//        int n = 0;
+//    }
 
     public class MyItem implements ClusterItem {
         private final LatLng mPosition;

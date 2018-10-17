@@ -4,16 +4,14 @@ import java.io.Serializable;
 
 public class TripBasicInfo implements Serializable {
     String Name;
-    String ToDate;
-    String FromDate;
+    String Date;
     String Region;
     String Key;
     Double Budget;
 
     public TripBasicInfo() {
         Name = "";
-        ToDate = "";
-        FromDate = "";
+        Date = "";
         Region = "";
         Key = "";
         Budget = Double.valueOf(0);
@@ -27,20 +25,12 @@ public class TripBasicInfo implements Serializable {
         Name = name;
     }
 
-    public String getToDate() {
-        return ToDate;
+    public String getDate() {
+        return Date;
     }
 
-    public void setToDate(String toDate) {
-        ToDate = toDate;
-    }
-
-    public String getFromDate() {
-        return FromDate;
-    }
-
-    public void setFromDate(String fromDate) {
-        FromDate = fromDate;
+    public void setDate(String date) {
+        Date = date;
     }
 
     public String getRegion() {
