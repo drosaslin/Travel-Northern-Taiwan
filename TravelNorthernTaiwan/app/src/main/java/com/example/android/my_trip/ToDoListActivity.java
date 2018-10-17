@@ -1,6 +1,7 @@
 package com.example.android.my_trip;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -26,6 +27,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.shashank.sony.fancydialoglib.Animation;
+import com.shashank.sony.fancydialoglib.FancyAlertDialog;
+import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
+import com.shashank.sony.fancydialoglib.Icon;
 
 import java.util.ArrayList;
 
@@ -62,6 +67,12 @@ public class ToDoListActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 mAdapter = new TasksAdapter(DataList, getApplicationContext());
+                mAdapter.setOnDeletePressedListener(new TasksAdapter.OnDeletePressedListener() {
+                    @Override
+                    public void onDeletePressed(int position) {
+                        showDeleteAlert(position);
+                    }
+                });
                 mRecyclerView.setAdapter(mAdapter);
                 clearCards();
                 showData(dataSnapshot);
@@ -91,9 +102,10 @@ public class ToDoListActivity extends AppCompatActivity {
         for(DataSnapshot ds : dataSnapshot.getChildren()){
             Task task = new Task();
             String tripTask = ds.getKey().toString();
+            Boolean done = (Boolean) ds.getValue();
 
             task.setTask(tripTask);
-            task.setIsDone(false);
+            task.setIsDone(done);
             task.setTripKey(currentKey);
 
             DataList.add(task);
@@ -104,7 +116,6 @@ public class ToDoListActivity extends AppCompatActivity {
     private void addTask(String newTask){
         int n = DataList.size();
         String child = Integer.toString(n);
-        //Toast.makeText(this, "add task func", Toast.LENGTH_SHORT).show();
         mRootReference.child(newTask).setValue(false);
         taskInput.setText("");
     }
@@ -115,4 +126,29 @@ public class ToDoListActivity extends AppCompatActivity {
         }
     }
 
+    public void showDeleteAlert(final int position) {
+        new FancyAlertDialog.Builder(ToDoListActivity.this)
+                .setTitle("Do you really want to delete this task?")
+                .setBackgroundColor(Color.parseColor("#FF0000"))  //Don't pass R.color.colorvalue
+                .setNegativeBtnText("Cancel")
+                .setPositiveBtnBackground(Color.parseColor("#FF4081"))  //Don't pass R.color.colorvalue
+                .setPositiveBtnText("Yes")
+                .setNegativeBtnBackground(Color.parseColor("#FFA9A7A8"))  //Don't pass R.color.colorvalue
+                .setAnimation(Animation.SLIDE  )
+                .isCancellable(true)
+                .setIcon(R.drawable.ic_error_outline_black_24dp, Icon.Visible)
+                .OnPositiveClicked(new FancyAlertDialogListener() {
+                    @Override
+                    public void OnClick() {
+                        Log.d("DILIT", "DELET");
+                        mAdapter.deleteTask(position);
+                    }
+                })
+                .OnNegativeClicked(new FancyAlertDialogListener() {
+                    @Override
+                    public void OnClick() {
+                    }
+                })
+                .build();
+    }
 }

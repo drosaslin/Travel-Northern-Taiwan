@@ -138,7 +138,7 @@ public class TripsActivity extends android.support.v4.app.Fragment {
 
     public void showDeleteAlert(final int position) {
         new FancyAlertDialog.Builder(getActivity())
-                .setTitle("Do you really want to delete this trip?")
+                .setTitle("Do you really want to delete this task?")
                 .setBackgroundColor(Color.parseColor("#FF0000"))  //Don't pass R.color.colorvalue
                 .setNegativeBtnText("Cancel")
                 .setPositiveBtnBackground(Color.parseColor("#FF4081"))  //Don't pass R.color.colorvalue

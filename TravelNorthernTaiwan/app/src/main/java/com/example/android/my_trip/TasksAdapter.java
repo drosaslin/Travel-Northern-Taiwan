@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,6 +25,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder>{
     ArrayList<Task> DataList;
     Context context;
     private DatabaseReference mRootReference;
+    private OnDeletePressedListener onDeletePressed;
 
     public TasksAdapter(ArrayList<Task> newTripList, Context newContext) {
         DataList = newTripList;
@@ -46,23 +48,19 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(final TasksAdapter.ViewHolder holder, final int position) {
         String task = DataList.get(position).getTask();
-        String isDone = task.substring(task.length()-1);
+        final boolean isDone = DataList.get(position).getIsDone();
         holder.taskName.setText(task);
-        if(isDone.equals("1")){
-            holder.isDoneChecked.setChecked(true);
-        }
-        else{
-            holder.isDoneChecked.setChecked(false);
-        }
+        holder.isDoneChecked.setChecked(DataList.get(position).getIsDone());
 
         //Deleting a card
         holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                deleteTasks(position);
-                updateDatabase();
-                DataList.remove(position);
-                showAllData();
+                onDeletePressed.onDeletePressed(position);
+//                deleteTasks(position);
+//                updateDatabase();
+//                DataList.remove(position);
+//                showAllData();
 //                Log.d("delete", DataList.get(position).toString() + " " + DataList.get(position).getTripKey());
 //                if(DataList!=null){
 //                    for(Task task : DataList){
@@ -72,6 +70,14 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder>{
 //                    }
 ////                    mRootReference.child("TripTasks").child(DataList.get(position).getTripKey()).child(DataList.get(position).toString()).removeValue();
 //                }
+            }
+        });
+
+        holder.isDoneChecked.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener(){
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+                DataList.get(position).setIsDone(isChecked);
+                mRootReference.child("TripTasks").child(DataList.get(position).getTripKey()).child(DataList.get(position).getTask()).setValue(buttonView.isChecked());
             }
         });
     }
@@ -85,8 +91,18 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder>{
         }
     }
 
-    private void deleteTasks(int position){
-        mRootReference.child("TripTasks").child(DataList.get(position).getTripKey()).removeValue();
+    public void deleteTask(int position) {
+        Log.d("DELETINGTASK", DataList.get(position).getTask());
+        mRootReference.child("TripTasks").child(DataList.get(position).getTripKey()).child(DataList.get(position).getTask()).removeValue();
+        notifyDataSetChanged();
+    }
+
+    public interface OnDeletePressedListener {
+        void onDeletePressed(int position);
+    }
+
+    public void setOnDeletePressedListener(OnDeletePressedListener onDeletePressedListener) {
+        onDeletePressed = onDeletePressedListener;
     }
 
     @Override

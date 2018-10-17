@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.android.my_trip.ShowInfoActivity;
+import com.example.android.my_trip.MyTrip;
 import com.example.android.my_trip.TripBasicInfo;
 import com.example.android.travelnortherntaiwan.R;
 import com.google.firebase.database.DatabaseReference;
@@ -62,7 +62,7 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
         holder.tripCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, ShowInfoActivity.class);
+                Intent intent = new Intent(context, MyTrip.class);
                 intent.putExtra("tripKey", DataList.get(position).getKey());
                 context.startActivity(intent);
             }
