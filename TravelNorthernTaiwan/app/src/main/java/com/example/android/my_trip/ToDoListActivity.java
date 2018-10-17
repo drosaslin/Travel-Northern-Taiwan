@@ -61,10 +61,10 @@ public class ToDoListActivity extends AppCompatActivity {
         mRootReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                clearCards();
-                showData(dataSnapshot);
                 mAdapter = new TasksAdapter(DataList, getApplicationContext());
                 mRecyclerView.setAdapter(mAdapter);
+                clearCards();
+                showData(dataSnapshot);
             }
 
             @Override
@@ -90,14 +90,14 @@ public class ToDoListActivity extends AppCompatActivity {
     private void showData(DataSnapshot dataSnapshot) {
         for(DataSnapshot ds : dataSnapshot.getChildren()){
             Task task = new Task();
-            String tripTask = ds.getValue().toString();
-            tripTask = tripTask.substring(0,tripTask.length() - 1);
+            String tripTask = ds.getKey().toString();
 
             task.setTask(tripTask);
-            task.setIsDone(tripTask.substring(tripTask.length() - 1));
+            task.setIsDone(false);
             task.setTripKey(currentKey);
 
             DataList.add(task);
+//            mAdapter.addNewTask(task);
         }
     }
 
@@ -105,7 +105,7 @@ public class ToDoListActivity extends AppCompatActivity {
         int n = DataList.size();
         String child = Integer.toString(n);
         //Toast.makeText(this, "add task func", Toast.LENGTH_SHORT).show();
-        mRootReference.child(child).setValue(newTask + "0");
+        mRootReference.child(newTask).setValue(false);
         taskInput.setText("");
     }
 

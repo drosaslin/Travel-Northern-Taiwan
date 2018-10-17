@@ -4,21 +4,21 @@ import java.io.Serializable;
 
 public class Task implements Serializable{
     String tripKey;
-    String isDone;
     String task;
+    boolean isDone;
 
-    public String getIsDone() {
+    public boolean getIsDone() {
         return isDone;
     }
 
-    public void setIsDone(String isDone) {
+    public void setIsDone(boolean isDone) {
         this.isDone = isDone;
     }
 
     public Task(){
         tripKey = "";
         task = "";
-        isDone = "0";
+        isDone = false;
     }
 
     public String getTripKey() {

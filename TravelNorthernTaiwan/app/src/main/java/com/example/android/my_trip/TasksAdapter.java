@@ -94,6 +94,12 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder>{
         return DataList.size();
     }
 
+    public void addNewTask(Task task) {
+        DataList.add(task);
+        DataList.add(task);
+        notifyDataSetChanged();
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView taskName;
         ImageView deleteBtn;
