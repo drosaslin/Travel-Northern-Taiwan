@@ -45,7 +45,6 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
     private FirebaseAuth mAuth;
     private DatabaseReference mRootReference;
     private boolean isNewTrip;
-    HashMap<Integer, Boolean> buttonState;
 
     public LocationListAdapter(ArrayList<Results> newLocations, Context newContext, String newTripKey, boolean newTrip) {
         locations = newLocations;
@@ -53,7 +52,6 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
         tripKey = newTripKey;
         isNewTrip = newTrip;
         tripDestinations = TripDestinations.getInstance();
-        buttonState = new HashMap<>();
         mAuth = FirebaseAuth.getInstance();
         mRootReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://travel-northern-taiwan.firebaseio.com");
 
@@ -207,6 +205,10 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
         }
 
         mRootReference.child("Itinerary").child(tripKey).setValue(itinerary);
+    }
+
+    public ArrayList<Results> getLocations() {
+        return locations;
     }
 
     public void finish() {

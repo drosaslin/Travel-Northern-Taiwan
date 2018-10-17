@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -44,7 +43,9 @@ public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback,
         LocationsListFragment.OnLocationPressedListener,
         LocationsListFragment.OnLocationAddedListener,
-        LocationsListFragment.OnLocationDeletedListener{
+        LocationsListFragment.OnLocationDeletedListener,
+        LocationDetailsFragment.OnLocationAddedListener,
+        LocationDetailsFragment.OnLocationDeletedListener{
 
     private final String GOOGLE_API_KEY = "AIzaSyCc4acsOQV7rnQ92weHYKO14fvL9wkRpKc";
     private FloatingActionButton saveTripButton;
@@ -467,7 +468,6 @@ public class MapsActivity extends FragmentActivity implements
         fragmentTransaction.commit();
     }
 
-
     @Override
     public void onLocationAdded(Location location) {
         MarkerOptions marker = new MarkerOptions();
@@ -479,6 +479,17 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     @Override
+    public void onLocationAdded(Location location, int tripPosition) {
+        MarkerOptions marker = new MarkerOptions();
+        marker.position(location.getLatLng());
+        marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+        marker.zIndex(1.0f);
+
+        itineraryMarkers.add(mMap.addMarker(marker));
+        locationsListFragment.recyclerItemUpdate(tripPosition, true);
+    }
+
+    @Override
     public void onLocationDeleted(Location location) {
         for(Marker marker : itineraryMarkers) {
             Log.i("MARKERSS", marker.getPosition().toString() + " " + location.toString());
@@ -486,6 +497,19 @@ public class MapsActivity extends FragmentActivity implements
                 marker.remove();
             }
         }
+    }
+
+
+    @Override
+    public void onLocationDeleted(Location location, int tripPosition) {
+        for(Marker marker : itineraryMarkers) {
+            Log.i("MARKERSS", marker.getPosition().toString() + " " + location.toString());
+            if (isInSameLocation(marker.getPosition(), location.getLatLng())) {
+                marker.remove();
+            }
+        }
+
+        locationsListFragment.recyclerItemUpdate(tripPosition, false);
     }
 
     private boolean isInSameLocation(LatLng markerOne, LatLng markerTwo) {
