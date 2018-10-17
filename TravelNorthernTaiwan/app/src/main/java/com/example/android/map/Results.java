@@ -1,5 +1,8 @@
 package com.example.android.map;
 
+import com.example.android.locations_info.Result;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**

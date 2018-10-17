@@ -44,18 +44,25 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
     private String tripKey;
     private FirebaseAuth mAuth;
     private DatabaseReference mRootReference;
+    private boolean isNewTrip;
     HashMap<Integer, Boolean> buttonState;
 
-    public LocationListAdapter(ArrayList<Results> newLocations, Context newContext, String newTripKey) {
+    public LocationListAdapter(ArrayList<Results> newLocations, Context newContext, String newTripKey, boolean newTrip) {
         locations = newLocations;
         context = newContext;
         tripKey = newTripKey;
+        isNewTrip = newTrip;
         tripDestinations = TripDestinations.getInstance();
         buttonState = new HashMap<>();
         mAuth = FirebaseAuth.getInstance();
         mRootReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://travel-northern-taiwan.firebaseio.com");
 
-        setDatabase();
+        if(isNewTrip) {
+            setDatabase();
+        }
+        for(String destinations : tripDestinations.getDestinations()) {
+            Log.d("DESTINATIONS", destinations);
+        }
     }
 
     @NonNull
@@ -79,22 +86,27 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
         holder.placeName.setText(locations.get(position).getName());
         holder.placeRating.setText(locations.get(position).getRating());
 
-        holder.addButton.setChecked(locations.get(position).getAddedStatus());
-        holder.addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d("PLACEID", locations.get(position).getId());
-                locations.get(position).setAddedStatus(!locations.get(position).getAddedStatus());
-                updateItinerary(position, holder);
-            }
-        });
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 notifyListener(position);
             }
         });
+
+        if(isNewTrip) {
+            holder.addButton.setChecked(isDestinationAlreadySelected(position));
+            holder.addButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Log.d("PLACEID", locations.get(position).getId());
+                    locations.get(position).setAddedStatus(!locations.get(position).getAddedStatus());
+                    updateItinerary(position, holder);
+                }
+            });
+        }
+        else {
+            holder.addButton.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -120,7 +132,18 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
         locationsListFragment.updateActivity(locations.get(position).getPlace_id(), locations.get(position).getGeometry().getLocation());
     }
 
+    private boolean isDestinationAlreadySelected(int position) {
+        for(String destinationId : tripDestinations.getDestinations()) {
+            if(destinationId.equals(locations.get(position).getPlace_id())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private void updateItinerary(int position, LocationListAdapter.LocationsViewHolder holder){
+        Log.d("ADDINGGG", "adding");
         if(holder.addButton.isChecked()) {
             addToItinerary(position);
             locationsListFragment.updateMap(locations.get(position).getGeometry().getLocation(), true);
@@ -135,6 +158,9 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
     }
 
     private void addToItinerary(int position) {
+        for(String destination : tripDestinations.getDestinations()) {
+            Log.d("ITIINERARY", destination);
+        }
         tripDestinations.addDestination(locations.get(position).getPlace_id());
         updateDatabase();
     }
@@ -147,6 +173,9 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
     private void updateDatabase() {
         //updates the data in the database based on the items inside tripDestinations
         int arraySize = tripDestinations.getDestinations().size();
+        for(String destinations : tripDestinations.getDestinations()) {
+            Log.d("DESTINATIONS", destinations);
+        }
         for(int n = 0; n < 10; n++ ) {
             //inserting all destinations added. Insert a blank character to all indexes without destinations
             if(n < arraySize) {
@@ -167,6 +196,10 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
         }
 
         mRootReference.child("Itinerary").child(tripKey).setValue(itinerary);
+    }
+
+    public void finish() {
+        tripDestinations.clearItinerary();
     }
 
     public class LocationsViewHolder extends RecyclerView.ViewHolder {

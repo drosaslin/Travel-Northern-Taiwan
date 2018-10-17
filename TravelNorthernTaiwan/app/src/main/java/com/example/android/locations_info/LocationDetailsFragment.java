@@ -1,6 +1,7 @@
 package com.example.android.locations_info;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -25,10 +26,18 @@ import com.example.android.travelnortherntaiwan.R;
 import com.example.android.travelnortherntaiwan.SingletonRequestQueue;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class LocationDetailsFragment extends Fragment {
 
@@ -43,13 +52,15 @@ public class LocationDetailsFragment extends Fragment {
     private TextView placeOpeningHours;
     private TextView placePhone;
     private TextView placeFee;
-//    private ImageView placeImage;
     private TabLayout tabLayout;
     private CheckBox addTripButton;
     private ViewPager pager;
     private TripDestinations destinations;
     private FirebaseAuth mAuth;
+    private DatabaseReference mBasicInfoRef;
     private DatabaseReference mRootReference;
+    private String tripDate;
+    private Boolean newTrip;
 
     @Nullable
     @Override
@@ -63,12 +74,15 @@ public class LocationDetailsFragment extends Fragment {
 
         Bundle bundle = getArguments();
         tripKey = (String) bundle.get("tripKey");
-
+        newTrip = (Boolean) bundle.get("newTrip");
         queue = SingletonRequestQueue.getInstance(getActivity()).getRequestQueue();
         destinations = TripDestinations.getInstance();
+        tripDate = null;
 
         mAuth = FirebaseAuth.getInstance();
-        mRootReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://travel-northern-taiwan.firebaseio.com");
+        String refUrl = "https://travel-northern-taiwan.firebaseio.com/";
+        mRootReference = FirebaseDatabase.getInstance().getReferenceFromUrl(refUrl);
+        mBasicInfoRef = FirebaseDatabase.getInstance().getReferenceFromUrl(refUrl + "BasicTripInfo/" + tripKey);
 
         tabLayout = getView().findViewById(R.id.details_tab_layout);
         tabLayout.addTab(tabLayout.newTab().setText("Reviews"));
@@ -81,24 +95,41 @@ public class LocationDetailsFragment extends Fragment {
         placePhone = getView().findViewById(R.id.place_phone_number);
         placeFee = getView().findViewById(R.id.place_entrance_fee);
         addTripButton = getView().findViewById(R.id.details_add_trip_button);
-        addTripButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updateItinerary();
-            }
-        });
-//        placeImage = getView().findViewById(R.id.place_image);
+
+        if(newTrip) {
+            addTripButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    updateItinerary();
+                }
+            });
+        }
+        else {
+            addTripButton.setVisibility(View.GONE);
+        }
 
         pager = getView().findViewById(R.id.view_pager);
 
+        mBasicInfoRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                GetTripDate(dataSnapshot);
+                apiCallPlaceDetails();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
         setTabLayout();
-        apiCallPlaceDetails();
     }
 
     private void setTripButton() {
         if(destinations.getDestinations() != null) {
             for (String destination : destinations.getDestinations()) {
-                if (destination.equals(placeDetails.getResult().getId())) {
+                if (destination.equals(placeDetails.getResult().getPlace_id())) {
                     addTripButton.setChecked(true);
                     break;
                 }
@@ -132,6 +163,7 @@ public class LocationDetailsFragment extends Fragment {
     private void updateUI(String response) {
         placeDetails = new Gson().fromJson(response, LocationDetailsResponse.class);
         setTripButton();
+        Log.d("DETALLES", placeDetails.toString());
 
         adapter = new PagerAdapter(getChildFragmentManager(), tabLayout.getTabCount(), placeDetails);
         pager.setAdapter(adapter);
@@ -145,20 +177,67 @@ public class LocationDetailsFragment extends Fragment {
             placeAddress.setText(placeDetails.getResult().getFormatted_address());
         }
         if(placeDetails.getResult().getOpening_hours() != null) {
-            placeOpeningHours.setText(placeDetails.getResult().getOpening_hours().getOpen_now());
+            String openingHour = getCorrespondingOpeningHours();
+            placeOpeningHours.setText(openingHour);
         }
         if(placeDetails.getResult().getFormatted_phone_number() != null) {
             placePhone.setText(placeDetails.getResult().getFormatted_phone_number());
         }
-//        placeImage.setImageResource();
-//        if(placeDetails.getResult().getPhotos() != null) {
-//            Photos photo = placeDetails.getResult().getPhotos().get(0);
-//            if (photo != null) {
-//                String reference = photo.getPhoto_reference();
-//                String url = "https://maps.googleapis.com/maps/api/place/photo?&maxwidth=200&photoreference=" + reference + "&key=" + GOOGLE_API_KEY;
-//                Picasso.get().load(url).into(placeImage);
-//            }
-//        }
+    }
+
+    private String getCorrespondingOpeningHours() {
+        String formattedDate = getDay();
+        Log.d("FORMATEDDAT", formattedDate);
+        String openingHours = "";
+
+        for (String day : placeDetails.getResult().getOpening_hours().getWeekday_text()) {
+            if(day.toLowerCase().contains(formattedDate.toLowerCase())) {
+                openingHours = day;
+                break;
+            }
+        }
+
+        openingHours = formatDate(openingHours);
+
+        return openingHours;
+    }
+
+    private String getDay() {
+        Date currentDate;
+        if(tripDate == null) {
+            currentDate = Calendar.getInstance().getTime();
+            SimpleDateFormat df = new SimpleDateFormat("EE");
+            String formattedDate = df.format(currentDate);
+            Log.d("DATEDATE", "1");
+            return formattedDate;
+        }
+        else {
+            SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd");
+            try {
+                Log.d("DATEDATE", "2");
+                currentDate = df.parse(tripDate);
+                df.applyPattern("EE");
+                String formattedDate = df.format(currentDate);
+                return formattedDate;
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return "";
+    }
+
+    private String formatDate(String openingHours) {
+        String day = openingHours.substring(0, openingHours.indexOf(":"));
+        String time = openingHours.substring(openingHours.indexOf(" "));
+
+        return time + " (" + day + ")";
+    }
+
+    private void GetTripDate(DataSnapshot ds) {
+        if(!ds.child("Date").getValue().toString().equals("")) {
+            tripDate = ds.child("Date").getValue().toString();
+        }
     }
 
     private void updateItinerary(){
@@ -207,7 +286,7 @@ public class LocationDetailsFragment extends Fragment {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-//                        Log.i("Response", response);
+                        Log.i("Response", response);
                         updateUI(response);
                     }
                 }, new Response.ErrorListener() {

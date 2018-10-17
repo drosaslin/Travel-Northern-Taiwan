@@ -15,6 +15,7 @@ import com.example.android.map.Location;
 import com.example.android.map.Results;
 import com.example.android.travelnortherntaiwan.R;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class LocationsListFragment extends Fragment {
@@ -48,17 +49,28 @@ public class LocationsListFragment extends Fragment {
 
         Bundle bundle = getArguments();
         String tripKey = (String) bundle.get("tripKey");
+        Boolean newTrip = (Boolean) bundle.get("newTrip");
 
-        adapter = new LocationListAdapter(new ArrayList<Results>(), getActivity(), tripKey);
+        adapter = new LocationListAdapter(new ArrayList<Results>(), getActivity(), tripKey, newTrip);
         adapter.setListener(this);
         recycler = getView().findViewById(R.id.locations_recycler);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
     public void updateData(ArrayList<Results> newData) {
-        //add new data to the locations list
+        //add new arraylist data to the locations list
         if(adapter != null) {
             adapter.addNewData(newData);
+            recycler.setAdapter(adapter);
+        }
+    }
+
+    public void updateData(Results newData) {
+        //add new data to the locations list
+        if(adapter != null) {
+            ArrayList<Results> results = new ArrayList<>();
+            results.add(newData);
+            adapter.addNewData(results);
             recycler.setAdapter(adapter);
         }
     }
@@ -109,5 +121,12 @@ public class LocationsListFragment extends Fragment {
         catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + "must override onLocationPressed method");
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        recycler = null;
+        adapter.finish();
     }
 }

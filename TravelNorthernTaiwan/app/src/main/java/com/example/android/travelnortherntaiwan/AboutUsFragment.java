@@ -111,8 +111,8 @@ public class AboutUsFragment extends android.support.v4.app.Fragment {
         i.setType("message/rfc822");
         i.putExtra(Intent.EXTRA_EMAIL  , email);
         Log.d("email", "index2 -> " + index2 + "emailAddress -> " + email[index2]);
-        i.putExtra(Intent.EXTRA_SUBJECT, "Thanks to use our App!");
-        i.putExtra(Intent.EXTRA_TEXT   , "Thanks to use our App!");
+        i.putExtra(Intent.EXTRA_SUBJECT, "Thanks for using our App!");
+        i.putExtra(Intent.EXTRA_TEXT   , "Thanks for using our App!");
         try {
             startActivity(Intent.createChooser(i, "Send mail..."));
         } catch (android.content.ActivityNotFoundException ex) {

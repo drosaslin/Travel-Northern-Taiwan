@@ -54,8 +54,9 @@ public class SummaryWeatherAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             ((ProvinceViewHolder)holder).weather.setImageResource(weatherIcons.get(icon));
         }
         else if(holder instanceof CurrentPositionViewHolder) {
-            String precipitation = Float.toString(weatherData.get(position).getCurrently().getPrecipProbability());
-            String windSpeed = Double.toString(weatherData.get(position).getCurrently().getWindSpeed());
+            double precip = weatherData.get(position).getCurrently().getPrecipProbability() * 100;
+            String precipitation = Integer.toString((int)precip) + "%";
+            String windSpeed = Integer.toString((int)weatherData.get(position).getCurrently().getWindSpeed()) + " km/h";
 
             ((CurrentPositionViewHolder)holder).place.setText(weatherData.get(position).getCity());
             ((CurrentPositionViewHolder)holder).temp.setText(temperature);

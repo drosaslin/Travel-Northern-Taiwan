@@ -140,11 +140,11 @@ public class MapsActivity extends FragmentActivity implements
         });
 
         activitiesTab.getTabAt(1).select();
-        activitiesTab.getTabAt(0).select();
 
         //display the locations list fragment in the slide up panel
         Bundle bundle = new Bundle();
         bundle.putString("tripKey", tripKey);
+        bundle.putBoolean("newTrip", true);
         locationsListFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.locations_container, locationsListFragment).commit();
     }
@@ -170,19 +170,6 @@ public class MapsActivity extends FragmentActivity implements
         //update location list fragment's recycler
         locationsListFragment.updateData(locationsResponse.getResults());
     }
-
-//    private void getMoreResults() {
-//        if(locationsResponse.getNext_page_token() != null) {
-//            Handler handler = new Handler();
-//            handler.postDelayed(new Runnable() {
-//                public void run() {
-//                    String token = locationsResponse.getNext_page_token();
-//                    Log.i("TOKEN", token);
-//                    apiCallNextToken(token);
-//                }
-//            }, 5000);
-//        }
-//    }
 
     private void performApiCalls(String key) {
         //call the google activities api for all activities related to the user's choice on its respective region
@@ -217,30 +204,8 @@ public class MapsActivity extends FragmentActivity implements
         queue.add(stringRequest);
     }
 
-//    private void apiCallNextToken(String token) {
-//        String url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?pagetoken=" + token + "&key=" + GOOGLE_API_KEY;
-//
-//        // Request a string response from the provided URL.
-//        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-//                new Response.Listener<String>() {
-//                    @Override
-//                    public void onResponse(String response) {
-//                        Log.i("Response", response);
-//                        updateMap(response);
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError error) {
-//                Log.d("Find", "Fail");
-//            }
-//        });
-//
-//        queue.add(stringRequest);
-//    }
-
     private void cleanView() {
         //clear all the markers from the map and items from the locations list
-
         if(mMap != null) {
             mMap.clear();
         }
@@ -249,6 +214,17 @@ public class MapsActivity extends FragmentActivity implements
         }
 
         locationsListFragment.clearData();
+        displaySelectedDestinations();
+    }
+
+    private void displaySelectedDestinations() {
+        for(Marker marker : itineraryMarkers) {
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(marker.getPosition());
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+            markerOptions.zIndex(1.0f);
+            mMap.addMarker(markerOptions);
+        }
     }
 
     private void setActivities() {
@@ -486,6 +462,7 @@ public class MapsActivity extends FragmentActivity implements
         LocationDetailsFragment fragment = new LocationDetailsFragment();
         Bundle bundle = new Bundle();
         bundle.putString("tripKey", tripKey);
+        bundle.putBoolean("newTrip", true);
         fragment.setArguments(bundle);
         fragment.setPlaceId(locationId);
 
@@ -553,5 +530,11 @@ public class MapsActivity extends FragmentActivity implements
         public String getPlaceId() {
             return mPlaceId;
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
     }
 }

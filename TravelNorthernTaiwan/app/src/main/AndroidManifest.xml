@@ -77,7 +77,8 @@
         <activity android:name="com.example.android.my_trip.BudgetManagerActivity" />
         <activity android:name="com.example.android.my_trip.SecondActivity" />
         <activity android:name="com.example.android.weather.OnTripWeather" />
-        <activity android:name="com.example.android.my_trip.MyTripMap"></activity>
+        <activity android:name="com.example.android.my_trip.MyTripMap" />
+        <activity android:name="com.example.android.my_trip.MyTripWeather"></activity>
     </application>
 
 </manifest>

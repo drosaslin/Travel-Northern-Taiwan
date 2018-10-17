@@ -1,6 +1,7 @@
 package com.example.android.trip_organizer;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -11,7 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.annotation.NonNull;
+import android.widget.Toast;
 
+import com.example.android.my_trip.BudgetManagerActivity;
 import com.example.android.my_trip.TripBasicInfo;
 import com.example.android.travelnortherntaiwan.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,6 +24,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ValueEventListener;
+import com.shashank.sony.fancydialoglib.Animation;
+import com.shashank.sony.fancydialoglib.FancyAlertDialog;
+import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
+import com.shashank.sony.fancydialoglib.Icon;
 
 import java.util.ArrayList;
 
@@ -66,6 +73,12 @@ public class TripsActivity extends android.support.v4.app.Fragment {
                 showData(dataSnapshot);
                 mAdapter = new TripsAdapter(DataList, getActivity());
                 mRecyclerView.setAdapter(mAdapter);
+                mAdapter.setOnDeletePressedListener(new TripsAdapter.OnDeletePressedListener() {
+                    @Override
+                    public void onDeletePressed(int position) {
+                        showDeleteAlert(position);
+                    }
+                });
             }
 
             @Override
@@ -118,5 +131,30 @@ public class TripsActivity extends android.support.v4.app.Fragment {
         if(mAdapter != null) {
             mAdapter.clearData();
         }
+    }
+
+    public void showDeleteAlert(final int position) {
+        new FancyAlertDialog.Builder(getActivity())
+                .setTitle("Do you really want to delete this trip?")
+                .setBackgroundColor(Color.parseColor("#FF0000"))  //Don't pass R.color.colorvalue
+                .setNegativeBtnText("Cancel")
+                .setPositiveBtnBackground(Color.parseColor("#FF4081"))  //Don't pass R.color.colorvalue
+                .setPositiveBtnText("Yes")
+                .setNegativeBtnBackground(Color.parseColor("#FFA9A7A8"))  //Don't pass R.color.colorvalue
+                .setAnimation(Animation.SLIDE  )
+                .isCancellable(true)
+                .setIcon(R.drawable.ic_error_outline_black_24dp, Icon.Visible)
+                .OnPositiveClicked(new FancyAlertDialogListener() {
+                    @Override
+                    public void OnClick() {
+                        mAdapter.deleteTrip(position);
+                    }
+                })
+                .OnNegativeClicked(new FancyAlertDialogListener() {
+                    @Override
+                    public void OnClick() {
+                    }
+                })
+                .build();
     }
 }

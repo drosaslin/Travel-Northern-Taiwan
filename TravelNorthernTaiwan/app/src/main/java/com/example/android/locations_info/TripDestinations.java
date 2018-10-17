@@ -45,4 +45,8 @@ public class TripDestinations {
     public String getDestination(int index) {
         return destinations.get(index);
     }
+
+    public void clearItinerary() {
+        destinations.clear();
+    }
 }
