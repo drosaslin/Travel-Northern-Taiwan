@@ -160,7 +160,7 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
                     startActivity(intent);
                 }
                 if(menuItem.getItemId() == R.id.action_tasks) {
-                    Toast.makeText(ShowInfoActivity.this, "map clicked", Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(ShowInfoActivity.this, "map clicked", Toast.LENGTH_SHORT).show();
                     Log.e("DEBUGING1", destinationsDetails.get(0).toString());
 
                     Bundle bundle = new Bundle();

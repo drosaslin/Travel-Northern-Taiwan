@@ -155,11 +155,11 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
         Log.d("ADDINGGG", "adding");
         if(holder.addButton.isChecked()) {
             addToItinerary(position);
-            locationsListFragment.updateMap(locations.get(position).getGeometry().getLocation(), true);
+            locationsListFragment.updateMap(locations.get(position), true);
         }
         else {
             deleteFromItinerary(position);
-            locationsListFragment.updateMap(locations.get(position).getGeometry().getLocation(), false);
+            locationsListFragment.updateMap(locations.get(position), false);
         }
 
         String message = (holder.addButton.isChecked()) ? "Destination Added": "Destination Deleted";

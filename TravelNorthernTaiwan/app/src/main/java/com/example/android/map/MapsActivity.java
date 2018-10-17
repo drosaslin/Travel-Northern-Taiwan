@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -17,6 +18,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.android.locations_info.LocationDetailsFragment;
 import com.example.android.locations_info.LocationsListFragment;
 import com.example.android.locations_info.LocationsResponse;
+import com.example.android.locations_info.Result;
 import com.example.android.travelnortherntaiwan.Messenger;
 import com.example.android.travelnortherntaiwan.R;
 import com.example.android.travelnortherntaiwan.SingletonRequestQueue;
@@ -97,7 +99,7 @@ public class MapsActivity extends FragmentActivity implements
         saveTripButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Toast.makeText(MapsActivity.this, "SAVING", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MapsActivity.this, "SAVING", Toast.LENGTH_SHORT).show();
                 messenger.addCount();
                 finish();
             }
@@ -155,7 +157,7 @@ public class MapsActivity extends FragmentActivity implements
         //add the markers for every place returned from the api call
         for(Results results : locationsResponse.getResults()) {
             LatLng coordinates = results.getGeometry().getLocation().getLatLng();
-            MyItem item = new MyItem(coordinates.latitude, coordinates.longitude, results.getName(), results.getRating(), results.getId());
+            MyItem item = new MyItem(coordinates.latitude, coordinates.longitude, results.getName(), results.getRating(), results.getPlace_id());
             mClusterManager.addItem(item);
         }
 
@@ -420,12 +422,27 @@ public class MapsActivity extends FragmentActivity implements
         // manager.
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
+        mMap.setOnInfoWindowClickListener(mClusterManager);
 
-        mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MyItem>() {
+        mClusterManager.setOnClusterItemInfoWindowClickListener(new ClusterManager.OnClusterItemInfoWindowClickListener<MyItem>() {
             @Override
-            public boolean onClusterItemClick(MyItem myItem) {
-//                onLocationPressed(myItem.getPlaceId());
-                return false;
+            public void onClusterItemInfoWindowClick(MyItem myItem) {
+                int position = getItemPosition(myItem.getPlaceId());
+
+                LocationDetailsFragment fragment = new LocationDetailsFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("tripKey", tripKey);
+                bundle.putInt("holderPosition", position);
+                bundle.putBoolean("newTrip", true);
+                fragment.setArguments(bundle);
+                fragment.setPlaceId(myItem.getPlaceId());
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setCustomAnimations(R.anim.enter_from_bottom, R.anim.exit_from_top, R.anim.enter_from_bottom, R.anim.exit_from_top);
+                fragmentTransaction.add(R.id.locations_container, fragment, "DetailsFragmentUp");
+                fragmentTransaction.addToBackStack("locationDetailsStack");
+                fragmentTransaction.commit();
             }
         });
 
@@ -441,9 +458,22 @@ public class MapsActivity extends FragmentActivity implements
                 });
     }
 
+    private int getItemPosition(String placeId) {
+        int size = locationsListFragment.getAdapter().getItemCount();
+        for (int n = 0; n < size; n++) {
+            Log.d("COMPARE", placeId + "--" + locationsListFragment.getAdapter().getLocations().get(n).getPlace_id());
+            if(placeId.equals(locationsListFragment.getAdapter().getLocations().get(n).getPlace_id())) {
+                return n;
+            }
+        }
+
+        return 0;
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        Toast.makeText(this, "back", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -469,31 +499,38 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     @Override
-    public void onLocationAdded(Location location) {
+    public void onLocationAdded(Results location) {
         MarkerOptions marker = new MarkerOptions();
-        marker.position(location.getLatLng());
+        marker.title(location.getName());
+        marker.snippet(location.getRating());
+        marker.position(location.getGeometry().getLocation().getLatLng());
         marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
         marker.zIndex(1.0f);
 
         itineraryMarkers.add(mMap.addMarker(marker));
+        itineraryMarkers.get(itineraryMarkers.size() - 1).setTag(location.getPlace_id());
+        itineraryMarkers.get(itineraryMarkers.size() - 1).showInfoWindow();
     }
 
     @Override
-    public void onLocationAdded(Location location, int tripPosition) {
+    public void onLocationAdded(Result location, int tripPosition) {
         MarkerOptions marker = new MarkerOptions();
-        marker.position(location.getLatLng());
+        marker.title(location.getName());
+        marker.position(location.getGeometry().getLocation().getLatLng());
         marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
         marker.zIndex(1.0f);
 
         itineraryMarkers.add(mMap.addMarker(marker));
         locationsListFragment.recyclerItemUpdate(tripPosition, true);
+        itineraryMarkers.get(itineraryMarkers.size() - 1).setTag(location.getPlace_id());
+        itineraryMarkers.get(itineraryMarkers.size() - 1).showInfoWindow();
     }
 
     @Override
-    public void onLocationDeleted(Location location) {
+    public void onLocationDeleted(Results location) {
         for(Marker marker : itineraryMarkers) {
             Log.i("MARKERSS", marker.getPosition().toString() + " " + location.toString());
-            if (isInSameLocation(marker.getPosition(), location.getLatLng())) {
+            if (isInSameLocation(marker.getPosition(), location.getGeometry().getLocation().getLatLng())) {
                 marker.remove();
             }
         }
@@ -501,10 +538,10 @@ public class MapsActivity extends FragmentActivity implements
 
 
     @Override
-    public void onLocationDeleted(Location location, int tripPosition) {
+    public void onLocationDeleted(Result location, int tripPosition) {
         for(Marker marker : itineraryMarkers) {
             Log.i("MARKERSS", marker.getPosition().toString() + " " + location.toString());
-            if (isInSameLocation(marker.getPosition(), location.getLatLng())) {
+            if (isInSameLocation(marker.getPosition(), location.getGeometry().getLocation().getLatLng())) {
                 marker.remove();
             }
         }
@@ -515,17 +552,6 @@ public class MapsActivity extends FragmentActivity implements
     private boolean isInSameLocation(LatLng markerOne, LatLng markerTwo) {
         return (markerOne.latitude == markerTwo.latitude && markerOne.longitude == markerTwo.longitude);
     }
-
-//    @Override
-//    public void onLocationAdded(int position) {
-//        Log.d("TESTING", "1");
-//        locationsListFragment.recyclerItemUpdate(position);
-//    }
-
-//    @Override
-//    public void onLocationPressed(String locationId, Location location) {
-//        int n = 0;
-//    }
 
     public class MyItem implements ClusterItem {
         private final LatLng mPosition;

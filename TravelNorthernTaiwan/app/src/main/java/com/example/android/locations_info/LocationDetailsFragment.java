@@ -21,7 +21,6 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.example.android.map.Location;
 import com.example.android.travelnortherntaiwan.R;
 import com.example.android.travelnortherntaiwan.SingletonRequestQueue;
 import com.google.firebase.auth.FirebaseAuth;
@@ -75,7 +74,7 @@ public class LocationDetailsFragment extends Fragment {
         Bundle bundle = getArguments();
         tripKey = (String) bundle.get("tripKey");
         newTrip = (Boolean) bundle.get("newTrip");
-        tripPosition = (Integer) bundle.get("holderPosition");
+        tripPosition = (bundle.get("holderPosition") != null) ? (Integer) bundle.get("holderPosition") : 0;
         queue = SingletonRequestQueue.getInstance(getActivity()).getRequestQueue();
         destinations = TripDestinations.getInstance();
         tripDate = null;
@@ -127,11 +126,11 @@ public class LocationDetailsFragment extends Fragment {
     }
 
     public interface OnLocationAddedListener {
-        void onLocationAdded(Location location, int tripPosition);
+        void onLocationAdded(Result location, int tripPosition);
     }
 
     public interface OnLocationDeletedListener {
-        void onLocationDeleted(Location location, int tripPosition);
+        void onLocationDeleted(Result location, int tripPosition);
     }
 
     private void setTripButton() {
@@ -272,7 +271,7 @@ public class LocationDetailsFragment extends Fragment {
             addTripButton.setChecked(false);
         }
         else {
-            onLocationAddedListener.onLocationAdded(placeDetails.getResult().getGeometry().getLocation(), tripPosition);
+            onLocationAddedListener.onLocationAdded(placeDetails.getResult(), tripPosition);
             destinations.addDestination(placeDetails.getResult().getPlace_id());
             updateDatabase();
         }
@@ -280,7 +279,7 @@ public class LocationDetailsFragment extends Fragment {
 
     private void deleteFromItinerary() {
         destinations.deleteDestination(placeDetails.getResult().getPlace_id());
-        onLocationDeletedListener.onLocationDeleted(placeDetails.getResult().getGeometry().getLocation(), tripPosition);
+        onLocationDeletedListener.onLocationDeleted(placeDetails.getResult(), tripPosition);
         updateDatabase();
     }
 

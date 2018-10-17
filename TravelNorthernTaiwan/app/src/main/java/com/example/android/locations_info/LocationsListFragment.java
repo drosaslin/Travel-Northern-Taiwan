@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,11 +29,11 @@ public class LocationsListFragment extends Fragment {
     }
 
     public interface  OnLocationAddedListener {
-        void onLocationAdded(Location location);
+        void onLocationAdded(Results location);
     }
 
     public interface OnLocationDeletedListener {
-        void onLocationDeleted(Location location);
+        void onLocationDeleted(Results location);
     }
 
     @Nullable
@@ -88,11 +87,15 @@ public class LocationsListFragment extends Fragment {
         }
     }
 
+    public LocationListAdapter getAdapter() {
+        return adapter;
+    }
+
     public void updateActivity(String locationId, Location location, int position) {
         onLocationPressedListener.onLocationPressed(locationId, location, position);
     }
 
-    public void updateMap(Location location, boolean add) {
+    public void updateMap(Results location, boolean add) {
         if(add) {
             onLocationAddedListener.onLocationAdded(location);
         }
