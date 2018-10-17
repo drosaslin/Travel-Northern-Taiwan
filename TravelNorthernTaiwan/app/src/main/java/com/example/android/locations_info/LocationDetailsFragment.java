@@ -1,5 +1,7 @@
 package com.example.android.locations_info;
 
+import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -51,7 +53,6 @@ public class LocationDetailsFragment extends Fragment {
     private TextView placeAddress;
     private TextView placeOpeningHours;
     private TextView placePhone;
-    private TextView placeFee;
     private TabLayout tabLayout;
     private CheckBox addTripButton;
     private ViewPager pager;
@@ -61,6 +62,8 @@ public class LocationDetailsFragment extends Fragment {
     private DatabaseReference mRootReference;
     private String tripDate;
     private Boolean newTrip;
+    private int tripPosition;
+    private OnLocationAddedListener onLocationAddedListener;
 
     @Nullable
     @Override
@@ -75,6 +78,7 @@ public class LocationDetailsFragment extends Fragment {
         Bundle bundle = getArguments();
         tripKey = (String) bundle.get("tripKey");
         newTrip = (Boolean) bundle.get("newTrip");
+        tripPosition = (Integer) bundle.get("holderPosition");
         queue = SingletonRequestQueue.getInstance(getActivity()).getRequestQueue();
         destinations = TripDestinations.getInstance();
         tripDate = null;
@@ -93,7 +97,6 @@ public class LocationDetailsFragment extends Fragment {
         placeAddress = getView().findViewById(R.id.place_address);
         placeOpeningHours = getView().findViewById(R.id.place_opening_hours);
         placePhone = getView().findViewById(R.id.place_phone_number);
-        placeFee = getView().findViewById(R.id.place_entrance_fee);
         addTripButton = getView().findViewById(R.id.details_add_trip_button);
 
         if(newTrip) {
@@ -124,6 +127,10 @@ public class LocationDetailsFragment extends Fragment {
         });
 
         setTabLayout();
+    }
+
+    public interface OnLocationAddedListener {
+        void onLocationAdded(int position);
     }
 
     private void setTripButton() {
@@ -241,6 +248,8 @@ public class LocationDetailsFragment extends Fragment {
     }
 
     private void updateItinerary(){
+        onLocationAddedListener.onLocationAdded(tripPosition);
+
         if(addTripButton.isChecked()) {
             addToItinerary();
 //            locationsListFragment.updateMap(locations.get(position).getGeometry().getLocation(), true);
@@ -297,5 +306,19 @@ public class LocationDetailsFragment extends Fragment {
         });
 
         queue.add(stringRequest);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        Activity activity = (Activity) context;
+
+//        try {
+//            onLocationAddedListener = (LocationDetailsFragment.OnLocationAddedListener) activity;
+//        }
+//        catch (ClassCastException e) {
+//            throw new ClassCastException(activity.toString() + "must override onLocationPressed method");
+//        }
     }
 }

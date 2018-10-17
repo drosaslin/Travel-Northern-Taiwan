@@ -45,6 +45,7 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
     private FirebaseAuth mAuth;
     private DatabaseReference mRootReference;
     private boolean isNewTrip;
+    private LocationListAdapter.LocationsViewHolder mHolder;
     HashMap<Integer, Boolean> buttonState;
 
     public LocationListAdapter(ArrayList<Results> newLocations, Context newContext, String newTripKey, boolean newTrip) {
@@ -74,6 +75,8 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
 
     @Override
     public void onBindViewHolder(final LocationListAdapter.LocationsViewHolder holder, final int position) {
+//        mHolder = holder;
+
         if(locations.get(position).getPhotos() != null) {
             Photos photo = locations.get(position).getPhotos().get(0);
             if (photo != null) {
@@ -114,6 +117,8 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
         return locations.size();
     }
 
+
+
     public void addNewData(ArrayList<Results> newResults) {
         locations.addAll(newResults);
         notifyDataSetChanged();
@@ -129,7 +134,7 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
     }
 
     public void notifyListener(int position) {
-        locationsListFragment.updateActivity(locations.get(position).getPlace_id(), locations.get(position).getGeometry().getLocation());
+        locationsListFragment.updateActivity(locations.get(position).getPlace_id(), locations.get(position).getGeometry().getLocation(), position);
     }
 
     private boolean isDestinationAlreadySelected(int position) {

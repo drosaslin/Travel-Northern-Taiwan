@@ -102,8 +102,11 @@ public class ToDoListActivity extends AppCompatActivity {
     }
 
     private void addTask(String newTask){
+        int n = DataList.size();
+        String child = Integer.toString(n);
         Toast.makeText(this, "add task func", Toast.LENGTH_SHORT).show();
-        mRootReference.child(currentKey).setValue(newTask + "0");
+        mRootReference.child(child).setValue(newTask + "0");
+        taskInput.setText("");
     }
 
     private void clearCards(){

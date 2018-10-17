@@ -67,26 +67,6 @@
 
         </LinearLayout>
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/map_phone_icon"/>
-
-            <TextView
-                android:id="@+id/place_phone_number"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:textColor="#000000"
-                android:text=""/>
-
-        </LinearLayout>
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -101,10 +81,10 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/map_money_icon"/>
+                    android:src="@drawable/map_phone_icon"/>
 
                 <TextView
-                    android:id="@+id/place_entrance_fee"
+                    android:id="@+id/place_phone_number"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:textColor="#000000"

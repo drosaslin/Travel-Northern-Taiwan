@@ -76,7 +76,6 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
         //Setting region name in view
         mRegion.setText(mRegion.getText() + currentRegion);
 
-        //fix this
         if(currentRegion.equals("Yilan")){
             mRegionImg.setImageDrawable(getResources().getDrawable(R.drawable.main_page_yilan, getApplicationContext().getTheme()));
         }else if(currentRegion.equals("Taipei")){
@@ -173,7 +172,7 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
     private boolean isValidInput(String tripName, String date, String budget){
         String[] toDateToken = date.split("/");
         if(TextUtils.isEmpty(tripName)){
-            Toast.makeText(getApplicationContext(), "Please enter a name for your trip", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getApplicationContext(), "Please enter a name for your trip", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;

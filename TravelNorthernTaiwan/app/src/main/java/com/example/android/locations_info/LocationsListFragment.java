@@ -7,15 +7,16 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 
 import com.example.android.map.Location;
 import com.example.android.map.Results;
 import com.example.android.travelnortherntaiwan.R;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class LocationsListFragment extends Fragment {
@@ -26,7 +27,7 @@ public class LocationsListFragment extends Fragment {
     private OnLocationDeletedListener onLocationDeletedListener;
 
     public interface OnLocationPressedListener {
-        void onLocationPressed(String locationId, Location location);
+        void onLocationPressed(String locationId, Location location, int position);
     }
 
     public interface  OnLocationAddedListener {
@@ -57,6 +58,13 @@ public class LocationsListFragment extends Fragment {
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
+
+    public void recyclerItemUpdate(int position) {
+        Log.d("TESTING", "2");
+        recycler.getLayoutManager().getChildAt(position).findViewById(R.id.add_trip_button);
+        adapter.notifyDataSetChanged();
+    }
+
     public void updateData(ArrayList<Results> newData) {
         //add new arraylist data to the locations list
         if(adapter != null) {
@@ -82,8 +90,8 @@ public class LocationsListFragment extends Fragment {
         }
     }
 
-    public void updateActivity(String locationId, Location location) {
-        onLocationPressedListener.onLocationPressed(locationId, location);
+    public void updateActivity(String locationId, Location location, int position) {
+        onLocationPressedListener.onLocationPressed(locationId, location, position);
     }
 
     public void updateMap(Location location, boolean add) {

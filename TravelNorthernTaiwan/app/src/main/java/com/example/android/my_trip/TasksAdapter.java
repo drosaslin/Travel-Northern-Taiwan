@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +34,6 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder>{
     @NonNull
     @Override
     public TasksAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.tasks_template, parent, false);
         return new TasksAdapter.ViewHolder(view);
     }
@@ -44,7 +44,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder>{
     }
 
     @Override
-    public void onBindViewHolder(TasksAdapter.ViewHolder holder, final int position) {
+    public void onBindViewHolder(final TasksAdapter.ViewHolder holder, final int position) {
         String task = DataList.get(position).getTask();
         String isDone = task.substring(task.length()-1);
         holder.taskName.setText(task);
@@ -55,22 +55,38 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder>{
             holder.isDoneChecked.setChecked(false);
         }
 
-        holder.taskCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(context, ToDoListActivity.class);
-                intent.putExtra("tripKey", DataList.get(position).getTripKey());
-                context.startActivity(intent);
-            }
-        });
-
         //Deleting a card
         holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mRootReference.child("TripTasks").child(DataList.get(position).getTripKey()).removeValue();
+                deleteTasks(position);
+                updateDatabase();
+                DataList.remove(position);
+                showAllData();
+//                Log.d("delete", DataList.get(position).toString() + " " + DataList.get(position).getTripKey());
+//                if(DataList!=null){
+//                    for(Task task : DataList){
+//                        boolean isDone = holder.isDoneChecked.isChecked();
+//                        String check = (isDone) ? "1" : "0";
+//                        if(task.getTask()+check.equals())
+//                    }
+////                    mRootReference.child("TripTasks").child(DataList.get(position).getTripKey()).child(DataList.get(position).toString()).removeValue();
+//                }
             }
         });
+    }
+
+    private void updateDatabase() {
+    }
+
+    private void showAllData() {
+        for(Task item : DataList) {
+            Log.d("TASKSSSS", item.getTask());
+        }
+    }
+
+    private void deleteTasks(int position){
+        mRootReference.child("TripTasks").child(DataList.get(position).getTripKey()).removeValue();
     }
 
     @Override
