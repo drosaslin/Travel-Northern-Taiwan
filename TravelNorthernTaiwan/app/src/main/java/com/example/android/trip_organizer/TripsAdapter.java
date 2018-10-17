@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.my_trip.ShowInfoActivity;
 import com.example.android.my_trip.TripBasicInfo;
@@ -21,9 +22,10 @@ import java.util.ArrayList;
 
 
 public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> {
-    ArrayList<TripBasicInfo> DataList;
-    Context context;
+    private ArrayList<TripBasicInfo> DataList;
+    private Context context;
     private DatabaseReference mRootReference;
+    private OnDeletePressedListener onDeletePressed;
 
     public TripsAdapter(ArrayList<TripBasicInfo> newTripList, Context newContext) {
         DataList = newTripList;
@@ -31,10 +33,17 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
         mRootReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://travel-northern-taiwan.firebaseio.com/");
     }
 
+    public interface OnDeletePressedListener {
+        void onDeletePressed(int position);
+    }
+
+    public void setOnDeletePressedListener(OnDeletePressedListener onDeletePressedListener) {
+        onDeletePressed = onDeletePressedListener;
+    }
+
     @NonNull
     @Override
     public TripsAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.trips_template, parent, false);
         return new TripsAdapter.ViewHolder(view);
     }
@@ -63,17 +72,25 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
         holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mRootReference.child("BasicTripInfo").child(DataList.get(position).getKey()).removeValue();
-                mRootReference.child("Itinerary").child(DataList.get(position).getKey()).removeValue();
-                mRootReference.child("ExpensesByTrip").child(DataList.get(position).getKey()).removeValue();
+                onDeletePressed.onDeletePressed(position);
             }
         });
-//        holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
+//        holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View view) {
-//
+//                mRootReference.child("BasicTripInfo").child(DataList.get(position).getKey()).removeValue();
+//                mRootReference.child("Itinerary").child(DataList.get(position).getKey()).removeValue();
+//                mRootReference.child("ExpensesByTrip").child(DataList.get(position).getKey()).removeValue();
 //            }
 //        });
+    }
+
+    public void deleteTrip(int position) {
+        mRootReference.child("BasicTripInfo").child(DataList.get(position).getKey()).removeValue();
+        mRootReference.child("Itinerary").child(DataList.get(position).getKey()).removeValue();
+        mRootReference.child("ExpensesByTrip").child(DataList.get(position).getKey()).removeValue();
+
+        Toast.makeText(context, DataList.get(position).getName() + " deleted",Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -19,6 +19,10 @@ public class LocationsResponse {
 
     private String status;
 
+    public LocationsResponse() {
+        results = new ArrayList<>();
+    }
+
     public String getNext_page_token ()
     {
         return next_page_token;

@@ -8,7 +8,7 @@
         android:icon="@drawable/ic_map"
         android:title="Map"/>
     <item
-        android:id="@+id/action_email"
-        android:icon="@drawable/ic_add"
-        android:title="button3" />
+        android:id="@+id/action_tasks"
+        android:icon="@drawable/ic_check"
+        android:title="To-do List" />
 </menu>

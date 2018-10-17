@@ -1,20 +1,13 @@
 package com.example.android.map;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.SlidingPaneLayout;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -32,7 +25,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -52,7 +44,8 @@ public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback,
         LocationsListFragment.OnLocationPressedListener,
         LocationsListFragment.OnLocationAddedListener,
-        LocationsListFragment.OnLocationDeletedListener{
+        LocationsListFragment.OnLocationDeletedListener,
+        LocationDetailsFragment.OnLocationAddedListener{
 
     private final String GOOGLE_API_KEY = "AIzaSyCc4acsOQV7rnQ92weHYKO14fvL9wkRpKc";
     private FloatingActionButton saveTripButton;
@@ -104,7 +97,7 @@ public class MapsActivity extends FragmentActivity implements
         saveTripButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MapsActivity.this, "SAVING", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(MapsActivity.this, "SAVING", Toast.LENGTH_SHORT).show();
                 messenger.addCount();
                 finish();
             }
@@ -144,6 +137,7 @@ public class MapsActivity extends FragmentActivity implements
         //display the locations list fragment in the slide up panel
         Bundle bundle = new Bundle();
         bundle.putString("tripKey", tripKey);
+        bundle.putBoolean("newTrip", true);
         locationsListFragment.setArguments(bundle);
         getSupportFragmentManager().beginTransaction().replace(R.id.locations_container, locationsListFragment).commit();
     }
@@ -169,19 +163,6 @@ public class MapsActivity extends FragmentActivity implements
         //update location list fragment's recycler
         locationsListFragment.updateData(locationsResponse.getResults());
     }
-
-//    private void getMoreResults() {
-//        if(locationsResponse.getNext_page_token() != null) {
-//            Handler handler = new Handler();
-//            handler.postDelayed(new Runnable() {
-//                public void run() {
-//                    String token = locationsResponse.getNext_page_token();
-//                    Log.i("TOKEN", token);
-//                    apiCallNextToken(token);
-//                }
-//            }, 5000);
-//        }
-//    }
 
     private void performApiCalls(String key) {
         //call the google activities api for all activities related to the user's choice on its respective region
@@ -218,7 +199,6 @@ public class MapsActivity extends FragmentActivity implements
 
     private void cleanView() {
         //clear all the markers from the map and items from the locations list
-
         if(mMap != null) {
             mMap.clear();
         }
@@ -227,6 +207,17 @@ public class MapsActivity extends FragmentActivity implements
         }
 
         locationsListFragment.clearData();
+        displaySelectedDestinations();
+    }
+
+    private void displaySelectedDestinations() {
+        for(Marker marker : itineraryMarkers) {
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(marker.getPosition());
+            markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+            markerOptions.zIndex(1.0f);
+            mMap.addMarker(markerOptions);
+        }
     }
 
     private void setActivities() {
@@ -456,7 +447,7 @@ public class MapsActivity extends FragmentActivity implements
     }
 
     @Override
-    public void onLocationPressed(String locationId, Location location) {
+    public void onLocationPressed(String locationId, Location location, int position) {
         /*set the location id in the location details' fragment and put the locations
           details fragment in front of the locations list fragment*/
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location.getLatLng(), 16));
@@ -464,6 +455,8 @@ public class MapsActivity extends FragmentActivity implements
         LocationDetailsFragment fragment = new LocationDetailsFragment();
         Bundle bundle = new Bundle();
         bundle.putString("tripKey", tripKey);
+        bundle.putInt("holderPosition", position);
+        bundle.putBoolean("newTrip", true);
         fragment.setArguments(bundle);
         fragment.setPlaceId(locationId);
 
@@ -500,6 +493,12 @@ public class MapsActivity extends FragmentActivity implements
         return (markerOne.latitude == markerTwo.latitude && markerOne.longitude == markerTwo.longitude);
     }
 
+    @Override
+    public void onLocationAdded(int position) {
+        Log.d("TESTING", "1");
+        locationsListFragment.recyclerItemUpdate(position);
+    }
+
     public class MyItem implements ClusterItem {
         private final LatLng mPosition;
         private final String mTitle;
@@ -531,5 +530,11 @@ public class MapsActivity extends FragmentActivity implements
         public String getPlaceId() {
             return mPlaceId;
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        finish();
     }
 }

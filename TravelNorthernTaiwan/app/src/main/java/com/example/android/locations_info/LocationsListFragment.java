@@ -7,9 +7,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 
 import com.example.android.map.Location;
 import com.example.android.map.Results;
@@ -25,7 +27,7 @@ public class LocationsListFragment extends Fragment {
     private OnLocationDeletedListener onLocationDeletedListener;
 
     public interface OnLocationPressedListener {
-        void onLocationPressed(String locationId, Location location);
+        void onLocationPressed(String locationId, Location location, int position);
     }
 
     public interface  OnLocationAddedListener {
@@ -48,17 +50,35 @@ public class LocationsListFragment extends Fragment {
 
         Bundle bundle = getArguments();
         String tripKey = (String) bundle.get("tripKey");
+        Boolean newTrip = (Boolean) bundle.get("newTrip");
 
-        adapter = new LocationListAdapter(new ArrayList<Results>(), getActivity(), tripKey);
+        adapter = new LocationListAdapter(new ArrayList<Results>(), getActivity(), tripKey, newTrip);
         adapter.setListener(this);
         recycler = getView().findViewById(R.id.locations_recycler);
         recycler.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
+
+    public void recyclerItemUpdate(int position) {
+        Log.d("TESTING", "2");
+        recycler.getLayoutManager().getChildAt(position).findViewById(R.id.add_trip_button);
+        adapter.notifyDataSetChanged();
+    }
+
     public void updateData(ArrayList<Results> newData) {
-        //add new data to the locations list
+        //add new arraylist data to the locations list
         if(adapter != null) {
             adapter.addNewData(newData);
+            recycler.setAdapter(adapter);
+        }
+    }
+
+    public void updateData(Results newData) {
+        //add new data to the locations list
+        if(adapter != null) {
+            ArrayList<Results> results = new ArrayList<>();
+            results.add(newData);
+            adapter.addNewData(results);
             recycler.setAdapter(adapter);
         }
     }
@@ -70,8 +90,8 @@ public class LocationsListFragment extends Fragment {
         }
     }
 
-    public void updateActivity(String locationId, Location location) {
-        onLocationPressedListener.onLocationPressed(locationId, location);
+    public void updateActivity(String locationId, Location location, int position) {
+        onLocationPressedListener.onLocationPressed(locationId, location, position);
     }
 
     public void updateMap(Location location, boolean add) {
@@ -109,5 +129,12 @@ public class LocationsListFragment extends Fragment {
         catch (ClassCastException e) {
             throw new ClassCastException(activity.toString() + "must override onLocationPressed method");
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        recycler = null;
+        adapter.finish();
     }
 }

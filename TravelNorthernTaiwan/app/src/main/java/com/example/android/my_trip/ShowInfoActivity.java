@@ -94,7 +94,7 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
         setProvinces();
         currentTripKey = getIntent().getExtras().getString("tripKey");
         String refUrl = "https://travel-northern-taiwan.firebaseio.com/";
-//        Toast.makeText(getApplicationContext(), "CREATED", Toast.LENGTH_SHORT).show();
+
         mAuth = FirebaseAuth.getInstance();
         currentUser = mAuth.getCurrentUser();
 
@@ -178,6 +178,9 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
                     Intent intent = new Intent(ShowInfoActivity.this, MyTripMap.class);
                     intent.putExtra("basicInfo", infoToDisplay);
                     startActivity(intent);
+                }
+                if(menuItem.getItemId() == R.id.action_tasks) {
+
                 }
                 return true;
             }
@@ -350,7 +353,9 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
 
         Bundle bundle = new Bundle();
         bundle.putParcelable("WeatherData", weatherData);
-        Intent intent = new Intent(getApplicationContext(), HourlyDataActivity.class);
+        Intent intent = new Intent(getApplicationContext(), MyTripWeather.class);
+        intent.putExtra("region", infoToDisplay.getRegion());
+
         intent.putExtras(bundle);
         startActivity(intent);
     }

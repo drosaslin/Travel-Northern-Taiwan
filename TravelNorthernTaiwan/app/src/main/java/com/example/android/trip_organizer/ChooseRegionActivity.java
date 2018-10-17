@@ -119,7 +119,7 @@ public class ChooseRegionActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Toast.makeText(this, Integer.toString(messenger.getCount()), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, Integer.toString(messenger.getCount()), Toast.LENGTH_SHORT).show();
         if(messenger.getCount() == 4) {
             messenger.setCount(0);
             Intent intent = new Intent(this, ShowInfoActivity.class);
