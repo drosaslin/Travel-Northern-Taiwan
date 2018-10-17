@@ -18,7 +18,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name="com.example.android.user_authentication.UserAuthenticationActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -54,7 +55,7 @@
             android:label="Map"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.example.android.my_trip.ShowInfoActivity"
+            android:name="com.example.android.my_trip.MyTrip"
             android:label="Trip information"
             android:screenOrientation="portrait" />
         <activity

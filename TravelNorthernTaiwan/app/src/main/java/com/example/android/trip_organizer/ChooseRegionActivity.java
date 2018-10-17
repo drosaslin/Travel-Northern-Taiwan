@@ -7,9 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
-import com.example.android.my_trip.ShowInfoActivity;
+import com.example.android.my_trip.MyTrip;
 import com.example.android.travelnortherntaiwan.Messenger;
 import com.example.android.travelnortherntaiwan.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -109,7 +108,7 @@ public class ChooseRegionActivity extends AppCompatActivity {
         //move later to another function
         //sending the user to another view and passing the current trip parameter to the view
         Intent newTrip = new Intent(ChooseRegionActivity.this,NewTripActivity.class);
-        tripKey = currentKey;
+        tripKey = currentKey.toString();
         newTrip.putExtra("tripKey", tripKey);
         newTrip.putExtra("region", tag);
         Log.d("test","key = " + currentKey);
@@ -122,7 +121,7 @@ public class ChooseRegionActivity extends AppCompatActivity {
 //        Toast.makeText(this, Integer.toString(messenger.getCount()), Toast.LENGTH_SHORT).show();
         if(messenger.getCount() == 4) {
             messenger.setCount(0);
-            Intent intent = new Intent(this, ShowInfoActivity.class);
+            Intent intent = new Intent(this, MyTrip.class);
             intent.putExtra("tripKey", tripKey);
             startActivity(intent);
             finish();
