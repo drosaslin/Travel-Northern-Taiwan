@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 
 import com.example.android.map.Location;
 import com.example.android.map.Results;
@@ -59,9 +58,8 @@ public class LocationsListFragment extends Fragment {
     }
 
 
-    public void recyclerItemUpdate(int position) {
-        Log.d("TESTING", "2");
-        recycler.getLayoutManager().getChildAt(position).findViewById(R.id.add_trip_button);
+    public void recyclerItemUpdate(int position, boolean tripAdded) {
+        adapter.getLocations().get(position).setAddedStatus(tripAdded);
         adapter.notifyDataSetChanged();
     }
 

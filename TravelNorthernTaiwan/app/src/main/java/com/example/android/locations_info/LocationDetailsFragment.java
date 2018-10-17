@@ -13,8 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,18 +21,16 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.example.android.map.Photos;
+import com.example.android.map.Location;
 import com.example.android.travelnortherntaiwan.R;
 import com.example.android.travelnortherntaiwan.SingletonRequestQueue;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
-import com.squareup.picasso.Picasso;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -64,6 +60,7 @@ public class LocationDetailsFragment extends Fragment {
     private Boolean newTrip;
     private int tripPosition;
     private OnLocationAddedListener onLocationAddedListener;
+    private OnLocationDeletedListener onLocationDeletedListener;
 
     @Nullable
     @Override
@@ -78,7 +75,7 @@ public class LocationDetailsFragment extends Fragment {
         Bundle bundle = getArguments();
         tripKey = (String) bundle.get("tripKey");
         newTrip = (Boolean) bundle.get("newTrip");
-//        tripPosition = (Integer) bundle.get("holderPosition");
+        tripPosition = (Integer) bundle.get("holderPosition");
         queue = SingletonRequestQueue.getInstance(getActivity()).getRequestQueue();
         destinations = TripDestinations.getInstance();
         tripDate = null;
@@ -130,7 +127,11 @@ public class LocationDetailsFragment extends Fragment {
     }
 
     public interface OnLocationAddedListener {
-        void onLocationAdded(int position);
+        void onLocationAdded(Location location, int tripPosition);
+    }
+
+    public interface OnLocationDeletedListener {
+        void onLocationDeleted(Location location, int tripPosition);
     }
 
     private void setTripButton() {
@@ -235,10 +236,14 @@ public class LocationDetailsFragment extends Fragment {
     }
 
     private String formatDate(String openingHours) {
-        String day = openingHours.substring(0, openingHours.indexOf(":"));
-        String time = openingHours.substring(openingHours.indexOf(" "));
+        if(openingHours != null && !openingHours.equals("") && openingHours.length() > 0) {
+            String day = openingHours.substring(0, openingHours.indexOf(":"));
+            String time = openingHours.substring(openingHours.indexOf(" "));
 
-        return time + " (" + day + ")";
+            return time + " (" + day + ")";
+        }
+
+        return "";
     }
 
     private void GetTripDate(DataSnapshot ds) {
@@ -248,8 +253,6 @@ public class LocationDetailsFragment extends Fragment {
     }
 
     private void updateItinerary(){
-//        onLocationAddedListener.onLocationAdded(tripPosition);
-
         if(addTripButton.isChecked()) {
             addToItinerary();
 //            locationsListFragment.updateMap(locations.get(position).getGeometry().getLocation(), true);
@@ -264,12 +267,20 @@ public class LocationDetailsFragment extends Fragment {
     }
 
     private void addToItinerary() {
-        destinations.addDestination(placeDetails.getResult().getId());
-        updateDatabase();
+        if(destinations.getDestinations().size() >= 10 && addTripButton.isChecked()) {
+            Toast.makeText(getActivity(), "Itinerary full", Toast.LENGTH_SHORT).show();
+            addTripButton.setChecked(false);
+        }
+        else {
+            onLocationAddedListener.onLocationAdded(placeDetails.getResult().getGeometry().getLocation(), tripPosition);
+            destinations.addDestination(placeDetails.getResult().getPlace_id());
+            updateDatabase();
+        }
     }
 
     private void deleteFromItinerary() {
-        destinations.deleteDestination(placeDetails.getResult().getId());
+        destinations.deleteDestination(placeDetails.getResult().getPlace_id());
+        onLocationDeletedListener.onLocationDeleted(placeDetails.getResult().getGeometry().getLocation(), tripPosition);
         updateDatabase();
     }
 
@@ -314,11 +325,17 @@ public class LocationDetailsFragment extends Fragment {
 
         Activity activity = (Activity) context;
 
-//        try {
-//            onLocationAddedListener = (LocationDetailsFragment.OnLocationAddedListener) activity;
-//        }
-//        catch (ClassCastException e) {
-//            throw new ClassCastException(activity.toString() + "must override onLocationPressed method");
-//        }
+        try {
+            onLocationAddedListener = (LocationDetailsFragment.OnLocationAddedListener) activity;
+        }
+        catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + "must override onLocationPressed method");
+        }
+        try {
+            onLocationDeletedListener = (LocationDetailsFragment.OnLocationDeletedListener) activity;
+        }
+        catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + "must override onLocationPressed method");
+        }
     }
 }

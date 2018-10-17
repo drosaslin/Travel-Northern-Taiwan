@@ -109,7 +109,7 @@ public class ChooseRegionActivity extends AppCompatActivity {
         //move later to another function
         //sending the user to another view and passing the current trip parameter to the view
         Intent newTrip = new Intent(ChooseRegionActivity.this,NewTripActivity.class);
-        tripKey = currentKey.toString();
+        tripKey = currentKey;
         newTrip.putExtra("tripKey", tripKey);
         newTrip.putExtra("region", tag);
         Log.d("test","key = " + currentKey);
