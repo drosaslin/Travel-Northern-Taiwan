@@ -10,5 +10,5 @@
     <item
         android:id="@+id/action_tasks"
         android:icon="@drawable/ic_check"
-        android:title="To-do List" />
+        android:title="To-do list" />
 </menu>

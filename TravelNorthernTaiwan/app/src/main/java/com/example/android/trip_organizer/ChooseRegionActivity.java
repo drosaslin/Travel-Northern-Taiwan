@@ -89,8 +89,7 @@ public class ChooseRegionActivity extends AppCompatActivity {
         HashMap<String, Double> expensesMap =  new HashMap<String, Double>();
 
         infoMap.put("TripName", "");
-        infoMap.put("From", "");
-        infoMap.put("To", "");
+        infoMap.put("Date", "");
         infoMap.put("Author", currentUser.getUid());
         infoMap.put("Region", tag);
 
@@ -105,6 +104,7 @@ public class ChooseRegionActivity extends AppCompatActivity {
         mRootReference.child("BasicTripInfo").child(currentKey).setValue(infoMap);
         mRootReference.child("ExpensesByTrip").child(currentKey).setValue(expensesMap);
         mRootReference.child("Itinerary").child(currentKey);
+        mRootReference.child("TripTasks").child(currentKey);
 
         //move later to another function
         //sending the user to another view and passing the current trip parameter to the view

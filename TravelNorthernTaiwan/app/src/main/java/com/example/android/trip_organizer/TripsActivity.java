@@ -111,14 +111,15 @@ public class TripsActivity extends android.support.v4.app.Fragment {
                     tInfo.setRegion("");
                 }
 
-                tInfo.setToDate(ds.child("To").getValue().toString());
-                tInfo.setFromDate(ds.child("From").getValue().toString());
-
+                if(ds.child("Date").getValue()!=null){
+                    tInfo.setDate(ds.child("Date").getValue().toString());
+                }else{
+                    tInfo.setDate("");
+                }
                 Log.d("test", "key " + tInfo.getKey());
                 Log.d("test", "name " + tInfo.getName());
                 Log.d("test", "region " + tInfo.getRegion());
-                Log.d("test", "to " + tInfo.getToDate());
-                Log.d("test", "from " + tInfo.getFromDate());
+                Log.d("test", "to " + tInfo.getDate());
 
 
                 DataList.add(tInfo);

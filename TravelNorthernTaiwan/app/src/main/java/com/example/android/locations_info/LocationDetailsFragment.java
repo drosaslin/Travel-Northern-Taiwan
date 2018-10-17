@@ -78,7 +78,7 @@ public class LocationDetailsFragment extends Fragment {
         Bundle bundle = getArguments();
         tripKey = (String) bundle.get("tripKey");
         newTrip = (Boolean) bundle.get("newTrip");
-        tripPosition = (Integer) bundle.get("holderPosition");
+//        tripPosition = (Integer) bundle.get("holderPosition");
         queue = SingletonRequestQueue.getInstance(getActivity()).getRequestQueue();
         destinations = TripDestinations.getInstance();
         tripDate = null;
@@ -242,13 +242,13 @@ public class LocationDetailsFragment extends Fragment {
     }
 
     private void GetTripDate(DataSnapshot ds) {
-        if(!ds.child("From").getValue().toString().equals("")) {
-            tripDate = ds.child("From").getValue().toString();
+        if(!ds.child("Date").getValue().toString().equals("")) {
+            tripDate = ds.child("Date").getValue().toString();
         }
     }
 
     private void updateItinerary(){
-        onLocationAddedListener.onLocationAdded(tripPosition);
+//        onLocationAddedListener.onLocationAdded(tripPosition);
 
         if(addTripButton.isChecked()) {
             addToItinerary();
@@ -314,11 +314,11 @@ public class LocationDetailsFragment extends Fragment {
 
         Activity activity = (Activity) context;
 
-        try {
-            onLocationAddedListener = (LocationDetailsFragment.OnLocationAddedListener) activity;
-        }
-        catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + "must override onLocationPressed method");
-        }
+//        try {
+//            onLocationAddedListener = (LocationDetailsFragment.OnLocationAddedListener) activity;
+//        }
+//        catch (ClassCastException e) {
+//            throw new ClassCastException(activity.toString() + "must override onLocationPressed method");
+//        }
     }
 }

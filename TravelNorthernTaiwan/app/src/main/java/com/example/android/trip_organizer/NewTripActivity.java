@@ -36,8 +36,7 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
     private Button mNextBtn;
 
     private EditText mTripName;
-    private EditText mToDate;
-    private EditText mFromDate;
+    private EditText mDate;
     private EditText mBudget;
     private TextView mRegion;
     private ImageView mRegionImg;
@@ -46,7 +45,7 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
     private FirebaseUser currentUser;
     private DatabaseReference mRootReference;
 
-    private DatePickerDialog fromDatepicker , toDatepicker;
+    private DatePickerDialog datepicker;
 
     private boolean isToDateFocused = false;
 
@@ -68,8 +67,7 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
         currentUser = mAuth.getCurrentUser();
 
         mTripName = (EditText) findViewById(R.id.tripName);
-        mToDate = (EditText) findViewById(R.id.toDate);
-        mFromDate = (EditText) findViewById(R.id.fromDate);
+        mDate = (EditText) findViewById(R.id.date);
         mBudget = (EditText) findViewById(R.id.budget);
         mNextBtn = (Button) findViewById(R.id.next_btn);
         mRegionImg = (ImageView) findViewById(R.id.regionImage);
@@ -78,7 +76,6 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
         //Setting region name in view
         mRegion.setText(mRegion.getText() + currentRegion);
 
-        //fix this
         if(currentRegion.equals("Yilan")){
             mRegionImg.setImageDrawable(getResources().getDrawable(R.drawable.main_page_yilan, getApplicationContext().getTheme()));
         }else if(currentRegion.equals("Taipei")){
@@ -97,22 +94,11 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
         //Get db reference
         String url = "https://travel-northern-taiwan.firebaseio.com/";
         mRootReference = FirebaseDatabase.getInstance().getReferenceFromUrl(url);
-
-        mFromDate.setOnClickListener(new View.OnClickListener() {
+        mDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                isToDateFocused = false;
-                DialogFragment fromDatePicker = new DatePickerFragment();
-                fromDatePicker.show(getFragmentManager(), "date picker");
-            }
-        });
-
-        mToDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                isToDateFocused = true;
-                DialogFragment toDatePicker = new DatePickerFragment();
-                toDatePicker.show(getFragmentManager(), "date picker");
+                DialogFragment datePicker = new DatePickerFragment();
+                datePicker.show(getFragmentManager(), "date picker");
             }
         });
 
@@ -131,11 +117,8 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
         //Month starts from 0, so it has to be added +1 to show the correct date
-        if(isToDateFocused){
-            mToDate.setText(new StringBuilder().append(year).append("/").append(month+1).append("/").append(dayOfMonth)); //yyyy/MM/dd
-        }else{
-            mFromDate.setText(new StringBuilder().append(year).append("/").append(month+1).append("/").append(dayOfMonth)); //yyyy/MM/dd
-        }
+        mDate.setText(new StringBuilder().append(year).append("/").append(month+1).append("/").append(dayOfMonth)); //yyyy/MM/dd
+
     }
 
 //    protected void onPause() {
@@ -146,22 +129,20 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
     public void attemptNewTrip(){
         String tripName = mTripName.getText().toString().trim();
         String userName = currentUser.getUid();
-        String toDate = mToDate.getText().toString().trim();//check datepicker
-        String fromDate = mFromDate.getText().toString().trim();
+        String date = mDate.getText().toString().trim();
         String budget = (mBudget.getText().toString().trim().isEmpty()) ? "0" : mBudget.getText().toString().trim();
 
         DatabaseReference budgetReference = mRootReference.child("ExpensesByTrip");
         DatabaseReference basicInfoReference = mRootReference.child("BasicTripInfo");
 
-        if(!isValidInput(tripName, toDate, fromDate, budget)){
+        if(!isValidInput(tripName, date, budget)){
             return;
         }
 
         Log.d("CURRENT TRIP", " is " + currentTripKey);
         //add region
         basicInfoReference.child(currentTripKey).child("TripName").setValue(tripName);
-        basicInfoReference.child(currentTripKey).child("From").setValue(fromDate);
-        basicInfoReference.child(currentTripKey).child("To").setValue(toDate);
+        basicInfoReference.child(currentTripKey).child("Date").setValue(date);
         basicInfoReference.child(currentTripKey).child("Budget").setValue(budget);
         basicInfoReference.child(currentTripKey).child("Author").setValue(userName);
         basicInfoReference.child(currentTripKey).child("Region").setValue(currentRegion);
@@ -188,8 +169,8 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
 
 
     //display error if trip name is null or trip already exists
-    private boolean isValidInput(String tripName, String toDate, String fromDate, String budget){
-        String[] toDateToken = toDate.split("/"), fromDateToken = fromDate.split("/");
+    private boolean isValidInput(String tripName, String date, String budget){
+        String[] toDateToken = date.split("/");
         if(TextUtils.isEmpty(tripName)){
 //            Toast.makeText(getApplicationContext(), "Please enter a name for your trip", Toast.LENGTH_SHORT).show();
             return false;
