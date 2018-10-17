@@ -212,6 +212,7 @@ public class MyTripMap extends AppCompatActivity implements
         LocationDetailsFragment fragment = new LocationDetailsFragment();
         Bundle bundle = new Bundle();
         bundle.putString("tripKey", myTrip.getKey());
+        bundle.putBoolean("newTrip", false);
         fragment.setArguments(bundle);
         fragment.setPlaceId(locationId);
 

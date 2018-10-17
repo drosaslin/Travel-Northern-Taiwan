@@ -462,6 +462,7 @@ public class MapsActivity extends FragmentActivity implements
         LocationDetailsFragment fragment = new LocationDetailsFragment();
         Bundle bundle = new Bundle();
         bundle.putString("tripKey", tripKey);
+        bundle.putBoolean("newTrip", true);
         fragment.setArguments(bundle);
         fragment.setPlaceId(locationId);
 
