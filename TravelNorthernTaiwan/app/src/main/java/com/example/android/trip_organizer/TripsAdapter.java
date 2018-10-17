@@ -18,7 +18,10 @@ import com.example.android.travelnortherntaiwan.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> {
@@ -59,6 +62,7 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
         String region = "Region: " + DataList.get(position).getRegion();
         holder.cardName.setText(name);
         holder.cardRegion.setText(region);
+        holder.cardDate.setText(getFormattedDate(DataList.get(position).getDate()));
         holder.tripCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,6 +89,25 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
 //        });
     }
 
+    private String getFormattedDate(String tripDate) {
+        SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy/mm/dd");
+        String formattedDate = null;
+        try {
+            if(!tripDate.equals("")) {
+                Date date = oldFormat.parse(tripDate);
+                SimpleDateFormat newFormat = new SimpleDateFormat("MMMM dd, yyyy");
+                formattedDate = newFormat.format(date);
+            }
+            else {
+                formattedDate = "No date specified";
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return formattedDate;
+    }
+
     public void deleteTrip(int position) {
         mRootReference.child("BasicTripInfo").child(DataList.get(position).getKey()).removeValue();
         mRootReference.child("Itinerary").child(DataList.get(position).getKey()).removeValue();
@@ -104,13 +127,12 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
         TextView cardRegion;
         CardView tripCard;
         ImageView deleteBtn;
-//        RelativeLayout relativeLayout;
 
         public ViewHolder(View itemView) {
             super(itemView);
-//            relativeLayout = (itemView).findViewById(R.id.my_trips_list);
+
             cardName = (itemView).findViewById(R.id.tripName);
-            //cardDate = (itemView).findViewById(R.id.tripDate);
+            cardDate = (itemView).findViewById(R.id.tripDate);
             cardRegion = (itemView).findViewById(R.id.tripRegion);
             tripCard = (itemView).findViewById(R.id.trip_card);
             deleteBtn = (itemView).findViewById(R.id.deleteBtn);

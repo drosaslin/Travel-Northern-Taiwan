@@ -57,14 +57,17 @@
                 android:id="@+id/rest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp" />
+                android:layout_marginLeft="5sp"
+                android:layout_gravity="center_vertical"
+                android:textSize="23sp"/>
 
             <Button
                 android:id="@+id/manageBudget"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Manage budget"
-                android:gravity="end"/>
+                android:layout_marginLeft="8sp"
+                android:gravity="center_vertical"/>
 
 
         </LinearLayout>

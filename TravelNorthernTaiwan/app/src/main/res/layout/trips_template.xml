@@ -37,6 +37,13 @@
                 android:text="Region"
                 android:textSize="20sp"/>
 
+            <TextView
+                android:id="@+id/tripDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="October 10, 2018"
+                android:textSize="20sp"/>
+
         </LinearLayout>
 
         <ImageView
