@@ -45,7 +45,6 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
     private FirebaseAuth mAuth;
     private DatabaseReference mRootReference;
     private boolean isNewTrip;
-    private LocationListAdapter.LocationsViewHolder mHolder;
     HashMap<Integer, Boolean> buttonState;
 
     public LocationListAdapter(ArrayList<Results> newLocations, Context newContext, String newTripKey, boolean newTrip) {
@@ -102,8 +101,15 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
                 @Override
                 public void onClick(View view) {
                     Log.d("PLACEID", locations.get(position).getId());
-                    locations.get(position).setAddedStatus(!locations.get(position).getAddedStatus());
-                    updateItinerary(position, holder);
+                    if(tripDestinations.getDestinations().size() >= 10 && holder.addButton.isChecked()) {
+                        Toast.makeText(context, "Itinerary full", Toast.LENGTH_SHORT).show();
+                        locations.get(position).setAddedStatus(!locations.get(position).getAddedStatus());
+                        holder.addButton.setChecked(false);
+                    }
+                    else {
+                        locations.get(position).setAddedStatus(!locations.get(position).getAddedStatus());
+                        updateItinerary(position, holder);
+                    }
                 }
             });
         }
@@ -181,7 +187,7 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
         for(String destinations : tripDestinations.getDestinations()) {
             Log.d("DESTINATIONS", destinations);
         }
-        for(int n = 0; n < 10; n++ ) {
+        for(int n = 0; n < 10; n++) {
             //inserting all destinations added. Insert a blank character to all indexes without destinations
             if(n < arraySize) {
                 mRootReference.child("Itinerary").child(tripKey).child(Integer.toString(n)).setValue(tripDestinations.getDestination(n));

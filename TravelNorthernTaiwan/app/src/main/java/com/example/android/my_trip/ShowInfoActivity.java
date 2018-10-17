@@ -167,7 +167,7 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
             @Override
             public boolean onMenuItemSelected(MenuItem menuItem) {
                 if(menuItem.getItemId() == R.id.action_weather) {
-                    Toast.makeText(ShowInfoActivity.this, infoToDisplay.getRegion(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(ShowInfoActivity.this, infoToDisplay.getRegion(), Toast.LENGTH_SHORT).show();
                     try {
                         prepareWeatherData();
                     } catch (ParseException e) {
