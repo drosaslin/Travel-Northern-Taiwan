@@ -49,22 +49,12 @@
             android:paddingTop="16dp">
 
             <EditText
-                android:id="@+id/fromDate"
+                android:id="@+id/date"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:focusable="false"
-                android:hint="From"
-                android:inputType="date"
-                android:longClickable="false" />
-
-            <EditText
-                android:id="@+id/toDate"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:focusable="false"
-                android:hint="To"
+                android:hint="Date"
                 android:inputType="date"
                 android:longClickable="false" />
 

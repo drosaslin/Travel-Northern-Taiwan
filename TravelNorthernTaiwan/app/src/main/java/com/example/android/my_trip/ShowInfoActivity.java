@@ -59,8 +59,7 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
     private ArrayList<MyAdapter.MyItem> myItemList;
 
     private EditText mTripName;
-    private EditText mToDate;
-    private EditText mFromDate;
+    private EditText mDate;
     private TextView mRest;
     private TextView mRegion;
 
@@ -79,8 +78,7 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
     private TripBasicInfo infoToDisplay;
     private LinkedHashMap<String, ArrayList<String>> coordinates;
     private WeatherData weatherData;
-    private boolean isToDateFocused = false;
-    private DatePickerDialog fromDatepicker , toDatepicker;
+    private DatePickerDialog datepicker;
     private ArrayList<LocationDetailsResponse> destinationsDetails;
 
     private ValueEventListener budgetListener, itineraryListener, basicInfoListener;
@@ -110,8 +108,7 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
         mBudgetRef = FirebaseDatabase.getInstance().getReferenceFromUrl(refUrl + "ExpensesByTrip/" + currentTripKey);
 
         mTripName = (EditText)findViewById(R.id.tripName);
-        mToDate = (EditText)findViewById(R.id.toDate);
-        mFromDate = (EditText)findViewById(R.id.fromDate);
+        mDate = (EditText)findViewById(R.id.start_date);
         mRest = (TextView) findViewById(R.id.rest);
         mRegion = (TextView) findViewById(R.id.regionField);
 
@@ -122,23 +119,6 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
 
         infoToDisplay = new TripBasicInfo();
 
-        mFromDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                isToDateFocused = false;
-                DialogFragment fromDatePicker = new DatePickerFragment();
-                fromDatePicker.show(getFragmentManager(), "date picker");
-            }
-        });
-
-        mToDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                isToDateFocused = true;
-                DialogFragment toDatePicker = new DatePickerFragment();
-                toDatePicker.show(getFragmentManager(), "date picker");
-            }
-        });
 
         manageBudgetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -187,6 +167,15 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
 //                    intent.putExtras("destinationsDetails", destinationsDetails);
                     getApplicationContext().startActivity(intent);
                 }
+                if(menuItem.getItemId() == R.id.action_tasks) {
+                    Toast.makeText(ShowInfoActivity.this, "map clicked", Toast.LENGTH_SHORT).show();
+                    Log.e("DEBUGING1", destinationsDetails.get(0).toString());
+
+                    Bundle bundle = new Bundle();
+                    Intent intent = new Intent(ShowInfoActivity.this, ToDoListActivity.class);
+                    intent.putExtra("tripKey", infoToDisplay.getKey());
+                    getApplicationContext().startActivity(intent);
+                }
                 return true;
             }
 
@@ -201,8 +190,7 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
         infoToDisplay.setKey(ds.getKey());
         infoToDisplay.setName(ds.child("TripName").getValue().toString());
         infoToDisplay.setRegion(ds.child("Region").getValue().toString());
-        infoToDisplay.setToDate(ds.child("To").getValue().toString());
-        infoToDisplay.setFromDate(ds.child("From").getValue().toString());
+        infoToDisplay.setDate(ds.child("Date").getValue().toString());
         infoToDisplay.setBudget(Double.parseDouble(ds.child("Budget").getValue().toString()));
     }
 
@@ -254,8 +242,7 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
 
     private void DisplayInfo(TripBasicInfo infoToDisplay){
         mTripName.setText(infoToDisplay.getName(), TextView.BufferType.EDITABLE);
-        mToDate.setText(infoToDisplay.getToDate(), TextView.BufferType.EDITABLE);
-        mFromDate.setText(infoToDisplay.getFromDate(), TextView.BufferType.EDITABLE);
+        mDate.setText(infoToDisplay.getDate(), TextView.BufferType.EDITABLE);
         mRegion.setText("Region: " + infoToDisplay.getRegion());
     }
 
@@ -268,8 +255,7 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
 
     private void SaveInfo(){
         mBasicInfoRef.child("TripName").setValue(mTripName.getText().toString());
-        mBasicInfoRef.child("To").setValue(mToDate.getText().toString());
-        mBasicInfoRef.child("From").setValue(mFromDate.getText().toString());
+        mBasicInfoRef.child("Date").setValue(mDate.getText().toString());
         Toast.makeText(getApplicationContext(), "Changes saved", Toast.LENGTH_SHORT).show();
     }
 
@@ -316,7 +302,7 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
         queue = com.example.android.travelnortherntaiwan.SingletonRequestQueue.getInstance(getApplicationContext()).getRequestQueue();
         DateFormat dateFormat = new SimpleDateFormat("yyy/MM/dd");
 
-        Date tripDate = (infoToDisplay.getFromDate().equals("")) ? new Date() : dateFormat.parse(infoToDisplay.getFromDate());
+        Date tripDate = (infoToDisplay.getDate().equals("")) ? new Date() : dateFormat.parse(infoToDisplay.getDate());
         String unixDate = Long.toString(tripDate.getTime() / 1000L);
 
         String url = "https://api.darksky.net/forecast/" + WEATHER_KEY + "/" + coordinates.get(infoToDisplay.getRegion()).get(0) + "," +  unixDate + "?units=si";
@@ -367,7 +353,6 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
     protected void onPause() {
         super.onPause();
         mBasicInfoRef.removeEventListener(basicInfoListener);
-        mItineraryRef.removeEventListener(itineraryListener);
         mBudgetRef.removeEventListener(budgetListener);
     }
 
@@ -379,9 +364,6 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 GetBasicInfo(dataSnapshot);
                 DisplayInfo(infoToDisplay);
-
-                /*mAdapter = new TripsAdapter(DataList, getActivity());
-                mRecyclerView.setAdapter(mAdapter);*/
             }
 
             @Override
@@ -403,7 +385,7 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
             }
         });
 
-        itineraryListener = mItineraryRef.addValueEventListener(new ValueEventListener() {
+        mItineraryRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 GetItinerary(dataSnapshot);
