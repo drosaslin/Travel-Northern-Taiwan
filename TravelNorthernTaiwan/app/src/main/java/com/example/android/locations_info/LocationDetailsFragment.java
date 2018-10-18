@@ -235,10 +235,14 @@ public class LocationDetailsFragment extends Fragment {
     }
 
     private String formatDate(String openingHours) {
-        String day = openingHours.substring(0, openingHours.indexOf(":"));
-        String time = openingHours.substring(openingHours.indexOf(" "));
+        if(openingHours != null && !openingHours.equals("") && openingHours.length() > 0) {
+            String day = openingHours.substring(0, openingHours.indexOf(":"));
+            String time = openingHours.substring(openingHours.indexOf(" "));
 
-        return time + " (" + day + ")";
+            return time + " (" + day + ")";
+        }
+
+        return "";
     }
 
     private void GetTripDate(DataSnapshot ds) {
