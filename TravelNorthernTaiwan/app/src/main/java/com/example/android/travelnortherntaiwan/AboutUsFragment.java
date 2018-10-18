@@ -77,7 +77,7 @@ public class AboutUsFragment extends android.support.v4.app.Fragment {
 
     private void buildGifDialog(int index){
         String[] title = {"Daniel", "Genesis", "David"};
-        String[] introduction = {"Hello! I am an engineer.", "Hello! I am an engineer2.", "Hello! I am an engineer3."};
+        String[] introduction = {"Hello! I am Daniel Chen.", "Hello! I am Genesis Yau.", "Hello! I am David Rosas."};
         int[] gif = {R.drawable.gif_dog, R.drawable.gif_cat, R.drawable.gif_guinea};
         new FancyGifDialog.Builder(getActivity())
                 .setTitle(title[index])
