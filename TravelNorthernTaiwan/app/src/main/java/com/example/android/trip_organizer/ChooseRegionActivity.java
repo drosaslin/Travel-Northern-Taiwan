@@ -119,12 +119,17 @@ public class ChooseRegionActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 //        Toast.makeText(this, Integer.toString(messenger.getCount()), Toast.LENGTH_SHORT).show();
-        if(messenger.getCount() == 4) {
-            messenger.setCount(0);
+        if(messenger.isTripFinished()) {
             Intent intent = new Intent(this, MyTrip.class);
             intent.putExtra("tripKey", tripKey);
             startActivity(intent);
             finish();
         }
+        if(messenger.isTripCanceled()) {
+            finish();
+        }
+        messenger.setTripFinished(false);
+        messenger.setTripCanceled(false);
+        messenger.setTripKey("");
     }
 }

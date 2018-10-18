@@ -157,9 +157,6 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
 
         //move later to another function
         //sending the user to another view and passing the current trip parameter to the view
-        if(messenger.getCount() == 1) {
-            messenger.addCount();
-        }
         Intent mapActivity = new Intent(this,MapsActivity.class);
         mapActivity.putExtra("tripKey", currentTripKey);
         mapActivity.putExtra("region", currentRegion);
@@ -172,7 +169,7 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
     private boolean isValidInput(String tripName, String date, String budget){
         String[] toDateToken = date.split("/");
         if(TextUtils.isEmpty(tripName)){
-//            Toast.makeText(getApplicationContext(), "Please enter a name for your trip", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Please enter a name for your trip", Toast.LENGTH_SHORT).show();
             return false;
         }
         return true;
@@ -194,9 +191,16 @@ public class NewTripActivity extends AppCompatActivity implements DatePickerDial
     protected void onResume() {
         super.onResume();
 //        Toast.makeText(this, Integer.toString(messenger.getCount()), Toast.LENGTH_SHORT).show();
-        if(messenger.getCount() == 3) {
-            messenger.addCount();
+        if(messenger.isTripFinished() || messenger.isTripCanceled()) {
             finish();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        mRootReference.child("BasicTripInfo").child(currentTripKey).removeValue();
+        mRootReference.child("ExpensesByTrip").child(currentTripKey).removeValue();
+
+        super.onBackPressed();
     }
 }

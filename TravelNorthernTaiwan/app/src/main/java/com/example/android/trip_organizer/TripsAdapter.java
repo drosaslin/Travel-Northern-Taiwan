@@ -90,7 +90,7 @@ public class TripsAdapter extends RecyclerView.Adapter<TripsAdapter.ViewHolder> 
     }
 
     private String getFormattedDate(String tripDate) {
-        SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy/mm/dd");
+        SimpleDateFormat oldFormat = new SimpleDateFormat("yyyy/MM/dd");
         String formattedDate = null;
         try {
             if(!tripDate.equals("")) {

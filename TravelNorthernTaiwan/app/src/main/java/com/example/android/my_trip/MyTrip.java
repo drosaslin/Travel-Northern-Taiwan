@@ -142,7 +142,7 @@ public class MyTrip extends AppCompatActivity implements DatePickerDialog.OnDate
             @Override
             public boolean onMenuItemSelected(MenuItem menuItem) {
                 if(menuItem.getItemId() == R.id.action_weather) {
-                    Toast.makeText(MyTrip.this, infoToDisplay.getRegion(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MyTrip.this, infoToDisplay.getRegion(), Toast.LENGTH_SHORT).show();
                     try {
                         prepareWeatherData();
                     } catch (ParseException e) {

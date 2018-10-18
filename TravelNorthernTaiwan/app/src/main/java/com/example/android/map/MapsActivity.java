@@ -1,5 +1,6 @@
 package com.example.android.map;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -30,11 +31,18 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.gson.Gson;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
+import com.shashank.sony.fancydialoglib.Animation;
+import com.shashank.sony.fancydialoglib.FancyAlertDialog;
+import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
+import com.shashank.sony.fancydialoglib.Icon;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
@@ -66,6 +74,8 @@ public class MapsActivity extends FragmentActivity implements
     private String region;
     private LatLng regionCoordinates;
     private Messenger messenger;
+    private int backStackCount = 0;
+    private DatabaseReference mRootReference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -100,7 +110,7 @@ public class MapsActivity extends FragmentActivity implements
             @Override
             public void onClick(View view) {
                 Toast.makeText(MapsActivity.this, "SAVING", Toast.LENGTH_SHORT).show();
-                messenger.addCount();
+                messenger.setTripFinished(true);
                 finish();
             }
         });
@@ -428,6 +438,7 @@ public class MapsActivity extends FragmentActivity implements
             @Override
             public void onClusterItemInfoWindowClick(MyItem myItem) {
                 int position = getItemPosition(myItem.getPlaceId());
+                backStackCount++;
 
                 LocationDetailsFragment fragment = new LocationDetailsFragment();
                 Bundle bundle = new Bundle();
@@ -472,8 +483,48 @@ public class MapsActivity extends FragmentActivity implements
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-        Toast.makeText(this, "back", Toast.LENGTH_SHORT).show();
+        if(backStackCount == 0) {
+            showAlertMessage();
+        }
+        else {
+            super.onBackPressed();
+            backStackCount--;
+        }
+    }
+
+    public void showAlertMessage() {
+        new FancyAlertDialog.Builder(MapsActivity.this)
+                .setTitle("Do you want to go back?\n All your progress is going to be lost")
+                .setBackgroundColor(Color.parseColor("#FF0000"))  //Don't pass R.color.colorvalue
+                .setNegativeBtnText("Cancel")
+                .setPositiveBtnBackground(Color.parseColor("#FF4081"))  //Don't pass R.color.colorvalue
+                .setPositiveBtnText("Yes")
+                .setNegativeBtnBackground(Color.parseColor("#FFA9A7A8"))  //Don't pass R.color.colorvalue
+                .setAnimation(Animation.SLIDE  )
+                .isCancellable(true)
+                .setIcon(R.drawable.ic_error_outline_black_24dp, Icon.Visible)
+                .OnPositiveClicked(new FancyAlertDialogListener() {
+                    @Override
+                    public void OnClick() {
+                        messenger.setTripCanceled(true);
+                        deleteTrip();
+                        finish();
+                    }
+                })
+                .OnNegativeClicked(new FancyAlertDialogListener() {
+                    @Override
+                    public void OnClick() {
+                    }
+                })
+                .build();
+    }
+
+    private void deleteTrip() {
+        mRootReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://travel-northern-taiwan.firebaseio.com/");
+
+        mRootReference.child("BasicTripInfo").child(tripKey).removeValue();
+        mRootReference.child("Itinerary").child(tripKey).removeValue();
+        mRootReference.child("ExpensesByTrip").child(tripKey).removeValue();
     }
 
     @Override
@@ -481,6 +532,7 @@ public class MapsActivity extends FragmentActivity implements
         /*set the location id in the location details' fragment and put the locations
           details fragment in front of the locations list fragment*/
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location.getLatLng(), 16));
+        backStackCount++;
 
         LocationDetailsFragment fragment = new LocationDetailsFragment();
         Bundle bundle = new Bundle();
