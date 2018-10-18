@@ -20,12 +20,6 @@
 
         <item
             android:drawable="@color/colorPrimaryDark"
-            android:id="@+id/nav_language"
-            android:icon="@drawable/drawer_language"
-            android:title="@string/language" />
-
-        <item
-            android:drawable="@color/colorPrimaryDark"
             android:id="@+id/nav_about_us"
             android:icon="@drawable/drawer_about"
             android:title="@string/about_us" />
