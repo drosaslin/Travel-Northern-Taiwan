@@ -17,6 +17,7 @@ import com.example.android.locations_info.LocationDetailsFragment;
 import com.example.android.locations_info.LocationDetailsResponse;
 import com.example.android.locations_info.LocationsListFragment;
 import com.example.android.locations_info.LocationsResponse;
+import com.example.android.locations_info.Result;
 import com.example.android.map.Location;
 import com.example.android.map.RegionsCoordinates;
 import com.example.android.map.Results;
@@ -27,6 +28,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.auth.FirebaseAuth;
@@ -44,7 +46,10 @@ public class MyTripMap extends AppCompatActivity implements
         OnMapReadyCallback,
         LocationsListFragment.OnLocationPressedListener,
         LocationsListFragment.OnLocationAddedListener,
-        LocationsListFragment.OnLocationDeletedListener {
+        LocationsListFragment.OnLocationDeletedListener,
+        LocationDetailsFragment.OnLocationAddedListener,
+        LocationDetailsFragment.OnLocationDeletedListener{
+
     private final String GOOGLE_API_KEY = "AIzaSyCc4acsOQV7rnQ92weHYKO14fvL9wkRpKc";
 
     private GoogleMap mMap;
@@ -98,6 +103,25 @@ public class MyTripMap extends AppCompatActivity implements
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(regionsCoordinates.getRegionCoordinates(myTrip.getRegion()), 11));
+        mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+            @Override
+            public void onInfoWindowClick(Marker marker) {
+                LocationDetailsFragment fragment = new LocationDetailsFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("tripKey", myTrip.getKey());
+                bundle.putInt("holderPosition", 0);
+                bundle.putBoolean("newTrip", false);
+                fragment.setArguments(bundle);
+                fragment.setPlaceId(marker.getTag().toString());
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setCustomAnimations(R.anim.enter_from_bottom, R.anim.exit_from_top, R.anim.enter_from_bottom, R.anim.exit_from_top);
+                fragmentTransaction.add(R.id.locations_container, fragment, "DetailsFragmentUp");
+                fragmentTransaction.addToBackStack("locationDetailsStack");
+                fragmentTransaction.commit();
+            }
+        });
     }
 
     private void apiCallPlaceDetails(String placeId, final int size) {
@@ -152,12 +176,14 @@ public class MyTripMap extends AppCompatActivity implements
 
     private void placeMarker(LocationDetailsResponse placeDetails) {
         MarkerOptions marker = new MarkerOptions();
+        marker.title(placeDetails.getResult().getName());
+        marker.snippet(placeDetails.getResult().getRating());
         marker.position(placeDetails.getResult().getGeometry().getLocation().getLatLng());
         marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
         marker.flat(true);
 
         polylineOptions.add(marker.getPosition());
-        mMap.addMarker(marker);
+        mMap.addMarker(marker).setTag(placeDetails.getResult().getPlace_id());
         mMap.addPolyline(polylineOptions);
     }
 
@@ -217,12 +243,22 @@ public class MyTripMap extends AppCompatActivity implements
     }
 
     @Override
-    public void onLocationAdded(Location location) {
+    public void onLocationAdded(Results location) {
 
     }
 
     @Override
-    public void onLocationDeleted(Location location) {
+    public void onLocationDeleted(Results location) {
+
+    }
+
+    @Override
+    public void onLocationAdded(Result location, int tripPosition) {
+
+    }
+
+    @Override
+    public void onLocationDeleted(Result location, int tripPosition) {
 
     }
 }

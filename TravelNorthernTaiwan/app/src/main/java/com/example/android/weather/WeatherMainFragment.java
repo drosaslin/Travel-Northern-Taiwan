@@ -152,7 +152,7 @@ public class WeatherMainFragment extends android.support.v4.app.Fragment impleme
 
     public void setProvinces() throws IOException {
         String city = getCurrentCity();
-        Toast.makeText(getActivity(), city, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(getActivity(), city, Toast.LENGTH_SHORT).show();
         if(!coordinates.isEmpty()) {
             coordinates.clear();
         }

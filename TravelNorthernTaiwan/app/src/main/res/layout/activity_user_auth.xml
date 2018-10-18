@@ -41,11 +41,5 @@
         android:onClick="openActivity"
         android:text="@string/sign_up_button" />
 
-    <Button
-        android:id="@+id/language_btn"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        android:onClick="openActivity"
-        android:text="@string/language_button" />
 
 </LinearLayout>

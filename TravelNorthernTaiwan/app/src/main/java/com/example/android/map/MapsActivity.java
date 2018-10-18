@@ -1,5 +1,6 @@
 package com.example.android.map;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -18,6 +19,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.android.locations_info.LocationDetailsFragment;
 import com.example.android.locations_info.LocationsListFragment;
 import com.example.android.locations_info.LocationsResponse;
+import com.example.android.locations_info.Result;
 import com.example.android.travelnortherntaiwan.Messenger;
 import com.example.android.travelnortherntaiwan.R;
 import com.example.android.travelnortherntaiwan.SingletonRequestQueue;
@@ -29,11 +31,18 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.maps.android.clustering.Cluster;
 import com.google.maps.android.clustering.ClusterItem;
 import com.google.gson.Gson;
 import com.google.maps.android.clustering.ClusterManager;
 import com.google.maps.android.clustering.view.DefaultClusterRenderer;
+import com.shashank.sony.fancydialoglib.Animation;
+import com.shashank.sony.fancydialoglib.FancyAlertDialog;
+import com.shashank.sony.fancydialoglib.FancyAlertDialogListener;
+import com.shashank.sony.fancydialoglib.Icon;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 
 import java.util.ArrayList;
@@ -44,7 +53,9 @@ public class MapsActivity extends FragmentActivity implements
         OnMapReadyCallback,
         LocationsListFragment.OnLocationPressedListener,
         LocationsListFragment.OnLocationAddedListener,
-        LocationsListFragment.OnLocationDeletedListener{
+        LocationsListFragment.OnLocationDeletedListener,
+        LocationDetailsFragment.OnLocationAddedListener,
+        LocationDetailsFragment.OnLocationDeletedListener{
 
     private final String GOOGLE_API_KEY = "AIzaSyCc4acsOQV7rnQ92weHYKO14fvL9wkRpKc";
     private FloatingActionButton saveTripButton;
@@ -63,6 +74,8 @@ public class MapsActivity extends FragmentActivity implements
     private String region;
     private LatLng regionCoordinates;
     private Messenger messenger;
+    private int backStackCount = 0;
+    private DatabaseReference mRootReference;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -96,8 +109,8 @@ public class MapsActivity extends FragmentActivity implements
         saveTripButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                Toast.makeText(MapsActivity.this, "SAVING", Toast.LENGTH_SHORT).show();
-                messenger.addCount();
+                Toast.makeText(MapsActivity.this, "SAVING", Toast.LENGTH_SHORT).show();
+                messenger.setTripFinished(true);
                 finish();
             }
         });
@@ -154,7 +167,7 @@ public class MapsActivity extends FragmentActivity implements
         //add the markers for every place returned from the api call
         for(Results results : locationsResponse.getResults()) {
             LatLng coordinates = results.getGeometry().getLocation().getLatLng();
-            MyItem item = new MyItem(coordinates.latitude, coordinates.longitude, results.getName(), results.getRating(), results.getId());
+            MyItem item = new MyItem(coordinates.latitude, coordinates.longitude, results.getName(), results.getRating(), results.getPlace_id());
             mClusterManager.addItem(item);
         }
 
@@ -419,12 +432,28 @@ public class MapsActivity extends FragmentActivity implements
         // manager.
         mMap.setOnCameraIdleListener(mClusterManager);
         mMap.setOnMarkerClickListener(mClusterManager);
+        mMap.setOnInfoWindowClickListener(mClusterManager);
 
-        mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<MyItem>() {
+        mClusterManager.setOnClusterItemInfoWindowClickListener(new ClusterManager.OnClusterItemInfoWindowClickListener<MyItem>() {
             @Override
-            public boolean onClusterItemClick(MyItem myItem) {
-//                onLocationPressed(myItem.getPlaceId());
-                return false;
+            public void onClusterItemInfoWindowClick(MyItem myItem) {
+                int position = getItemPosition(myItem.getPlaceId());
+                backStackCount++;
+
+                LocationDetailsFragment fragment = new LocationDetailsFragment();
+                Bundle bundle = new Bundle();
+                bundle.putString("tripKey", tripKey);
+                bundle.putInt("holderPosition", position);
+                bundle.putBoolean("newTrip", true);
+                fragment.setArguments(bundle);
+                fragment.setPlaceId(myItem.getPlaceId());
+
+                FragmentManager fragmentManager = getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setCustomAnimations(R.anim.enter_from_bottom, R.anim.exit_from_top, R.anim.enter_from_bottom, R.anim.exit_from_top);
+                fragmentTransaction.add(R.id.locations_container, fragment, "DetailsFragmentUp");
+                fragmentTransaction.addToBackStack("locationDetailsStack");
+                fragmentTransaction.commit();
             }
         });
 
@@ -440,9 +469,62 @@ public class MapsActivity extends FragmentActivity implements
                 });
     }
 
+    private int getItemPosition(String placeId) {
+        int size = locationsListFragment.getAdapter().getItemCount();
+        for (int n = 0; n < size; n++) {
+            Log.d("COMPARE", placeId + "--" + locationsListFragment.getAdapter().getLocations().get(n).getPlace_id());
+            if(placeId.equals(locationsListFragment.getAdapter().getLocations().get(n).getPlace_id())) {
+                return n;
+            }
+        }
+
+        return 0;
+    }
+
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        if(backStackCount == 0) {
+            showAlertMessage();
+        }
+        else {
+            super.onBackPressed();
+            backStackCount--;
+        }
+    }
+
+    public void showAlertMessage() {
+        new FancyAlertDialog.Builder(MapsActivity.this)
+                .setTitle("Do you want to go back?\n All your progress is going to be lost")
+                .setBackgroundColor(Color.parseColor("#FF0000"))  //Don't pass R.color.colorvalue
+                .setNegativeBtnText("Cancel")
+                .setPositiveBtnBackground(Color.parseColor("#FF4081"))  //Don't pass R.color.colorvalue
+                .setPositiveBtnText("Yes")
+                .setNegativeBtnBackground(Color.parseColor("#FFA9A7A8"))  //Don't pass R.color.colorvalue
+                .setAnimation(Animation.SLIDE  )
+                .isCancellable(true)
+                .setIcon(R.drawable.ic_error_outline_black_24dp, Icon.Visible)
+                .OnPositiveClicked(new FancyAlertDialogListener() {
+                    @Override
+                    public void OnClick() {
+                        messenger.setTripCanceled(true);
+                        deleteTrip();
+                        finish();
+                    }
+                })
+                .OnNegativeClicked(new FancyAlertDialogListener() {
+                    @Override
+                    public void OnClick() {
+                    }
+                })
+                .build();
+    }
+
+    private void deleteTrip() {
+        mRootReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://travel-northern-taiwan.firebaseio.com/");
+
+        mRootReference.child("BasicTripInfo").child(tripKey).removeValue();
+        mRootReference.child("Itinerary").child(tripKey).removeValue();
+        mRootReference.child("ExpensesByTrip").child(tripKey).removeValue();
     }
 
     @Override
@@ -450,6 +532,7 @@ public class MapsActivity extends FragmentActivity implements
         /*set the location id in the location details' fragment and put the locations
           details fragment in front of the locations list fragment*/
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location.getLatLng(), 16));
+        backStackCount++;
 
         LocationDetailsFragment fragment = new LocationDetailsFragment();
         Bundle bundle = new Bundle();
@@ -467,41 +550,60 @@ public class MapsActivity extends FragmentActivity implements
         fragmentTransaction.commit();
     }
 
-
     @Override
-    public void onLocationAdded(Location location) {
+    public void onLocationAdded(Results location) {
         MarkerOptions marker = new MarkerOptions();
-        marker.position(location.getLatLng());
+        marker.title(location.getName());
+        marker.snippet(location.getRating());
+        marker.position(location.getGeometry().getLocation().getLatLng());
         marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
         marker.zIndex(1.0f);
 
         itineraryMarkers.add(mMap.addMarker(marker));
+        itineraryMarkers.get(itineraryMarkers.size() - 1).setTag(location.getPlace_id());
+        itineraryMarkers.get(itineraryMarkers.size() - 1).showInfoWindow();
     }
 
     @Override
-    public void onLocationDeleted(Location location) {
+    public void onLocationAdded(Result location, int tripPosition) {
+        MarkerOptions marker = new MarkerOptions();
+        marker.title(location.getName());
+        marker.position(location.getGeometry().getLocation().getLatLng());
+        marker.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+        marker.zIndex(1.0f);
+
+        itineraryMarkers.add(mMap.addMarker(marker));
+        locationsListFragment.recyclerItemUpdate(tripPosition, true);
+        itineraryMarkers.get(itineraryMarkers.size() - 1).setTag(location.getPlace_id());
+        itineraryMarkers.get(itineraryMarkers.size() - 1).showInfoWindow();
+    }
+
+    @Override
+    public void onLocationDeleted(Results location) {
         for(Marker marker : itineraryMarkers) {
             Log.i("MARKERSS", marker.getPosition().toString() + " " + location.toString());
-            if (isInSameLocation(marker.getPosition(), location.getLatLng())) {
+            if (isInSameLocation(marker.getPosition(), location.getGeometry().getLocation().getLatLng())) {
                 marker.remove();
             }
         }
     }
 
+
+    @Override
+    public void onLocationDeleted(Result location, int tripPosition) {
+        for(Marker marker : itineraryMarkers) {
+            Log.i("MARKERSS", marker.getPosition().toString() + " " + location.toString());
+            if (isInSameLocation(marker.getPosition(), location.getGeometry().getLocation().getLatLng())) {
+                marker.remove();
+            }
+        }
+
+        locationsListFragment.recyclerItemUpdate(tripPosition, false);
+    }
+
     private boolean isInSameLocation(LatLng markerOne, LatLng markerTwo) {
         return (markerOne.latitude == markerTwo.latitude && markerOne.longitude == markerTwo.longitude);
     }
-
-//    @Override
-//    public void onLocationAdded(int position) {
-//        Log.d("TESTING", "1");
-//        locationsListFragment.recyclerItemUpdate(position);
-//    }
-
-//    @Override
-//    public void onLocationPressed(String locationId, Location location) {
-//        int n = 0;
-//    }
 
     public class MyItem implements ClusterItem {
         private final LatLng mPosition;

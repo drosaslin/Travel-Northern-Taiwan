@@ -1,7 +1,6 @@
 package com.example.android.my_trip;
 
 import android.app.DatePickerDialog;
-import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,8 +23,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.example.android.locations_info.LocationDetailsResponse;
 import com.example.android.travelnortherntaiwan.R;
 import com.example.android.travelnortherntaiwan.SingletonRequestQueue;
-import com.example.android.trip_organizer.DatePickerFragment;
-import com.example.android.weather.HourlyDataActivity;
 import com.example.android.weather.WeatherData;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,7 +34,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.transferwise.sequencelayout.SequenceLayout;
 
-import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -48,7 +44,7 @@ import java.util.LinkedHashMap;
 
 import io.github.yavski.fabspeeddial.FabSpeedDial;
 
-public class ShowInfoActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
+public class MyTrip extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
     private final String GOOGLE_API_KEY = "AIzaSyCc4acsOQV7rnQ92weHYKO14fvL9wkRpKc";
     private static final String WEATHER_KEY = "db4321093bdd7e123918dc6fa6e9c1e3";
 
@@ -113,7 +109,6 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
         mRegion = (TextView) findViewById(R.id.regionField);
 
         manageBudgetBtn = findViewById(R.id.manageBudget);
-        saveInfoBtn = findViewById(R.id.saveChanges);
         showMoreButton = findViewById(R.id.selection_button);
         setActionButton();
 
@@ -123,18 +118,18 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
         manageBudgetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ShowInfoActivity.this, BudgetManagerActivity.class);
+                Intent intent = new Intent(MyTrip.this, BudgetManagerActivity.class);
                 intent.putExtra("tripKey", currentTripKey);
                 startActivity(intent);
             }
         });
-
-        saveInfoBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                SaveInfo();
-            }
-        });
+//
+//        saveInfoBtn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                SaveInfo();
+//            }
+//        });
     }
 
     private void setActionButton() {
@@ -147,7 +142,7 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
             @Override
             public boolean onMenuItemSelected(MenuItem menuItem) {
                 if(menuItem.getItemId() == R.id.action_weather) {
-                    Toast.makeText(ShowInfoActivity.this, infoToDisplay.getRegion(), Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(MyTrip.this, infoToDisplay.getRegion(), Toast.LENGTH_SHORT).show();
                     try {
                         prepareWeatherData();
                     } catch (ParseException e) {
@@ -155,16 +150,13 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
                     }
                 }
                 if(menuItem.getItemId() == R.id.action_map) {
-                    Intent intent = new Intent(ShowInfoActivity.this, MyTripMap.class);
+                    Intent intent = new Intent(MyTrip.this, MyTripMap.class);
                     intent.putExtra("basicInfo", infoToDisplay);
                     startActivity(intent);
                 }
                 if(menuItem.getItemId() == R.id.action_tasks) {
-                    Toast.makeText(ShowInfoActivity.this, "map clicked", Toast.LENGTH_SHORT).show();
-                    Log.e("DEBUGING1", destinationsDetails.get(0).toString());
-
                     Bundle bundle = new Bundle();
-                    Intent intent = new Intent(ShowInfoActivity.this, ToDoListActivity.class);
+                    Intent intent = new Intent(MyTrip.this, ToDoListActivity.class);
                     intent.putExtra("tripKey", infoToDisplay.getKey());
                     getApplicationContext().startActivity(intent);
                 }
@@ -255,11 +247,11 @@ public class ShowInfoActivity extends AppCompatActivity implements DatePickerDia
         Log.d("GetBudget", "rest -> " + rest);
     }
 
-    private void SaveInfo(){
-        mBasicInfoRef.child("TripName").setValue(mTripName.getText().toString());
-        mBasicInfoRef.child("Date").setValue(mDate.getText().toString());
-        Toast.makeText(getApplicationContext(), "Changes saved", Toast.LENGTH_SHORT).show();
-    }
+//    private void SaveInfo(){
+//        mBasicInfoRef.child("TripName").setValue(mTripName.getText().toString());
+//        mBasicInfoRef.child("Date").setValue(mDate.getText().toString());
+//        Toast.makeText(getApplicationContext(), "Changes saved", Toast.LENGTH_SHORT).show();
+//    }
 
     private void apiCallPlaceDetails(String placeId, final int size) {
         String url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=" + placeId + "&fields=price_level,name,rating,formatted_address,formatted_phone_number,geometry,icon,id,opening_hours,photos,place_id,plus_code,rating,reviews&key=" + GOOGLE_API_KEY;

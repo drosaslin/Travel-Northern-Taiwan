@@ -27,7 +27,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Trip Name"
-            android:inputType="textPersonName" />
+            android:inputType="none"
+            android:focusable="false"
+            android:longClickable="false"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -42,7 +44,7 @@
                 android:layout_weight="1"
                 android:focusable="false"
                 android:hint="Date"
-                android:inputType="date"
+                android:inputType="none"
                 android:longClickable="false" />
 
         </LinearLayout>
@@ -57,20 +59,17 @@
                 android:id="@+id/rest"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="10dp" />
+                android:layout_marginLeft="5sp"
+                android:layout_gravity="center_vertical"
+                android:textSize="23sp"/>
 
             <Button
                 android:id="@+id/manageBudget"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Manage" />
-
-            <Button
-                android:id="@+id/saveChanges"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:text="Save" />
+                android:text="Manage budget"
+                android:layout_marginLeft="8sp"
+                android:gravity="center_vertical"/>
 
 
         </LinearLayout>
@@ -102,20 +101,6 @@
             </LinearLayout>
 
         </ScrollView>
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/ggg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:clickable="true"
-            android:focusable="true"
-            app:fabSize="mini"
-            app:srcCompat="@drawable/ic_save"
-            android:layout_margin="6dp"
-            android:backgroundTint="@color/colorAccentExtra"
-            app:borderWidth="0dp"
-            />
 
         <io.github.yavski.fabspeeddial.FabSpeedDial
             android:id="@+id/selection_button"

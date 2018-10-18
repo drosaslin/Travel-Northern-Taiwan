@@ -45,8 +45,6 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
     private FirebaseAuth mAuth;
     private DatabaseReference mRootReference;
     private boolean isNewTrip;
-    private LocationListAdapter.LocationsViewHolder mHolder;
-    HashMap<Integer, Boolean> buttonState;
 
     public LocationListAdapter(ArrayList<Results> newLocations, Context newContext, String newTripKey, boolean newTrip) {
         locations = newLocations;
@@ -54,7 +52,6 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
         tripKey = newTripKey;
         isNewTrip = newTrip;
         tripDestinations = TripDestinations.getInstance();
-        buttonState = new HashMap<>();
         mAuth = FirebaseAuth.getInstance();
         mRootReference = FirebaseDatabase.getInstance().getReferenceFromUrl("https://travel-northern-taiwan.firebaseio.com");
 
@@ -102,8 +99,15 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
                 @Override
                 public void onClick(View view) {
                     Log.d("PLACEID", locations.get(position).getId());
-                    locations.get(position).setAddedStatus(!locations.get(position).getAddedStatus());
-                    updateItinerary(position, holder);
+                    if(tripDestinations.getDestinations().size() >= 10 && holder.addButton.isChecked()) {
+                        Toast.makeText(context, "Itinerary full", Toast.LENGTH_SHORT).show();
+                        locations.get(position).setAddedStatus(!locations.get(position).getAddedStatus());
+                        holder.addButton.setChecked(false);
+                    }
+                    else {
+                        locations.get(position).setAddedStatus(!locations.get(position).getAddedStatus());
+                        updateItinerary(position, holder);
+                    }
                 }
             });
         }
@@ -151,11 +155,11 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
         Log.d("ADDINGGG", "adding");
         if(holder.addButton.isChecked()) {
             addToItinerary(position);
-            locationsListFragment.updateMap(locations.get(position).getGeometry().getLocation(), true);
+            locationsListFragment.updateMap(locations.get(position), true);
         }
         else {
             deleteFromItinerary(position);
-            locationsListFragment.updateMap(locations.get(position).getGeometry().getLocation(), false);
+            locationsListFragment.updateMap(locations.get(position), false);
         }
 
         String message = (holder.addButton.isChecked()) ? "Destination Added": "Destination Deleted";
@@ -181,7 +185,7 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
         for(String destinations : tripDestinations.getDestinations()) {
             Log.d("DESTINATIONS", destinations);
         }
-        for(int n = 0; n < 10; n++ ) {
+        for(int n = 0; n < 10; n++) {
             //inserting all destinations added. Insert a blank character to all indexes without destinations
             if(n < arraySize) {
                 mRootReference.child("Itinerary").child(tripKey).child(Integer.toString(n)).setValue(tripDestinations.getDestination(n));
@@ -201,6 +205,10 @@ public class LocationListAdapter extends RecyclerView.Adapter<LocationListAdapte
         }
 
         mRootReference.child("Itinerary").child(tripKey).setValue(itinerary);
+    }
+
+    public ArrayList<Results> getLocations() {
+        return locations;
     }
 
     public void finish() {
