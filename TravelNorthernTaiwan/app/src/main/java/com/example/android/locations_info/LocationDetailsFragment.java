@@ -238,17 +238,10 @@ public class LocationDetailsFragment extends Fragment {
         if(openingHours != null && !openingHours.equals("") && openingHours.length() > 0) {
             String day = openingHours.substring(0, openingHours.indexOf(":"));
             String time = openingHours.substring(openingHours.indexOf(" "));
-<<<<<<< HEAD
 
             return time + " (" + day + ")";
         }
 
-=======
-
-            return time + " (" + day + ")";
-        }
-
->>>>>>> abbd691a80577ced7431f40b2e1ac19cfabcbda0
         return "";
     }
 
